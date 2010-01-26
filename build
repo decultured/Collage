@@ -1,0 +1,3 @@
+#!/bin/sh
+
+amxmlc -incremental=true -debug=true src/Collage.mxml

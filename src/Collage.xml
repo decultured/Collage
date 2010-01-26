@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<application xmlns="http://ns.adobe.com/air/application/1.5"> 
+    <id>com.endlesspaths.Collage</id> 
+    <version>0.1</version> 
+    <filename>Collage</filename> 
+	<allowBrowserInvocation>true</allowBrowserInvocation>
+    <initialWindow> 
+        <content>Collage.swf</content> 
+        <visible>true</visible> 
+        <systemChrome>none</systemChrome> 
+        <transparent>true</transparent> 
+        <width>800</width> 
+        <height>600</height> 
+    </initialWindow>
+</application>

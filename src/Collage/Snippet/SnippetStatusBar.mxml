@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="24" bottom="0">
+	<mx:Image source="@Embed('../../../assets/size_grip.png')" id="SnippetSizeGrip" right="0" bottom="0" />
+</mx:Canvas>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:clg="Collage.*" layout="absolute" creationComplete="init()">
+	<mx:Style> 
+		WindowedApplication
+		{
+			background-color:"0x000000";
+			background-alpha:"1.0";
+		}
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+		import mx.controls.Alert;
+		import mx.controls.Image;
+		import flash.filesystem.File;
+		import mx.managers.PopUpManager;
+		import mx.containers.TitleWindow;
+		import Collage.Snippet.*;
+		import Collage.Components.*;
+
+		private function init():void{
+		  this.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER,onDragIn);
+		  this.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP,onDrop);
+		}
+
+		private function onDragIn(event:NativeDragEvent):void{
+		  NativeDragManager.acceptDragDrop(this);
+		}
+
+		private function onDrop(event:NativeDragEvent):void{
+		  var dropfiles:Array = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
+		  for each (var file:File in dropfiles){
+		    switch (file.extension.toLowerCase()){
+		      case "png" :
+				addImage(file, event.localX, event.localY);
+				break;
+		      case "jpg" :
+		        addImage(file, event.localX, event.localY);
+		        break;
+		      case "jpeg" :
+		        addImage(file, event.localX, event.localY);
+		        break;
+		      case "gif" :
+		        addImage(file, event.localX, event.localY);
+		        break;
+		      default:
+		        Alert.show("Unmapped Extension");
+		      }
+		    }
+		  }
+
+		  private function addImage(file:File, xPos:Number, yPos:Number):void{
+			
+			/*var newImageWindow:clgImage;
+			newImageWindow = clgImage(PopUpManager.createPopUp(this, clgImage, false));*/
+
+			var newPicture:Picture = new Picture();
+			addChild(newPicture);
+			newPicture.height = 200;
+			newPicture.width = 300;
+			newPicture.y = yPos - newPicture.height * 0.5;
+			newPicture.x = xPos - newPicture.width * 0.5;
+			newPicture.Title = file.name;
+
+			newPicture.displayImage.load(file.url);
+			if (newPicture.displayImage.content is Bitmap) {
+                var bitmap:Bitmap = newPicture.displayImage.content as Bitmap;
+                if (bitmap != null && bitmap.smoothing == false) {
+                    bitmap.smoothing = true;
+                }
+            }
+		  }
+       ]]>
+    </mx:Script>
+</mx:WindowedApplication>

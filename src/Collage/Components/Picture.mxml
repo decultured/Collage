@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<clg:Snippet xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:clg="Collage.Snippet.*">
+	<mx:Image id="displayImage" horizontalAlign="center" verticalAlign="middle" left="0" right="0" top="0" bottom="0" />
+</clg:Snippet>
