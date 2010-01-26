@@ -15,11 +15,20 @@
 		import mx.managers.PopUpManager;
 		import mx.containers.TitleWindow;
 		import Collage.Snippet.*;
-		import Collage.Components.*;
+		import Collage.Components.Picture;
+		import com.roguedevelopment.objecthandles.HandleDescription;
+		import com.roguedevelopment.objecthandles.HandleRoles;
+		import com.roguedevelopment.objecthandles.ObjectHandles;
+		import com.roguedevelopment.objecthandles.constraints.MovementConstraint;
+		import com.roguedevelopment.objecthandles.constraints.SizeConstraint;
 
+		protected var _ObjectHandles:ObjectHandles;
+
+		
 		private function init():void{
-		  this.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER,onDragIn);
-		  this.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP,onDrop);
+			this.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER,onDragIn);
+			this.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP,onDrop);
+			_ObjectHandles = new ObjectHandles(this);
 		}
 
 		private function onDragIn(event:NativeDragEvent):void{
@@ -48,26 +57,13 @@
 		    }
 		  }
 
-		  private function addImage(file:File, xPos:Number, yPos:Number):void{
-			
-			/*var newImageWindow:clgImage;
-			newImageWindow = clgImage(PopUpManager.createPopUp(this, clgImage, false));*/
-
+		private function addImage(file:File, xPos:Number, yPos:Number):void
+		{
 			var newPicture:Picture = new Picture();
+			_ObjectHandles.registerComponent(newPicture.model, newPicture);
 			addChild(newPicture);
-			newPicture.height = 200;
-			newPicture.width = 300;
-			newPicture.y = yPos - newPicture.height * 0.5;
-			newPicture.x = xPos - newPicture.width * 0.5;
-			newPicture.Title = file.name;
 
-			newPicture.displayImage.load(file.url);
-			if (newPicture.displayImage.content is Bitmap) {
-                var bitmap:Bitmap = newPicture.displayImage.content as Bitmap;
-                if (bitmap != null && bitmap.smoothing == false) {
-                    bitmap.smoothing = true;
-                }
-            }
+			newPicture.url = file.url;
 		  }
        ]]>
     </mx:Script>

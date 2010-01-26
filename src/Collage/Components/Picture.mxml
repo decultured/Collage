@@ -1,4 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<clg:Snippet xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:clg="Collage.Snippet.*">
+<clg:Snippet xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.Snippet.*"
+	backgroundColor="0xffffff"
+	backgroundAlpha="0"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	creationComplete="Initialize()" >
+	
+	<mx:Script>
+		<![CDATA[
+		import mx.controls.Alert;
+		
+		private var _URL:String = null;
+		
+		public function get url():String {return _URL;}
+		public function set url(url:String):void
+		{
+			_URL = url;
+			LoadImage();
+		}
+		
+		public function Initialize():void
+		{
+			LoadImage();
+		}
+		
+		public function LoadImage():void
+		{
+			if (!displayImage || !_URL)
+				return;
+			
+			displayImage.load(_URL);
+			if (displayImage.content is Bitmap) {
+                var bitmap:Bitmap = displayImage.content as Bitmap;
+                if (bitmap != null && bitmap.smoothing == false) {
+                    bitmap.smoothing = true;
+                }
+				model.width = bitmap.width;
+				model.height = bitmap.height;
+				Alert.show("In here!");
+            }
+		}
+
+		]]>
+    </mx:Script>
 	<mx:Image id="displayImage" horizontalAlign="center" verticalAlign="middle" left="0" right="0" top="0" bottom="0" />
 </clg:Snippet>
