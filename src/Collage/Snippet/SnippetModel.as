@@ -8,8 +8,8 @@ package Collage.Snippet
 	{
 		[Bindable] public var x:Number = 10;
 		[Bindable] public var y:Number  = 10;
-		[Bindable] public var height:Number = 50;
-		[Bindable] public var width:Number = 50;
+		[Bindable] public var height:Number = 150;
+		[Bindable] public var width:Number = 150;
 		[Bindable] public var rotation:Number = 0;
 		
 		public function Resized():void

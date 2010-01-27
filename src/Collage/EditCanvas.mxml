@@ -11,7 +11,7 @@
 	<![CDATA[
 		import mx.controls.Alert;
 		import Collage.Snippet.*;
-		import Collage.Components.Picture;
+		import Collage.Components.*;
 		import com.roguedevelopment.objecthandles.HandleDescription;
 		import com.roguedevelopment.objecthandles.HandleRoles;
 		import com.roguedevelopment.objecthandles.ObjectHandles;
@@ -24,7 +24,22 @@
 
 		protected function init() : void
 		{
-			_ObjectHandles         = new ObjectHandles( this );
+			_ObjectHandles = new ObjectHandles( this );
+			
+			var sizeConstraint:SizeConstraint = new SizeConstraint();
+			sizeConstraint.minWidth = 20;
+			sizeConstraint.minHeight = 20;
+			sizeConstraint.maxWidth = this.width;
+			sizeConstraint.maxHeight = this.height;
+			_ObjectHandles.constraints.push(sizeConstraint);							
+
+			var moveConstraint:MovementConstraint = new MovementConstraint();
+			moveConstraint.minX = 0;
+			moveConstraint.minY = 0;
+			moveConstraint.maxX = this.width;
+			moveConstraint.maxY = this.height;
+			_ObjectHandles.constraints.push(moveConstraint);							
+			
 			this.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER,onDragIn);
 			this.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP,onDrop);
 			
@@ -34,22 +49,19 @@
 		}
 
 		private function ObjectMoved(event:ObjectChangedEvent):void{
-			for each (var snippet:SnippetModel in event.relatedObjects)
-			{
+			for each (var snippet:SnippetModel in event.relatedObjects) {
 				snippet.Moved();
 			}
 		}
 
 		private function ObjectResized(event:ObjectChangedEvent):void{
-			for each (var snippet:SnippetModel in event.relatedObjects)
-			{
+			for each (var snippet:SnippetModel in event.relatedObjects) {
 				snippet.Resized();
 			}
 		}
 
 		private function ObjectRotated(event:ObjectChangedEvent):void{
-			for each (var snippet:SnippetModel in event.relatedObjects)
-			{
+			for each (var snippet:SnippetModel in event.relatedObjects)	{
 				snippet.Resized();
 			}
 		}
@@ -66,7 +78,7 @@
 					case "jpg" :
 					case "jpeg" :
 					case "gif" :
-					addImage(file, event.localX, event.localY);
+					AddImage(file, event.localX, event.localY);
 					break;
 					default:
 					Alert.show("Unmapped Extension");
@@ -74,16 +86,39 @@
 			}
 		}
 
-		private function addImage(file:File, xPos:Number, yPos:Number):void
+		public function AddImage(file:File, xPos:Number, yPos:Number):void
 		{
-			var newPicture:Picture = new Picture();
+			var newPicture:PictureSnippet = new PictureSnippet();
 			newPicture.model.x = xPos - 100;
 			newPicture.model.y = yPos - 100;
-			
+
 			_ObjectHandles.registerComponent(newPicture.model, newPicture);
 			addChild(newPicture);
 
-			newPicture.url = file.url;
+			if (file) {
+				var pictureModel:PictureSnippetModel = newPicture.model as PictureSnippetModel;
+				pictureModel.url = file.url;
+			}
+		}
+
+		public function AddLabel(text:String, xPos:Number, yPos:Number):void
+		{
+			var newLabel:LabelSnippet = new LabelSnippet();
+			newLabel.model.x = xPos - 100;
+			newLabel.model.y = yPos - 100;
+
+			_ObjectHandles.registerComponent(newLabel.model, newLabel);
+			addChild(newLabel);
+		}
+
+		public function AddTextBox(text:String, xPos:Number, yPos:Number):void
+		{
+			var newTextBox:TextBoxSnippet = new TextBoxSnippet();
+			newTextBox.model.x = xPos - 100;
+			newTextBox.model.y = yPos - 100;
+
+			_ObjectHandles.registerComponent(newTextBox.model, newTextBox);
+			addChild(newTextBox);
 		}
 
 		protected function backgroundClick(event:MouseEvent) : void

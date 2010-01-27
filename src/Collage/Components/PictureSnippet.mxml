@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <clg:Snippet xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Snippet.*"
-	backgroundColor="0xffffff"
-	backgroundAlpha="0"
+	backgroundColor="0x000000"
+	backgroundAlpha="0.2"
 	horizontalScrollPolicy="off"
 	verticalScrollPolicy="off"
 	creationComplete="Initialize()" >
@@ -11,19 +11,10 @@
 		<![CDATA[
 		import mx.controls.Alert;
 		import mx.events.PropertyChangeEvent;
-		
-		private var _URL:String = null;
-		
-		public function get url():String {return _URL;}
-		public function set url(url:String):void
-		{
-			_URL = url;
-			LoadImage();
-		}
-		
+				
 		protected override function CreateModel():void
 		{
-			_model = new PictureModel();
+			_model = new PictureSnippetModel();
 		}
 
 		public function Initialize():void
@@ -33,22 +24,28 @@
 		
 		public function LoadImage():void
 		{
-			if (!displayImage || !_URL)
+			if (!displayImage)
 				return;
 			
-			displayImage.load(_URL);
+			var pictureModel:PictureSnippetModel = _model as PictureSnippetModel;
+			
+			displayImage.load(pictureModel.url);
 
 			displayImage.addEventListener(Event.COMPLETE, Complete);
 		}
 		
 		protected override function onModelChange( event:PropertyChangeEvent):void
 		{
+			if(event.property == "url") {
+				LoadImage();
+				Alert.show("Picture loading...");
+			}
 			super.onModelChange(event);
 		}
 
 		private function Complete(event:Event):void
 		{
-			var pictureModel:PictureModel = _model as PictureModel;
+			var pictureModel:PictureSnippetModel = _model as PictureSnippetModel;
 			displayImage.removeEventListener(Event.COMPLETE, Complete);
 
 			if (displayImage.content is Bitmap) {

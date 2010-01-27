@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> 
-<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:clg="Collage.*" layout="absolute" creationComplete="init()">
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:clg="Collage.*" layout="absolute" applicationComplete="Initialize()" >
 	<mx:Style> 
 		WindowedApplication
 		{
@@ -7,15 +7,42 @@
 			background-alpha:"1.0";
 		}
 	</mx:Style>
-	<mx:Script><![CDATA[]]></mx:Script>
+	<mx:Script>
+	<![CDATA[
+		import mx.controls.Alert;
+		import mx.events.FlexEvent;
+
+		private function Initialize():void
+		{
+			stage.addEventListener(KeyboardEvent.KEY_DOWN,HandleKeyDown); 
+		}
+
+		private function Fullscreen():void
+		{
+			if (stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE)
+				stage.displayState = StageDisplayState.NORMAL;
+			else
+				stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+		}
+		
+		private function HandleKeyDown(event:KeyboardEvent):void
+		{
+		}
+	]]>
+	</mx:Script>
 	<mx:Canvas top="0" left="0" right="150" bottom="0">
 		<mx:Box top="0" left="0" right="0" bottom="0" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10"  horizontalAlign="center" verticalAlign="middle">
-			<clg:EditCanvas width="1024" height="768" dropShadowEnabled="true">
+			<clg:EditCanvas id="mainEditCanvas" width="1024" height="768" dropShadowEnabled="true">
 
 			</clg:EditCanvas>
 		</mx:Box>
 	</mx:Canvas>
-	<mx:Canvas top="0" width="150" right="0" bottom="0" backgroundColor="#FFaaaa" backgroundAlpha="1">
-		<mx:Button />
+	<mx:Canvas top="0" width="150" right="0" bottom="0" backgroundColor="#FFFFFF" backgroundAlpha="1" horizontalScrollPolicy="off" >
+		<mx:Button label="Fullscreen" id="fullscreenButton" fontSize="14" width="100%" click="Fullscreen();" />
+		<mx:VBox top="100" left="0" right="0" bottom="0" horizontalScrollPolicy="off" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10">
+			<mx:Button label="Add Image" id="addImageButton" fontSize="14" width="100%" click="mainEditCanvas.AddImage(null, 150, 150);" />
+			<mx:Button label="Add Label" id="addLabelButton" fontSize="14" width="100%" click="mainEditCanvas.AddLabel(null, 150, 150);" />
+			<mx:Button label="Add TextBox" id="addTextBoxButton" fontSize="14" width="100%" click="mainEditCanvas.AddTextBox(null, 150, 150);" />
+		</mx:VBox>
 	</mx:Canvas>
 </mx:WindowedApplication>
