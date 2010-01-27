@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="100%" height="100%" 
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	backgroundColor="#FFFFFF" backgroundAlpha="1" borderThickness="0"
+	creationComplete="init()"
+	click="backgroundClick(event)"
+	>
+	<mx:Script>
+	<![CDATA[
+		import mx.controls.Alert;
+		import Collage.Snippet.*;
+		import Collage.Components.Picture;
+		import com.roguedevelopment.objecthandles.HandleDescription;
+		import com.roguedevelopment.objecthandles.HandleRoles;
+		import com.roguedevelopment.objecthandles.ObjectHandles;
+		import com.roguedevelopment.objecthandles.constraints.MovementConstraint;
+		import com.roguedevelopment.objecthandles.constraints.SizeConstraint;
+		import com.roguedevelopment.objecthandles.ObjectChangedEvent;
+		import com.roguedevelopment.objecthandles.constraints.SizeConstraint;
+
+		protected var _ObjectHandles:ObjectHandles;
+
+		protected function init() : void
+		{
+			_ObjectHandles         = new ObjectHandles( this );
+			this.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER,onDragIn);
+			this.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP,onDrop);
+			
+			_ObjectHandles.addEventListener(ObjectChangedEvent.OBJECT_MOVED, ObjectMoved);
+			_ObjectHandles.addEventListener(ObjectChangedEvent.OBJECT_RESIZED, ObjectResized);
+			_ObjectHandles.addEventListener(ObjectChangedEvent.OBJECT_ROTATED, ObjectRotated);
+		}
+
+		private function ObjectMoved(event:ObjectChangedEvent):void{
+			for each (var snippet:SnippetModel in event.relatedObjects)
+			{
+				snippet.Moved();
+			}
+		}
+
+		private function ObjectResized(event:ObjectChangedEvent):void{
+			for each (var snippet:SnippetModel in event.relatedObjects)
+			{
+				snippet.Resized();
+			}
+		}
+
+		private function ObjectRotated(event:ObjectChangedEvent):void{
+			for each (var snippet:SnippetModel in event.relatedObjects)
+			{
+				snippet.Resized();
+			}
+		}
+
+		private function onDragIn(event:NativeDragEvent):void{
+			NativeDragManager.acceptDragDrop(this);
+		}
+
+		private function onDrop(event:NativeDragEvent):void{
+			var dropfiles:Array    = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
+			for each (var file:File in dropfiles){
+				switch (file.extension.toLowerCase()){
+					case "png" :
+					case "jpg" :
+					case "jpeg" :
+					case "gif" :
+					addImage(file, event.localX, event.localY);
+					break;
+					default:
+					Alert.show("Unmapped Extension");
+				}
+			}
+		}
+
+		private function addImage(file:File, xPos:Number, yPos:Number):void
+		{
+			var newPicture:Picture = new Picture();
+			newPicture.model.x = xPos - 100;
+			newPicture.model.y = yPos - 100;
+			
+			_ObjectHandles.registerComponent(newPicture.model, newPicture);
+			addChild(newPicture);
+
+			newPicture.url = file.url;
+		}
+
+		protected function backgroundClick(event:MouseEvent) : void
+		{		
+			if( event.target == this )
+			{
+				_ObjectHandles.selectionManager.clearSelection();
+			}
+		}
+	]]>
+	</mx:Script>				
+</mx:Canvas>
