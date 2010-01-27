@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" backgroundColor="white" backgroundAlpha="0" creationComplete="Initialize()" >
-	<mx:Script source="SnippetMain.as"/>
-</mx:Canvas>
