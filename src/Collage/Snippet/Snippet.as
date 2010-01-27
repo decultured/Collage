@@ -11,19 +11,24 @@ package Collage.Snippet
 		public function Snippet()
 		{
 			super();
-			_model = new SnippetModel();
-			reposition();
+			CreateModel();
 			_model.addEventListener( PropertyChangeEvent.PROPERTY_CHANGE, onModelChange );
+			Reposition();
 		}
 		
 		public function get model():SnippetModel {return _model;}
 
+		protected function CreateModel():void
+		{
+			_model = new SnippetModel();
+		}
+
 		protected function onModelChange( event:PropertyChangeEvent):void
 		{
-			reposition();
+			Reposition();
 		}
 		
-		protected function reposition() : void
+		protected function Reposition() : void
 		{
 			drawFocus(false);
 			x = _model.x;

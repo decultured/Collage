@@ -1,5 +1,6 @@
 package Collage.Snippet
 {
+	import mx.controls.Alert;
 	import com.roguedevelopment.objecthandles.IMoveable;
 	import com.roguedevelopment.objecthandles.IResizeable;
 
@@ -10,5 +11,15 @@ package Collage.Snippet
 		[Bindable] public var height:Number = 50;
 		[Bindable] public var width:Number = 50;
 		[Bindable] public var rotation:Number = 0;
+		
+		public function Resized():void
+		{
+		}
+		public function Moved():void
+		{
+		}
+		public function Rotated():void
+		{
+		}
 	}
 }

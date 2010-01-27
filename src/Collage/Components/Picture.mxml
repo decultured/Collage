@@ -10,6 +10,7 @@
 	<mx:Script>
 		<![CDATA[
 		import mx.controls.Alert;
+		import mx.events.PropertyChangeEvent;
 		
 		private var _URL:String = null;
 		
@@ -20,6 +21,11 @@
 			LoadImage();
 		}
 		
+		protected override function CreateModel():void
+		{
+			_model = new PictureModel();
+		}
+
 		public function Initialize():void
 		{
 			LoadImage();
@@ -31,18 +37,36 @@
 				return;
 			
 			displayImage.load(_URL);
+
+			displayImage.addEventListener(Event.COMPLETE, Complete);
+		}
+		
+		protected override function onModelChange( event:PropertyChangeEvent):void
+		{
+			super.onModelChange(event);
+		}
+
+		private function Complete(event:Event):void
+		{
+			var pictureModel:PictureModel = _model as PictureModel;
+			displayImage.removeEventListener(Event.COMPLETE, Complete);
+
 			if (displayImage.content is Bitmap) {
                 var bitmap:Bitmap = displayImage.content as Bitmap;
                 if (bitmap != null && bitmap.smoothing == false) {
                     bitmap.smoothing = true;
                 }
+			
+				if (bitmap.height && bitmap.width) {
+					pictureModel.aspectRatio = bitmap.width / bitmap.height;
+				}
+				
 				model.width = bitmap.width;
 				model.height = bitmap.height;
-				Alert.show("In here!");
             }
-		}
+		} 
 
 		]]>
     </mx:Script>
-	<mx:Image id="displayImage" horizontalAlign="center" verticalAlign="middle" left="0" right="0" top="0" bottom="0" />
+	<mx:Image id="displayImage" horizontalAlign="left" verticalAlign="top" left="0" right="0" top="0" bottom="0" />
 </clg:Snippet>
