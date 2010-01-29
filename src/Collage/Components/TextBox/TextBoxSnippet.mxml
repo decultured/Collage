@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<clg:Snippet xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.Snippet.*"
+	backgroundColor="0x000000"
+	backgroundAlpha="0"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	creationComplete="Initialize()" >
+	
+	<mx:Script>
+	<![CDATA[
+		import mx.controls.Alert;
+		import mx.events.PropertyChangeEvent;
+		
+		public function get TextBoxModel():TextBoxSnippetModel {return _model as TextBoxSnippetModel;}
+		
+		protected override function CreateModel():void
+		{
+			_model = new TextBoxSnippetModel();
+		}
+
+		public function Initialize():void
+		{
+			displayTextBox.text = TextBoxModel.text;
+		}
+		
+		protected override function onModelChange( event:PropertyChangeEvent):void
+		{
+			if(event && displayTextBox && event.property == "text") {
+				displayTextBox.text = TextBoxModel.text;
+			}
+			super.onModelChange(event);
+		}
+	]]>
+    </mx:Script>
+	<mx:Text id="displayTextBox" text="This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. " left="0" right="0" top="0" bottom="0" />
+</clg:Snippet>

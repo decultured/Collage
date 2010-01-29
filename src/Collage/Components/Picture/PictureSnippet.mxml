@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<clg:Snippet xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.Snippet.*"
+	backgroundColor="0x000000"
+	backgroundAlpha="0.1"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	creationComplete="Initialize()" >
+	
+	<mx:Script>
+		<![CDATA[
+		import mx.controls.Alert;
+		import mx.core.*;
+		import mx.events.PropertyChangeEvent;
+		
+		private var _BitmapData:BitmapData = null;
+				
+		protected override function CreateModel():void
+		{
+			_model = new PictureSnippetModel();
+		}
+
+		public function Initialize():void
+		{
+			LoadImage();
+		}
+		
+		public function LoadImage():void
+		{
+			if (!displayImage)
+				return;
+			
+			var pictureModel:PictureSnippetModel = _model as PictureSnippetModel;
+			if (pictureModel.url) {
+				displayImage.load(pictureModel.url);
+				displayImage.addEventListener(Event.COMPLETE, Complete);
+			} else if(_BitmapData) {
+				var bitmap:BitmapAsset = new BitmapAsset(_BitmapData);
+				displayImage.addEventListener(Event.COMPLETE, Complete);
+				displayImage.source = bitmap;
+				Complete(null);
+			}
+		}
+		
+		protected override function onModelChange( event:PropertyChangeEvent):void
+		{
+			if(event && event.property == "url") {
+				LoadImage();
+			}
+			super.onModelChange(event);
+		}
+
+		private function ChangeBitmap(bitmap:Bitmap):void
+		{
+			/*if (displayImage) {
+				displayImage.content = bitmap;
+
+                if (bitmap != null && bitmap.smoothing == false) {
+                    bitmap.smoothing = true;
+                }
+
+				if (bitmap.height && bitmap.width) {
+					pictureModel.aspectRatio = bitmap.width / bitmap.height;
+				}
+				
+				model.width = bitmap.width;
+				model.height = bitmap.height;
+			}*/
+		}
+
+		private function Complete(event:Event):void
+		{
+			var pictureModel:PictureSnippetModel = _model as PictureSnippetModel;
+			displayImage.removeEventListener(Event.COMPLETE, Complete);
+
+			if (displayImage.content is Bitmap) {
+                var bitmap:Bitmap = displayImage.content as Bitmap;
+                if (bitmap != null && bitmap.smoothing == false) {
+                    bitmap.smoothing = true;
+                }
+				if (bitmap.height && bitmap.width) {
+					pictureModel.aspectRatio = bitmap.width / bitmap.height;
+				}
+				
+				model.width = bitmap.width;
+				model.height = bitmap.height;
+            }
+			super.onModelChange(null);
+		}
+
+		public override function LoadFromData(data:Object):Boolean
+		{
+			if (data is BitmapData)
+			{
+				_BitmapData = data as BitmapData;
+				LoadImage();
+			}
+			return false;
+		}
+
+		]]>
+    </mx:Script>
+	<mx:Image id="displayImage" horizontalAlign="left" verticalAlign="top" top="0" left="0" right="0" bottom="0" />
+</clg:Snippet>

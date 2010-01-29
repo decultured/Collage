@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<clg:Snippet xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.Snippet.*"
+	backgroundColor="0x000000"
+	backgroundAlpha="0.2"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	creationComplete="Initialize()" >
+	
+	<mx:Script>
+		<![CDATA[
+        import mx.collections.ArrayCollection;
+		import mx.events.PropertyChangeEvent;
+
+		protected function Initialize():void
+		{
+			
+		}
+		
+		protected override function onModelChange( event:PropertyChangeEvent):void
+		{
+			super.onModelChange(event);
+		}
+		]]>
+    </mx:Script>
+</clg:Snippet>
