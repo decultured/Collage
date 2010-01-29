@@ -9,22 +9,31 @@
 	>
 	<mx:Script>
 	<![CDATA[
+		import mx.core.*;
 		import mx.controls.Alert;
 		import Collage.Snippet.*;
 		import Collage.Components.*;
+		import Collage.Components.Label.*;
+		import Collage.Components.TextBox.*;
+		import Collage.Components.Picture.*;
+		import Collage.Components.TextBox.*;
+		import Collage.Components.LineChart.*;
 		import com.roguedevelopment.objecthandles.HandleDescription;
 		import com.roguedevelopment.objecthandles.HandleRoles;
 		import com.roguedevelopment.objecthandles.ObjectHandles;
 		import com.roguedevelopment.objecthandles.constraints.MovementConstraint;
 		import com.roguedevelopment.objecthandles.constraints.SizeConstraint;
 		import com.roguedevelopment.objecthandles.ObjectChangedEvent;
+		import com.roguedevelopment.objecthandles.SelectionEvent;
 		import com.roguedevelopment.objecthandles.constraints.SizeConstraint;
 
 		protected var _ObjectHandles:ObjectHandles;
+		protected var _SnippetFactory:SnippetFactory;
 
 		protected function init() : void
 		{
 			_ObjectHandles = new ObjectHandles( this );
+			_SnippetFactory = new SnippetFactory();
 			
 			var sizeConstraint:SizeConstraint = new SizeConstraint();
 			sizeConstraint.minWidth = 20;
@@ -43,9 +52,18 @@
 			this.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER,onDragIn);
 			this.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP,onDrop);
 			
+			_ObjectHandles.addEventListener(SelectionEvent.SELECTED, ObjectSelected);
+			_ObjectHandles.addEventListener(SelectionEvent.ADDED_TO_SELECTION, ObjectSelected);
 			_ObjectHandles.addEventListener(ObjectChangedEvent.OBJECT_MOVED, ObjectMoved);
 			_ObjectHandles.addEventListener(ObjectChangedEvent.OBJECT_RESIZED, ObjectResized);
 			_ObjectHandles.addEventListener(ObjectChangedEvent.OBJECT_ROTATED, ObjectRotated);
+		}
+
+		protected function ObjectSelected(event:SelectionEvent):void {
+			Alert.show("selected");
+			for each (var snippet:SnippetModel in event.targets) {
+				snippet.Moved();
+			}
 		}
 
 		private function ObjectMoved(event:ObjectChangedEvent):void{
@@ -78,7 +96,7 @@
 					case "jpg" :
 					case "jpeg" :
 					case "gif" :
-					AddImage(file, event.localX, event.localY);
+					AddImageFromFile(file, event.localX, event.localY);
 					break;
 					default:
 					Alert.show("Unmapped Extension");
@@ -86,9 +104,9 @@
 			}
 		}
 
-		public function AddImage(file:File, xPos:Number, yPos:Number):void
+		public function AddImageFromFile(file:File, xPos:Number, yPos:Number):void
 		{
-			var newPicture:PictureSnippet = new PictureSnippet();
+			var newPicture:Snippet = _SnippetFactory.CreateNewObject("picture");
 			newPicture.model.x = xPos - 100;
 			newPicture.model.y = yPos - 100;
 
@@ -99,6 +117,31 @@
 				var pictureModel:PictureSnippetModel = newPicture.model as PictureSnippetModel;
 				pictureModel.url = file.url;
 			}
+		}
+
+		public function AddImageFromBitmap(bitmap:BitmapData, xPos:Number, yPos:Number):void
+		{
+			var newPicture:Snippet = _SnippetFactory.CreateNewObject("picture");
+			newPicture.model.x = xPos - 100;
+			newPicture.model.y = yPos - 100;
+
+			_ObjectHandles.registerComponent(newPicture.model, newPicture);
+			addChild(newPicture);
+
+			if (bitmap) {
+				var pictureModel:PictureSnippetModel = newPicture.model as PictureSnippetModel;
+				newPicture.LoadFromData(bitmap);
+			}
+		}
+
+		public function AddLineChart(data:Object, xPos:Number, yPos:Number):void
+		{
+			var newLineChart:LineChartSnippet = new LineChartSnippet();
+			newLineChart.model.x = xPos - 100;
+			newLineChart.model.y = yPos - 100;
+
+			_ObjectHandles.registerComponent(newLineChart.model, newLineChart);
+			addChild(newLineChart);
 		}
 
 		public function AddLabel(text:String, xPos:Number, yPos:Number):void
@@ -119,6 +162,8 @@
 
 			_ObjectHandles.registerComponent(newTextBox.model, newTextBox);
 			addChild(newTextBox);
+			
+			newTextBox.TextBoxModel.text = text;
 		}
 
 		protected function backgroundClick(event:MouseEvent) : void

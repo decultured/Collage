@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?> 
-<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:clg="Collage.*" layout="absolute" applicationComplete="Initialize()" >
+<mx:WindowedApplication 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.*"
+	layout="absolute"
+	applicationComplete="Initialize()"
+    paste="HandlePaste(event)" >
+	
 	<mx:Style> 
 		WindowedApplication
 		{
@@ -11,10 +17,14 @@
 	<![CDATA[
 		import mx.controls.Alert;
 		import mx.events.FlexEvent;
+		import flash.desktop.Clipboard;
+	    import flash.desktop.ClipboardFormats;
+	    import flash.desktop.ClipboardTransferMode;
 
 		private function Initialize():void
 		{
-			stage.addEventListener(KeyboardEvent.KEY_DOWN,HandleKeyDown); 
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown); 
+//			stage.addEventListener(Event.PASTE, HandlePaste); 
 		}
 
 		private function Fullscreen():void
@@ -27,6 +37,16 @@
 		
 		private function HandleKeyDown(event:KeyboardEvent):void
 		{
+//			Alert.show(event.keyCode.toString());
+		}
+		
+		public function HandlePaste(event:Event):void
+		{
+			if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.BITMAP_FORMAT)) {
+				mainEditCanvas.AddImageFromBitmap(Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData, 150, 150);
+			} else if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT)) {
+				mainEditCanvas.AddTextBox(Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String, 150, 150);
+			}
 		}
 	]]>
 	</mx:Script>
@@ -38,11 +58,15 @@
 		</mx:Box>
 	</mx:Canvas>
 	<mx:Canvas top="0" width="150" right="0" bottom="0" backgroundColor="#FFFFFF" backgroundAlpha="1" horizontalScrollPolicy="off" >
-		<mx:Button label="Fullscreen" id="fullscreenButton" fontSize="14" width="100%" click="Fullscreen();" />
+		<mx:VBox top="0" left="0" right="0" bottom="100" horizontalScrollPolicy="off" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10">
+			<mx:Button label="Fullscreen" id="fullscreenButton" fontSize="14" width="100%" click="Fullscreen();" />
+			<mx:Button label="Paste" id="pasteButton" fontSize="14" width="100%" click="HandlePaste(null);" />
+		</mx:VBox>
 		<mx:VBox top="100" left="0" right="0" bottom="0" horizontalScrollPolicy="off" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10">
-			<mx:Button label="Add Image" id="addImageButton" fontSize="14" width="100%" click="mainEditCanvas.AddImage(null, 150, 150);" />
+			<mx:Button label="Add Image" id="addImageButton" fontSize="14" width="100%" click="mainEditCanvas.AddImageFromFile(null, 150, 150);" />
 			<mx:Button label="Add Label" id="addLabelButton" fontSize="14" width="100%" click="mainEditCanvas.AddLabel(null, 150, 150);" />
 			<mx:Button label="Add TextBox" id="addTextBoxButton" fontSize="14" width="100%" click="mainEditCanvas.AddTextBox(null, 150, 150);" />
+			<mx:Button label="Add LineChart" id="addLineChartButton" fontSize="14" width="100%" click="mainEditCanvas.AddLineChart(null, 150, 150);" />
 		</mx:VBox>
 	</mx:Canvas>
 </mx:WindowedApplication>

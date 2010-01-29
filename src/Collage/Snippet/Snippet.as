@@ -1,5 +1,6 @@
 package Collage.Snippet
 {
+	import mx.containers.Box;
 	import mx.containers.Canvas;
 	import mx.events.PropertyChangeEvent;
 	import mx.controls.Alert;
@@ -7,6 +8,7 @@ package Collage.Snippet
 	public class Snippet extends Canvas
 	{
 		protected var _model:SnippetModel;
+		private var _BorderBox:Canvas;
 		
 		public function Snippet()
 		{
@@ -14,6 +16,16 @@ package Collage.Snippet
 			CreateModel();
 			_model.addEventListener( PropertyChangeEvent.PROPERTY_CHANGE, onModelChange );
 			Reposition();
+			_BorderBox = new Canvas();
+			_BorderBox.setStyle("top", 0);
+			_BorderBox.setStyle("left", 0);
+			_BorderBox.setStyle("bottom", 0);
+			_BorderBox.setStyle("right", 0);
+			_BorderBox.setStyle("borderThickness", 2);
+			_BorderBox.setStyle("borderColor", 0xff6600);
+			_BorderBox.setStyle("borderStyle", "solid");
+			_BorderBox.setStyle("borderAlpha", 0.3);
+			addChild(_BorderBox);
 		}
 		
 		public function get model():SnippetModel {return _model;}
@@ -36,6 +48,16 @@ package Collage.Snippet
 			width = _model.width;
 			height = _model.height;
 			rotation = _model.rotation;
+		}
+				
+		public function LoadFromData(data:Object):Boolean
+		{
+			return false;
+		}
+		
+		public function LoadFromXML():Boolean
+		{
+			return false;
 		}
 	}
 }
