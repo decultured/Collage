@@ -60,6 +60,7 @@
 	<mx:Canvas top="0" width="150" right="0" bottom="0" backgroundColor="#FFFFFF" backgroundAlpha="1" horizontalScrollPolicy="off" >
 		<mx:VBox top="0" left="0" right="0" bottom="100" horizontalScrollPolicy="off" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10">
 			<mx:Button label="Fullscreen" id="fullscreenButton" fontSize="14" width="100%" click="Fullscreen();" />
+			<mx:Button label="Save Image" id="saveImageButton" fontSize="14" width="100%" click="mainEditCanvas.SaveImage();" />
 			<mx:Button label="Paste" id="pasteButton" fontSize="14" width="100%" click="HandlePaste(null);" />
 		</mx:VBox>
 		<mx:VBox top="100" left="0" right="0" bottom="0" horizontalScrollPolicy="off" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10">

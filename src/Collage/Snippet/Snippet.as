@@ -14,6 +14,7 @@ package Collage.Snippet
 		{
 			super();
 			CreateModel();
+			_model.owner = this;
 			_model.addEventListener( PropertyChangeEvent.PROPERTY_CHANGE, onModelChange );
 			Reposition();
 			_BorderBox = new Canvas();
