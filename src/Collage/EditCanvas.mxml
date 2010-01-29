@@ -18,21 +18,17 @@
 		import Collage.Components.Picture.*;
 		import Collage.Components.TextBox.*;
 		import Collage.Components.LineChart.*;
-		import com.roguedevelopment.objecthandles.HandleDescription;
-		import com.roguedevelopment.objecthandles.HandleRoles;
-		import com.roguedevelopment.objecthandles.ObjectHandles;
-		import com.roguedevelopment.objecthandles.constraints.MovementConstraint;
-		import com.roguedevelopment.objecthandles.constraints.SizeConstraint;
-		import com.roguedevelopment.objecthandles.ObjectChangedEvent;
-		import com.roguedevelopment.objecthandles.SelectionEvent;
-		import com.roguedevelopment.objecthandles.constraints.SizeConstraint;
+		import com.roguedevelopment.objecthandles.*;
+		import com.roguedevelopment.objecthandles.constraints.*;
 
+		protected var _SelectionManager:ObjectHandlesSelectionManager;
 		protected var _ObjectHandles:ObjectHandles;
 		protected var _SnippetFactory:SnippetFactory;
 
 		protected function init() : void
 		{
-			_ObjectHandles = new ObjectHandles( this );
+			_SelectionManager = new ObjectHandlesSelectionManager();
+			_ObjectHandles = new ObjectHandles(this, _SelectionManager);
 			_SnippetFactory = new SnippetFactory();
 			
 			var sizeConstraint:SizeConstraint = new SizeConstraint();
@@ -52,17 +48,24 @@
 			this.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER,onDragIn);
 			this.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP,onDrop);
 			
-			_ObjectHandles.addEventListener(SelectionEvent.SELECTED, ObjectSelected);
-			_ObjectHandles.addEventListener(SelectionEvent.ADDED_TO_SELECTION, ObjectSelected);
+//			_SelectionManager.addEventListener(SelectionEvent.SELECTED, ObjectSelected);
+			_SelectionManager.addEventListener(SelectionEvent.ADDED_TO_SELECTION, ObjectSelected);
+			_SelectionManager.addEventListener(SelectionEvent.REMOVED_FROM_SELECTION, ObjectDeselected);
+			_SelectionManager.addEventListener(SelectionEvent.SELECTION_CLEARED, ObjectDeselected);
 			_ObjectHandles.addEventListener(ObjectChangedEvent.OBJECT_MOVED, ObjectMoved);
 			_ObjectHandles.addEventListener(ObjectChangedEvent.OBJECT_RESIZED, ObjectResized);
 			_ObjectHandles.addEventListener(ObjectChangedEvent.OBJECT_ROTATED, ObjectRotated);
 		}
 
 		protected function ObjectSelected(event:SelectionEvent):void {
-			Alert.show("selected");
 			for each (var snippet:SnippetModel in event.targets) {
-				snippet.Moved();
+				snippet.selected = true;
+			}
+		}
+
+		protected function ObjectDeselected(event:SelectionEvent):void {
+			for each (var snippet:SnippetModel in event.targets) {
+				snippet.selected = false;
 			}
 		}
 

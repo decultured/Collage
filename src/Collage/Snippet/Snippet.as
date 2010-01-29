@@ -25,6 +25,7 @@ package Collage.Snippet
 			_BorderBox.setStyle("borderColor", 0xff6600);
 			_BorderBox.setStyle("borderStyle", "solid");
 			_BorderBox.setStyle("borderAlpha", 0.3);
+			_BorderBox.visible = false;
 			addChild(_BorderBox);
 		}
 		
@@ -38,6 +39,14 @@ package Collage.Snippet
 		protected function onModelChange( event:PropertyChangeEvent):void
 		{
 			Reposition();
+			
+			if (event && event.property == "selected")
+			{
+				if (_model.selected)
+					_BorderBox.visible = true;
+				else
+					_BorderBox.visible = false;
+			}
 		}
 		
 		protected function Reposition() : void

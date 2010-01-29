@@ -6,6 +6,8 @@ package Collage.Snippet
 
 	public class SnippetModel implements IResizeable, IMoveable
 	{
+		[Bindable] public var selected:Boolean = false;
+
 		[Bindable] public var x:Number = 10;
 		[Bindable] public var y:Number  = 10;
 		[Bindable] public var height:Number = 150;

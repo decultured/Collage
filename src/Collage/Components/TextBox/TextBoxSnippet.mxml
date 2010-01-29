@@ -21,17 +21,19 @@
 
 		public function Initialize():void
 		{
-			displayTextBox.text = TextBoxModel.text;
+			if (TextBoxModel.text)
+				displayTextBox.text = TextBoxModel.text;
 		}
 		
 		protected override function onModelChange( event:PropertyChangeEvent):void
 		{
 			if(event && displayTextBox && event.property == "text") {
-				displayTextBox.text = TextBoxModel.text;
+				if (TextBoxModel.text)
+					displayTextBox.text = TextBoxModel.text;
 			}
 			super.onModelChange(event);
 		}
 	]]>
     </mx:Script>
-	<mx:Text id="displayTextBox" text="This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. " left="0" right="0" top="0" bottom="0" />
+	<mx:Text id="displayTextBox" selectable="false" text="This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. " left="0" right="0" top="0" bottom="0" />
 </clg:Snippet>
