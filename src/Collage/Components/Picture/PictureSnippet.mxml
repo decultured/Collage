@@ -50,6 +50,24 @@
 			super.onModelChange(event);
 		}
 
+		private function ChangeBitmap(bitmap:Bitmap):void
+		{
+			/*if (displayImage) {
+				displayImage.content = bitmap;
+
+                if (bitmap != null && bitmap.smoothing == false) {
+                    bitmap.smoothing = true;
+                }
+
+				if (bitmap.height && bitmap.width) {
+					pictureModel.aspectRatio = bitmap.width / bitmap.height;
+				}
+				
+				model.width = bitmap.width;
+				model.height = bitmap.height;
+			}*/
+		}
+
 		private function Complete(event:Event):void
 		{
 			var pictureModel:PictureSnippetModel = _model as PictureSnippetModel;

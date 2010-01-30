@@ -22,8 +22,6 @@
 		import com.roguedevelopment.objecthandles.*;
 		import com.roguedevelopment.objecthandles.constraints.*;
 
-		public var InpectorWindow:UIComponent;
-
 		protected var _SelectionManager:ObjectHandlesSelectionManager;
 		protected var _ObjectHandles:ObjectHandles;
 		protected var _SnippetFactory:SnippetFactory;
@@ -63,16 +61,11 @@
 		}
 
 		protected function ObjectSelected(event:SelectionEvent):void {
-			for each (var snippetModel:SnippetModel in event.targets) {
-				snippetModel.selected = true;
+			for each (var snippet:SnippetModel in event.targets) {
+				snippet.selected = true;
 				optionsBox.visible = true;
-				_CurrentlySelected = snippetModel;
+				_CurrentlySelected = snippet;
 				PositionOptionsBox();
-				
-				if (_CurrentlySelected.snippet) {
-					var snippet:Snippet = _CurrentlySelected.snippet;
-					snippet.ShowEditor(InpectorWindow);
-				}
 			}
 		}
 
@@ -81,11 +74,6 @@
 				_CurrentlySelected = null;
 				PositionOptionsBox();
 				snippet.selected = false;
-				
-				if (InpectorWindow) {
-					for (var i:uint = 0; i < InpectorWindow.numChildren; i++)
-						InpectorWindow.removeChildAt(0);
-				}
 			}
 		}
 
@@ -133,8 +121,8 @@
 
 		protected function deleteSelected():void
 		{
-			if (_CurrentlySelected && _CurrentlySelected.snippet) {
-				var snippet:Snippet = _CurrentlySelected.snippet;
+			if (_CurrentlySelected && _CurrentlySelected.owner) {
+				var snippet:Snippet = _CurrentlySelected.owner;
 				_ObjectHandles.unregisterComponent(snippet);
 				removeChild(snippet);
 			}
@@ -254,6 +242,7 @@
 	]]>
 	</mx:Script>
 	<mx:HBox id="optionsBox" visible="false" paddingBottom="6" paddingTop="6">
+		<mx:Image id="editButton" source="@Embed('../../assets/icons/application_edit.png')" />
 		<mx:Image id="lockButton" source="@Embed('../../assets/icons/lock.png')" />
 		<mx:Image id="deleteButton" source="@Embed('../../assets/icons/delete.png')" click="deleteSelected()" />
 	</mx:HBox>			
