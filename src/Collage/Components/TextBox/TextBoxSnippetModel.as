@@ -4,7 +4,7 @@ package Collage.Components.TextBox
 	
 	public class TextBoxSnippetModel extends SnippetModel
 	{
-		private var _Text:String = null;
+		private var _Text:String = "Default Text.";
 		
 		[Bindable]
 		public function get text():String {return _Text;}

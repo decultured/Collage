@@ -14,7 +14,7 @@ package Collage.Snippet
 		[Bindable] public var width:Number = 150;
 		[Bindable] public var rotation:Number = 0;
 
-		public var owner:Snippet = null;
+		public var snippet:Snippet = null;
 		
 		public function SnippetModel():void
 		{
