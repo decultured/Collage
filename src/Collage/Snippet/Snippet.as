@@ -1,20 +1,28 @@
 package Collage.Snippet
 {
+	import mx.core.*;  
 	import mx.containers.Box;
 	import mx.containers.Canvas;
+	import mx.managers.*;
 	import mx.events.PropertyChangeEvent;
 	import mx.controls.Alert;
 
 	public class Snippet extends Canvas
 	{
 		protected var _model:SnippetModel;
+		protected var _Editor:SnippetEditor;
 		private var _BorderBox:Canvas;
+		
+		public function get editor():SnippetEditor {return _Editor;}
+		public function set editor(editor:SnippetEditor):void {_Editor = editor;}
+		public function get model():SnippetModel {return _model;}
 		
 		public function Snippet()
 		{
 			super();
 			CreateModel();
-			_model.owner = this;
+			CreateEditor();
+			_model.snippet = this;
 			_model.addEventListener( PropertyChangeEvent.PROPERTY_CHANGE, onModelChange );
 			Reposition();
 			_BorderBox = new Canvas();
@@ -30,11 +38,14 @@ package Collage.Snippet
 			addChild(_BorderBox);
 		}
 		
-		public function get model():SnippetModel {return _model;}
-
 		protected function CreateModel():void
 		{
 			_model = new SnippetModel();
+		}
+
+		protected function CreateEditor():void
+		{
+//			_Editor = new SnippetEditor();
 		}
 
 		protected function onModelChange( event:PropertyChangeEvent):void
@@ -50,6 +61,21 @@ package Collage.Snippet
 			}
 		}
 		
+		public function ShowEditor(parent:UIComponent):void
+		{
+			if (!_Editor || !parent)
+				return;
+			for (var i:uint = 0; i < parent.numChildren; i++)
+				parent.removeChildAt(0);
+				
+			parent.addChild(_Editor);
+		}
+		
+		public function HideEditor():void
+		{
+			
+		}
+
 		protected function Reposition() : void
 		{
 			drawFocus(false);

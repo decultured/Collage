@@ -19,21 +19,27 @@
 			_model = new TextBoxSnippetModel();
 		}
 
+		protected override function CreateEditor():void
+		{
+			_Editor = new TextBoxSnippetEditor();
+			_Editor.snippet = this;
+		}
+
 		public function Initialize():void
 		{
 			if (TextBoxModel.text)
-				displayTextBox.text = TextBoxModel.text;
+				displayTextBox.htmlText = TextBoxModel.text;
 		}
 		
 		protected override function onModelChange( event:PropertyChangeEvent):void
 		{
 			if(event && displayTextBox && event.property == "text") {
 				if (TextBoxModel.text)
-					displayTextBox.text = TextBoxModel.text;
+					displayTextBox.htmlText = TextBoxModel.text;
 			}
 			super.onModelChange(event);
 		}
 	]]>
     </mx:Script>
-	<mx:Text id="displayTextBox" selectable="false" text="This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. This Textbox displays rich text. " left="0" right="0" top="0" bottom="0" />
+	<mx:TextArea id="displayTextBox" editable="false" selectable="false" verticalScrollPolicy="auto" htmlText="Default text?" left="0" right="0" top="0" bottom="0" />
 </clg:Snippet>
