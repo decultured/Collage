@@ -1,10 +1,10 @@
-package Collage
+package Collage.Document
 {
 	import Collage.Clip.*;
-	import Clips.Label.*;
-	import Clips.LineChart.*;
-	import Clips.Picture.*;
-	import Clips.TextBox.*;
+	import Collage.Clips.Label.*;
+	import Collage.Clips.LineChart.*;
+	import Collage.Clips.Picture.*;
+	import Collage.Clips.TextBox.*;
 	
 	public class ClipFactory
 	{
@@ -14,32 +14,30 @@ package Collage
 
 		public static function RegisterClipDefinitions():void
 		{
-			
+			_ClipTypes["image"] = PictureClip;
+			_ClipTypes["label"] = LabelClip;
+			_ClipTypes["textbox"] = TextBoxClip;
+			_ClipTypes["linechart"] = LineChartClip;
 		}
 
 		public static function CreateByType(clipType:String):Clip
 		{
-			var newSnippet:Snippet;
-			return newSnippet;
+			if (clipType == "image")
+				return new PictureClip();
+			else if (clipType == "label")
+				return new LabelClip();
+			else if (clipType == "textbox")
+				return new TextBoxClip();
+			else if (clipType == "linechart")
+				return new LineChartClip();
+			return null;
 		}
 		
-		public static function CreateFromObject(data:Object):Clip
-		{
-			var newSnippet:Snippet;
-			return newSnippet;
-		}
-
-		public static function CreateFromFile(file:File):Clip
-		{
-			var newSnippet:Snippet;
-			return newSnippet;
-		}
-
 		public static function CreateFromXML(description:XML):Clip
 		{
-			var newSnippet:Snippet;
-			return newSnippet;
+//			if (_ClipTypes[clipTypes])
+//				return new _ClipTypes[clipTypes];
+			return null;
 		}
-		
 	}
 }

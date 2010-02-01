@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <mx:WindowedApplication 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:clg="Collage.*"
 	layout="absolute"
 	applicationComplete="Initialize()"
     paste="HandlePaste(event)" >
@@ -15,16 +14,21 @@
 	</mx:Style>
 	<mx:Script>
 	<![CDATA[
+		import Collage.Document.*;
+		import mx.graphics.ImageSnapshot;
 		import mx.controls.Alert;
 		import mx.events.FlexEvent;
 		import flash.desktop.Clipboard;
 	    import flash.desktop.ClipboardFormats;
 	    import flash.desktop.ClipboardTransferMode;
 
+		private var _EditDocument:ClipEditDocument;
+
 		private function Initialize():void
 		{
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown); 
-			mainEditCanvas.InpectorWindow = inspectorWindow;
+
+			_EditDocument = new ClipEditDocument(mainEditCanvas, inspectorWindow, optionsBox);
 		}
 
 		private function Fullscreen():void
@@ -42,28 +46,80 @@
 		public function HandlePaste(event:Event):void
 		{
 			if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.BITMAP_FORMAT)) {
-				mainEditCanvas.AddImageFromBitmap(Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData, 150, 150);
+//				mainEditCanvas.AddImageFromBitmap(Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData, 150, 150);
 			} else if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT)) {
-				mainEditCanvas.AddTextBox(Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String, 150, 150);
+//				mainEditCanvas.AddTextBox(Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String, 150, 150);
 			}
 		}
+		
+		public function SaveImage():void
+		{
+			var file:File = File.desktopDirectory.resolvePath("snapshot.png");
+			file.addEventListener(Event.SELECT, SaveImageEvent);
+			file.browseForSave("Save As");
+		}
+			
+		protected function SaveImageEvent(event:Event):void
+		{
+			var snapshot:ImageSnapshot = ImageSnapshot.captureImage(mainEditCanvas);
+			
+			var newFile:File = event.target as File;
+			var fs:FileStream = new FileStream();
+			try{
+				fs.open(newFile,FileMode.WRITE);
+				fs.writeBytes(snapshot.data, 0, snapshot.data.length); 
+				fs.close();
+			} catch(e:Error){
+				trace(e.message);
+			}
+		}
+		
+		private function onDragIn(event:NativeDragEvent):void{
+			NativeDragManager.acceptDragDrop(this);
+		}
+/*
+		private function onDrop(event:NativeDragEvent):void{
+			var dropfiles:Array    = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
+			for each (var file:File in dropfiles){
+				switch (file.extension.toLowerCase()){
+					case "png" :
+					case "jpg" :
+					case "jpeg" :
+					case "gif" :
+					AddImageFromFile(file, event.localX, event.localY);
+					break;
+					default:
+					Alert.show("Unmapped Extension");
+				}
+			}
+		}
+*/		
 	]]>
 	</mx:Script>
 	<mx:ApplicationControlBar height="40" top="0" left="0" right="0">
 		<mx:Button label="Fullscreen" id="fullscreenButton" click="Fullscreen();" />
-		<mx:Button label="Save Image" id="saveImageButton" click="mainEditCanvas.SaveImage();" />
+		<mx:Button label="Save Image" id="saveImageButton" click="SaveImage();" />
 		<mx:Button label="Paste" id="pasteButton" click="HandlePaste(null);" />
-		<mx:Button label="Add Image" id="addImageButton" click="mainEditCanvas.AddImageFromFile(null, 150, 150);" />
-		<mx:Button label="Add Label" id="addLabelButton" click="mainEditCanvas.AddLabel(null, 150, 150);" />
-		<mx:Button label="Add TextBox" id="addTextBoxButton" click="mainEditCanvas.AddTextBox(null, 150, 150);" />
-		<mx:Button label="Add LineChart" id="addLineChartButton" click="mainEditCanvas.AddLineChart(null, 150, 150);" />
+		<mx:Button label="Add Image" id="addImageButton" click="_EditDocument.AddClipByType('image', new Rectangle(150, 150, 300, 300));" />
+		<mx:Button label="Add Label" id="addLabelButton" click="_EditDocument.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
+		<mx:Button label="Add TextBox" id="addTextBoxButton" click="_EditDocument.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
+		<mx:Button label="Add LineChart" id="addLineChartButton" click="_EditDocument.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
 	</mx:ApplicationControlBar>
     <mx:HDividedBox top="40" left="0" right="0" bottom="0">
         <mx:Canvas label="Canvas 1" width="100%" height="100%" color="0x323232" backgroundColor="#ACACAC">
 			<mx:Box top="0" left="0" right="0" bottom="0" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10"  horizontalAlign="center" verticalAlign="middle">
-				<clg:EditCanvas id="mainEditCanvas" width="1024" height="768" dropShadowEnabled="true">
-
-				</clg:EditCanvas>
+				<mx:Canvas id="mainEditCanvas" 
+					width="1024" height="768" 
+					dropShadowEnabled="true" 
+					click="_EditDocument.BackgroundClick(event);" 
+					backgroundColor="#FFFFFF" backgroundAlpha="1" borderThickness="0"
+					horizontalScrollPolicy="off"
+					verticalScrollPolicy="off" >
+					<mx:HBox id="optionsBox" visible="false" paddingBottom="6" paddingTop="6">
+						<mx:Image id="lockButton" source="@Embed('../assets/icons/lock.png')" />
+						<mx:Image id="deleteButton" source="@Embed('../assets/icons/delete.png')" click="_EditDocument.deleteSelected()" />
+					</mx:HBox>			
+				</mx:Canvas>
 			</mx:Box>
         </mx:Canvas>
         <mx:Box id="inspectorWindow" width="250" height="100%" backgroundColor="#FFFFFF" backgroundAlpha="1" horizontalScrollPolicy="off" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5"  >

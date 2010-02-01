@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<clg:Snippet xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:clg="Collage.Snippet.*"
+<clg:ClipView xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.Clip.*"
 	backgroundColor="0x000000"
 	backgroundAlpha="0"
 	horizontalScrollPolicy="off"
@@ -12,34 +12,25 @@
 		import mx.controls.Alert;
 		import mx.events.PropertyChangeEvent;
 		
-		public function get TextBoxModel():TextBoxSnippetModel {return _model as TextBoxSnippetModel;}
-		
-		protected override function CreateModel():void
-		{
-			_model = new TextBoxSnippetModel();
-		}
-
-		protected override function CreateEditor():void
-		{
-			_Editor = new TextBoxSnippetEditor();
-			_Editor.snippet = this;
-		}
-
 		public function Initialize():void
 		{
-			if (TextBoxModel.text)
-				displayTextBox.htmlText = TextBoxModel.text;
+			if (_Model) {
+				var textBoxClip:TextBoxClip = _Model as TextBoxClip;
+				displayTextBox.htmlText = textBoxClip.text;
+			}
 		}
 		
 		protected override function onModelChange( event:PropertyChangeEvent):void
 		{
 			if(event && displayTextBox && event.property == "text") {
-				if (TextBoxModel.text)
-					displayTextBox.htmlText = TextBoxModel.text;
+				if (_Model) {
+					var textBoxClip:TextBoxClip = _Model as TextBoxClip;
+					displayTextBox.htmlText = textBoxClip.text;
+				}
 			}
 			super.onModelChange(event);
 		}
 	]]>
     </mx:Script>
 	<mx:TextArea id="displayTextBox" editable="false" selectable="false" verticalScrollPolicy="auto" htmlText="Default text?" left="0" right="0" top="0" bottom="0" />
-</clg:Snippet>
+</clg:ClipView>

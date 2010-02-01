@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<clg:Snippet xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:clg="Collage.Snippet.*"
+<clg:ClipView xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.Clip.*"
 	backgroundColor="0x000000"
 	backgroundAlpha="0.1"
 	horizontalScrollPolicy="off"
@@ -15,11 +15,6 @@
 		
 		private var _BitmapData:BitmapData = null;
 				
-		protected override function CreateModel():void
-		{
-			_model = new PictureSnippetModel();
-		}
-
 		public function Initialize():void
 		{
 			LoadImage();
@@ -30,7 +25,7 @@
 			if (!displayImage)
 				return;
 			
-			var pictureModel:PictureSnippetModel = _model as PictureSnippetModel;
+			var pictureModel:PictureClip = _Model as PictureClip;
 			if (pictureModel.url) {
 				displayImage.load(pictureModel.url);
 				displayImage.addEventListener(Event.COMPLETE, Complete);
@@ -52,7 +47,7 @@
 
 		private function Complete(event:Event):void
 		{
-			var pictureModel:PictureSnippetModel = _model as PictureSnippetModel;
+			var pictureModel:PictureClip = _Model as PictureClip;
 			displayImage.removeEventListener(Event.COMPLETE, Complete);
 
 			if (displayImage.content is Bitmap) {
@@ -83,4 +78,4 @@
 		]]>
     </mx:Script>
 	<mx:Image id="displayImage" horizontalAlign="left" verticalAlign="top" top="0" left="0" right="0" bottom="0" />
-</clg:Snippet>
+</clg:ClipView>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<clg:Snippet xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:clg="Collage.Snippet.*"
+<clg:ClipView xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.Clip.*"
 	backgroundColor="0x000000"
 	backgroundAlpha="0"
 	horizontalScrollPolicy="off"
@@ -13,31 +13,20 @@
 		import mx.events.PropertyChangeEvent;
 		import mx.events.FlexEvent;
 		
-		protected override function CreateModel():void
-		{
-			_model = new LabelSnippetModel();
-		}
-
 		public function Initialize():void
 		{
 			onModelChange(null);
 		}
-		
-		protected override function CreateEditor():void
-		{
-			_Editor = new LabelSnippetEditor();
-			_Editor.snippet = this;
-		}
 
 		protected override function onModelChange( event:PropertyChangeEvent):void
 		{
-			var labelModel:LabelSnippetModel = _model as LabelSnippetModel;
+			var labelModel:LabelClip = _Model as LabelClip;
 			
 			if (displayLabel) {
 				displayLabel.text = labelModel.text;
 				displayLabel.validateNow();
-				_model.width = displayLabel.textWidth + 10;
-				_model.height = displayLabel.textHeight;
+				_Model.width = displayLabel.textWidth + 10;
+				_Model.height = displayLabel.textHeight;
 			}
 			
 			super.onModelChange(event);
@@ -45,4 +34,4 @@
 	]]>
     </mx:Script>
 	<mx:Label id="displayLabel" text="This Label displays plain text." fontSize="18" textAlign="center" left="0" right="0" top="0" bottom="0" />
-</clg:Snippet>
+</clg:ClipView>

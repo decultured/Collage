@@ -9,179 +9,7 @@
 	>
 	<mx:Script>
 	<![CDATA[
-		import mx.core.*;
-		import mx.controls.Alert;
-		import Collage.Snippet.*;
-		import Collage.Components.*;
-		import mx.graphics.*;
-		import Collage.Components.Label.*;
-		import Collage.Components.TextBox.*;
-		import Collage.Components.Picture.*;
-		import Collage.Components.TextBox.*;
-		import Collage.Components.LineChart.*;
-		import com.roguedevelopment.objecthandles.*;
-		import com.roguedevelopment.objecthandles.constraints.*;
-
-		public var InpectorWindow:UIComponent;
-
-		protected var _SelectionManager:ObjectHandlesSelectionManager;
-		protected var _ObjectHandles:ObjectHandles;
-		protected var _SnippetFactory:SnippetFactory;
-		protected var _CurrentlySelected:SnippetModel;
-
-		protected function init() : void
-		{
-			_SelectionManager = new ObjectHandlesSelectionManager();
-			_ObjectHandles = new ObjectHandles(this, _SelectionManager);
-			_SnippetFactory = new SnippetFactory();
-			
-			var sizeConstraint:SizeConstraint = new SizeConstraint();
-			sizeConstraint.minWidth = 20;
-			sizeConstraint.minHeight = 20;
-			sizeConstraint.maxWidth = this.width;
-			sizeConstraint.maxHeight = this.height;
-			_ObjectHandles.constraints.push(sizeConstraint);							
-
-			var moveConstraint:MovementConstraint = new MovementConstraint();
-			moveConstraint.minX = 0;
-			moveConstraint.minY = 0;
-			moveConstraint.maxX = this.width;
-			moveConstraint.maxY = this.height;
-			_ObjectHandles.constraints.push(moveConstraint);							
-			
-			this.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER,onDragIn);
-			this.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP,onDrop);
-			
-//			_SelectionManager.addEventListener(SelectionEvent.SELECTED, ObjectSelected);
-			_SelectionManager.addEventListener(SelectionEvent.ADDED_TO_SELECTION, ObjectSelected);
-			_SelectionManager.addEventListener(SelectionEvent.REMOVED_FROM_SELECTION, ObjectDeselected);
-			_SelectionManager.addEventListener(SelectionEvent.SELECTION_CLEARED, ObjectDeselected);
-			_ObjectHandles.addEventListener(ObjectChangedEvent.OBJECT_MOVED, ObjectMoved);
-			_ObjectHandles.addEventListener(ObjectChangedEvent.OBJECT_MOVING, ObjectMoving);
-			_ObjectHandles.addEventListener(ObjectChangedEvent.OBJECT_RESIZED, ObjectResized);
-			_ObjectHandles.addEventListener(ObjectChangedEvent.OBJECT_ROTATED, ObjectRotated);
-		}
-
-		protected function ObjectSelected(event:SelectionEvent):void {
-			for each (var snippetModel:SnippetModel in event.targets) {
-				snippetModel.selected = true;
-				optionsBox.visible = true;
-				_CurrentlySelected = snippetModel;
-				PositionOptionsBox();
-				
-				if (_CurrentlySelected.snippet) {
-					var snippet:Snippet = _CurrentlySelected.snippet;
-					snippet.ShowEditor(InpectorWindow);
-				}
-			}
-		}
-
-		protected function ObjectDeselected(event:SelectionEvent):void {
-			for each (var snippet:SnippetModel in event.targets) {
-				_CurrentlySelected = null;
-				PositionOptionsBox();
-				snippet.selected = false;
-				
-				if (InpectorWindow) {
-					for (var i:uint = 0; i < InpectorWindow.numChildren; i++)
-						InpectorWindow.removeChildAt(0);
-				}
-			}
-		}
-
-		private function ObjectMoved(event:ObjectChangedEvent):void{
-			for each (var snippet:SnippetModel in event.relatedObjects) {
-				snippet.Moved();
-				PositionOptionsBox();
-			}
-		}
-
-		private function ObjectMoving(event:ObjectChangedEvent):void{
-			for each (var snippet:SnippetModel in event.relatedObjects) {
-				PositionOptionsBox();
-			}
-		}
-
-		private function ObjectResized(event:ObjectChangedEvent):void{
-			for each (var snippet:SnippetModel in event.relatedObjects) {
-				snippet.Resized();
-			}
-		}
-
-		private function ObjectRotated(event:ObjectChangedEvent):void{
-			for each (var snippet:SnippetModel in event.relatedObjects)	{
-				snippet.Resized();
-			}
-		}
-
-		protected function PositionOptionsBox():void
-		{
-			if (!_CurrentlySelected) {
-				optionsBox.visible = false;
-				return;
-			}
-			
-			if (_CurrentlySelected.y < 30) {
-				optionsBox.y = _CurrentlySelected.y + _CurrentlySelected.height;
-				optionsBox.x = _CurrentlySelected.x + _CurrentlySelected.width - optionsBox.width;
-			} else {
-				optionsBox.y = _CurrentlySelected.y - optionsBox.height;
-				optionsBox.x = _CurrentlySelected.x + _CurrentlySelected.width - optionsBox.width;
-			}
-			
-		}
-
-		protected function deleteSelected():void
-		{
-			if (_CurrentlySelected && _CurrentlySelected.snippet) {
-				var snippet:Snippet = _CurrentlySelected.snippet;
-				_ObjectHandles.unregisterComponent(snippet);
-				removeChild(snippet);
-			}
-		}
-		
-		public function SaveImage():void
-		{
-			var file:File = File.desktopDirectory.resolvePath("snapshot.png");
-			file.addEventListener(Event.SELECT, SaveImageEvent);
-			file.browseForSave("Save As");
-		}
-			
-		protected function SaveImageEvent(event:Event):void
-		{
-			var snapshot:ImageSnapshot = ImageSnapshot.captureImage(this);
-			
-			var newFile:File = event.target as File;
-			var fs:FileStream = new FileStream();
-			try{
-				fs.open(newFile,FileMode.WRITE);
-				fs.writeBytes(snapshot.data, 0, snapshot.data.length); 
-				fs.close();
-			} catch(e:Error){
-				trace(e.message);
-			}
-		}
-		
-		private function onDragIn(event:NativeDragEvent):void{
-			NativeDragManager.acceptDragDrop(this);
-		}
-
-		private function onDrop(event:NativeDragEvent):void{
-			var dropfiles:Array    = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
-			for each (var file:File in dropfiles){
-				switch (file.extension.toLowerCase()){
-					case "png" :
-					case "jpg" :
-					case "jpeg" :
-					case "gif" :
-					AddImageFromFile(file, event.localX, event.localY);
-					break;
-					default:
-					Alert.show("Unmapped Extension");
-				}
-			}
-		}
-
+/*
 		public function AddImageFromFile(file:File, xPos:Number, yPos:Number):void
 		{
 			var newPicture:Snippet = _SnippetFactory.CreateNewObject("picture");
@@ -243,7 +71,6 @@
 			
 			newTextBox.TextBoxModel.text = text;
 		}
-
 		protected function backgroundClick(event:MouseEvent) : void
 		{		
 			if( event.target == this )
@@ -251,10 +78,10 @@
 				_ObjectHandles.selectionManager.clearSelection();
 			}
 		}
-	]]>
+		<mx:HBox id="optionsBox" visible="false" paddingBottom="6" paddingTop="6">
+			<mx:Image id="lockButton" source="@Embed('../../assets/icons/lock.png')" />
+			<mx:Image id="deleteButton" source="@Embed('../../assets/icons/delete.png')" click="deleteSelected()" />
+		</mx:HBox>			
+*/	]]>
 	</mx:Script>
-	<mx:HBox id="optionsBox" visible="false" paddingBottom="6" paddingTop="6">
-		<mx:Image id="lockButton" source="@Embed('../../assets/icons/lock.png')" />
-		<mx:Image id="deleteButton" source="@Embed('../../assets/icons/delete.png')" click="deleteSelected()" />
-	</mx:HBox>			
 </mx:Canvas>

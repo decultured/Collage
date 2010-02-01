@@ -1,8 +1,8 @@
-package Collage.Components.TextBox
+package Collage.Clips.TextBox
 {
-	import Collage.Snippet.*;
+	import Collage.Clip.*;
 	
-	public class TextBoxSnippetModel extends SnippetModel
+	public class TextBoxClip extends Clip
 	{
 		private var _Text:String = "Default Text.";
 		
@@ -12,5 +12,24 @@ package Collage.Components.TextBox
 		{
 			_Text = newText;
 		}
+
+		public function TextBoxClip()
+		{
+			super();
+			CreateView();
+			CreateEditor();
+		}
+
+		protected override function CreateView():void
+		{
+			_View = new TextBoxClipView();
+			_View.model = this;
+		}
+
+		protected override function CreateEditor():void
+		{
+			_Editor = new TextBoxClipEditor();
+		}
+
 	}
 }

@@ -1,4 +1,4 @@
-package Collage.Snippet
+package Collage.Clip
 {
 	import mx.controls.Alert;
 	import com.roguedevelopment.objecthandles.IMoveable;
@@ -7,6 +7,7 @@ package Collage.Snippet
 	public class Clip implements IResizeable, IMoveable
 	{
 		private var _UID:String;
+		[Bindable] public var selected:Boolean = false;
 
 		[Bindable] public var x:Number = 10;
 		[Bindable] public var y:Number  = 10;
@@ -14,21 +15,33 @@ package Collage.Snippet
 		[Bindable] public var width:Number = 150;
 		[Bindable] public var rotation:Number = 0;
 		
-		private var _Editor:ClipEditor;
-		private var _View:ClipView;
+		protected var _Editor:ClipEditor;
+		protected var _View:ClipView;
 
-       	public function get uid():String {return _uid;}
+       	public function get uid():String
+		{
+			if (!_UID)
+				_UID = UIDUtil.createUID();
+			return _UID;
+		}
+		public function set uid(uid:String):void {_UID = uid;}
 		public function get editor():ClipEditor {return _Editor;}
 		public function get view():ClipView {return _View;}
 
-		// These should be overidden in child classes
-		public static function get TypeName():String {return "Clip";}
-		public static function get FileAssociations():Array {return null;}
-		public static function get ObjectAssociations():Array {return null;}
-
-		public function ClipModel():void
+		public function Clip():void
 		{
-			_uid = UIDUtil.createUID();
+		}
+		
+		protected function CreateView():void
+		{
+			_View = new ClipView();
+			_View.model = this;
+		}
+
+		protected function CreateEditor():void
+		{
+			_Editor = new ClipEditor();
+			_Editor.model = this;
 		}
 
 		public function Resized():void

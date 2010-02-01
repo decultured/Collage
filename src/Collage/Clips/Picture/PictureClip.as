@@ -1,9 +1,27 @@
-package Collage.Components.Picture
+package Collage.Clips.Picture
 {
-	import Collage.Snippet.*;
+	import Collage.Clip.*;
 	
-	public class PictureSnippetModel extends SnippetModel
+	public class PictureClip extends Clip
 	{
+		public function PictureClip()
+		{
+			super();
+			CreateView();
+			CreateEditor();
+		}
+		
+		protected override function CreateView():void
+		{
+			_View = new PictureClipView();
+			_View.model = this;
+		}
+
+		protected override function CreateEditor():void
+		{
+//			_Editor = new ClipEditor(this);
+		}
+
 		[Bindable] public var aspectRatio:Number = 0;
 		private var _URL:String = null;
 		

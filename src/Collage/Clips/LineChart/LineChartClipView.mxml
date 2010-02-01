@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<clg:Snippet xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:clg="Collage.Snippet.*"
+<clg:ClipView xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.Clip.*"
 	backgroundColor="0x000000"
 	backgroundAlpha="0.2"
 	horizontalScrollPolicy="off"
@@ -23,4 +23,4 @@
 		}
 		]]>
     </mx:Script>
-</clg:Snippet>
+</clg:ClipView>
