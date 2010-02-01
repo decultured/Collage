@@ -77,23 +77,22 @@
 		private function onDragIn(event:NativeDragEvent):void{
 			NativeDragManager.acceptDragDrop(this);
 		}
-/*
+
 		private function onDrop(event:NativeDragEvent):void{
-			var dropfiles:Array    = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
+			var dropfiles:Array = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
 			for each (var file:File in dropfiles){
 				switch (file.extension.toLowerCase()){
 					case "png" :
 					case "jpg" :
 					case "jpeg" :
 					case "gif" :
-					AddImageFromFile(file, event.localX, event.localY);
+					//AddImageFromFile(file, event.localX, event.localY);
 					break;
 					default:
 					Alert.show("Unmapped Extension");
 				}
 			}
 		}
-*/		
 	]]>
 	</mx:Script>
 	<mx:ApplicationControlBar height="40" top="0" left="0" right="0" paddingTop="3" paddingBottom="3" >

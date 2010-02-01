@@ -27,12 +27,37 @@
 			}
 		}
 		
+		private function LoadFromFile():void
+		{
+			if (_Model) {
+				var pictureModel:PictureClip = _Model as PictureClip;
+				pictureModel.url = src.text;
+			}
+		}
 		
+		public function SaveImage():void
+		{
+			var file:File = File.desktopDirectory;
+			var imgFilter:FileFilter = new FileFilter("Image", "*.png;*.jpg;*.jpeg;*.gif;*.svg");
+			file.addEventListener(Event.SELECT, LoadImageEvent);
+			file.browseForOpen("Open", [txtFilter]);
+		}
+			
+		protected function LoadImageEvent(event:Event):void
+		{
+			var newFile:File = event.target as File;
+			var fs:FileStream = new FileStream();
+			try{
+				fs.open(newFile,FileMode.WRITE);
+				fs.writeBytes(snapshot.data, 0, snapshot.data.length); 
+				fs.close();
+			} catch(e:Error){
+				trace(e.message);
+			}
+		}
 	]]>
     </mx:Script>
 	<mx:Label id="src" text="Not loaded... " color="0x323232" width="100%" />
 	<mx:HRule width="100%" />
-	<mx:Button id="loadImageButton" label="Load from file" fontSize="14" width="100%"/>
-	<mx:HRule width="100%" />
-	<mx:Button id="loadImageFromURL" label="Load from URL" fontSize="14" width="100%"/>
+	<mx:Button id="loadImageButton" label="Load from file" fontSize="14" width="100%" click="LoadFromFile()" />
 </clg:ClipEditor>
