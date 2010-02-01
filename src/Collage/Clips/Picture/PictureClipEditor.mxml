@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<clg:ClipEditor xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.Clip.*"
+	backgroundColor="0x000000"
+	backgroundAlpha="0"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	creationComplete="Initialize()" 
+	width="100%" >
+	
+	<mx:Script>
+	<![CDATA[
+		private function Initialize():void
+		{
+			if (_Model) {
+				var pictureModel:PictureClip = _Model as PictureClip;
+				if (src.text)
+					src.text = pictureModel.url;
+			}
+		}
+		
+		private function FileChanged():void
+		{
+			if (_Model) {
+				var pictureModel:PictureClip = _Model as PictureClip;
+				pictureModel.url = src.text;
+			}
+		}
+		
+		
+	]]>
+    </mx:Script>
+	<mx:Label id="src" text="Not loaded... " color="0x323232" width="100%" />
+	<mx:HRule width="100%" />
+	<mx:Button id="loadImageButton" label="Load from file" fontSize="14" width="100%"/>
+	<mx:HRule width="100%" />
+	<mx:Button id="loadImageFromURL" label="Load from URL" fontSize="14" width="100%"/>
+</clg:ClipEditor>

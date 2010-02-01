@@ -15,6 +15,10 @@ package Collage.Clip
 		[Bindable] public var width:Number = 150;
 		[Bindable] public var rotation:Number = 0;
 		
+		public var verticalSizable:Boolean = true;
+		public var horizontalSizable:Boolean = true;
+		public var rotatable:Boolean = true;
+		
 		protected var _Editor:ClipEditor;
 		protected var _View:ClipView;
 

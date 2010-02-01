@@ -32,5 +32,5 @@
 		}
 	]]>
     </mx:Script>
-	<mx:TextArea id="displayTextBox" editable="false" selectable="false" verticalScrollPolicy="auto" htmlText="Default text?" left="0" right="0" top="0" bottom="0" />
+	<mx:TextArea id="displayTextBox" editable="false" selectable="false" verticalScrollPolicy="auto" htmlText="Default text?" left="0" right="0" top="0" bottom="0" backgroundAlpha="0" backgroundColor="0x000000" borderStyle="none" />
 </clg:ClipView>

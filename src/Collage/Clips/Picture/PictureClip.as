@@ -4,6 +4,16 @@ package Collage.Clips.Picture
 	
 	public class PictureClip extends Clip
 	{
+		[Bindable] public var aspectRatio:Number = 0;
+		private var _URL:String = null;
+		
+		[Bindable]
+		public function get url():String {return _URL;}
+		public function set url(url:String):void
+		{
+			_URL = url;
+		}
+		
 		public function PictureClip()
 		{
 			super();
@@ -19,19 +29,10 @@ package Collage.Clips.Picture
 
 		protected override function CreateEditor():void
 		{
-//			_Editor = new ClipEditor(this);
+			_Editor = new PictureClipEditor();
+			_Editor.model = this;
 		}
 
-		[Bindable] public var aspectRatio:Number = 0;
-		private var _URL:String = null;
-		
-		[Bindable]
-		public function get url():String {return _URL;}
-		public function set url(url:String):void
-		{
-			_URL = url;
-		}
-		
 		public override function Resized():void
 		{
 			if (!height || !aspectRatio)

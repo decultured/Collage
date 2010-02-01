@@ -96,14 +96,15 @@
 */		
 	]]>
 	</mx:Script>
-	<mx:ApplicationControlBar height="40" top="0" left="0" right="0">
-		<mx:Button label="Fullscreen" id="fullscreenButton" click="Fullscreen();" />
-		<mx:Button label="Save Image" id="saveImageButton" click="SaveImage();" />
-		<mx:Button label="Paste" id="pasteButton" click="HandlePaste(null);" />
-		<mx:Button label="Add Image" id="addImageButton" click="_EditDocument.AddClipByType('image', new Rectangle(150, 150, 300, 300));" />
-		<mx:Button label="Add Label" id="addLabelButton" click="_EditDocument.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
-		<mx:Button label="Add TextBox" id="addTextBoxButton" click="_EditDocument.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
-		<mx:Button label="Add LineChart" id="addLineChartButton" click="_EditDocument.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
+	<mx:ApplicationControlBar height="40" top="0" left="0" right="0" paddingTop="3" paddingBottom="3" >
+		<mx:Image id="fullscreenBtn" source="@Embed('../assets/icons/fullscreen.png')" width="32" height="32" click="Fullscreen();" />
+		<mx:Image id="saveImageBtn" source="@Embed('../assets/icons/save_image.png')" width="32" height="32" click="SaveImage();" />
+		<mx:Image id="PasteBtn" source="@Embed('../assets/icons/paste.png')" width="32" height="32" click="HandlePaste(null);" />
+		<mx:VRule height="32" />
+		<mx:Image id="addImageBtn" source="@Embed('../assets/icons/picture.png')" width="32" height="32" click="_EditDocument.AddClipByType('image', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addLabelBtn" source="@Embed('../assets/icons/label.png')" width="32" height="32" click="_EditDocument.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addTextBoxBtn" source="@Embed('../assets/icons/text_box.png')" width="32" height="32" click="_EditDocument.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addLineChartBtn" source="@Embed('../assets/icons/line_chart.png')" width="32" height="32" click="_EditDocument.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
 	</mx:ApplicationControlBar>
     <mx:HDividedBox top="40" left="0" right="0" bottom="0">
         <mx:Canvas label="Canvas 1" width="100%" height="100%" color="0x323232" backgroundColor="#ACACAC">

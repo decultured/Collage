@@ -15,6 +15,9 @@ package Collage.Clips.Label
 
 		public function LabelClip()
 		{
+			verticalSizable = false;
+			horizontalSizable = false;
+			rotatable = false;
 			super();
 			CreateView();
 			CreateEditor();

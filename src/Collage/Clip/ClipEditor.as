@@ -1,10 +1,10 @@
 package Collage.Clip
 {
-	import mx.containers.Canvas;
+	import mx.containers.Box;
 	import mx.events.*;
 	import mx.controls.Alert;
 
-	public class ClipEditor extends Canvas
+	public class ClipEditor extends Box
 	{
 		protected var _Model:Clip;
 		

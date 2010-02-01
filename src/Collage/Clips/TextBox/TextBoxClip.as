@@ -15,6 +15,7 @@ package Collage.Clips.TextBox
 
 		public function TextBoxClip()
 		{
+			rotatable = false;
 			super();
 			CreateView();
 			CreateEditor();
