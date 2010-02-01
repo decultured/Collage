@@ -50,8 +50,7 @@ package Collage.Clip
 					_BorderBox.visible = false;
 			}
 		}
-/*		
-*/
+
 		protected function Reposition() : void
 		{
 			drawFocus(false);

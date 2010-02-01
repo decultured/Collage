@@ -1,7 +1,5 @@
 package Collage.Document
 {
-	import mx.controls.Alert;
-	import flash.utils.*;
 	import flash.geom.*;
 	import Collage.Clip.*;
 	import mx.core.UIComponent;
@@ -31,7 +29,6 @@ package Collage.Document
 			if (_ViewPane && newClip && !_Clips[newClip.uid]) {
 				_Clips[newClip.uid] = newClip;
 				_ViewPane.addChild(newClip.view);
-				Alert.show("Clip Type: " + flash.utils.getQualifiedClassName(newClip.view));
 				return true;
 			}
 			return false;

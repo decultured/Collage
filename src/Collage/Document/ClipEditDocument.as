@@ -1,8 +1,5 @@
 package Collage.Document
 {
-	import mx.controls.Alert;
-	import flash.utils.*;
-	
 	import flash.geom.*;
 	import Collage.Clip.*;
 	import flash.events.*;
@@ -87,8 +84,6 @@ package Collage.Document
 		public override function AddClipByType(clipType:String, position:Rectangle = null):Clip
 		{
 			var newClip:Clip = super.AddClipByType(clipType);
-			
-//			Alert.show("Clip Type: " + flash.utils.getQualifiedClassName(newClip.view));
 			
 			if (newClip)
 				_ObjectHandles.registerComponent(newClip, newClip.view);

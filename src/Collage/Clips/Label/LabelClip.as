@@ -29,6 +29,7 @@ package Collage.Clips.Label
 		protected override function CreateEditor():void
 		{
 			_Editor = new LabelClipEditor();
+			_Editor.model = this;
 		}
 	}
 }

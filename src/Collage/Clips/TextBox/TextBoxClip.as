@@ -29,6 +29,7 @@ package Collage.Clips.TextBox
 		protected override function CreateEditor():void
 		{
 			_Editor = new TextBoxClipEditor();
+			_Editor.model = this;
 		}
 
 	}

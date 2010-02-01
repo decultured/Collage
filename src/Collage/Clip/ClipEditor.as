@@ -13,7 +13,6 @@ package Collage.Clip
 		
 		public function ClipEditor()
 		{
-			
 		}
 	}
 }
