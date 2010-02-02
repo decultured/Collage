@@ -3,7 +3,9 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	layout="absolute"
 	applicationComplete="Initialize()"
-    paste="HandlePaste(event)" >
+    paste="HandlePaste(event)"
+	nativeDragEnter="onDragIn(event)" 
+	nativeDragDrop="onDrop(event)" >
 	
 	<mx:Style> 
 		WindowedApplication
@@ -15,6 +17,7 @@
 	<mx:Script>
 	<![CDATA[
 		import Collage.Document.*;
+		import Collage.Clips.Picture.*;
 		import mx.graphics.ImageSnapshot;
 		import mx.controls.Alert;
 		import mx.events.FlexEvent;
@@ -81,15 +84,13 @@
 		private function onDrop(event:NativeDragEvent):void{
 			var dropfiles:Array = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
 			for each (var file:File in dropfiles){
-				switch (file.extension.toLowerCase()){
-					case "png" :
-					case "jpg" :
-					case "jpeg" :
-					case "gif" :
-					//AddImageFromFile(file, event.localX, event.localY);
-					break;
-					default:
-					Alert.show("Unmapped Extension");
+				var ext:String = file.extension.toLowerCase();
+				
+				if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "gif") {
+					var newClip:PictureClip = _EditDocument.AddClipByType("image") as PictureClip;
+					newClip.url = file.url;
+				} else {
+					//Alert.show("Unmapped Extension");
 				}
 			}
 		}

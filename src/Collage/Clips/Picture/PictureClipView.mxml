@@ -55,7 +55,6 @@
 		{
 			_Loaded = true;
 
-			Alert.show(getQualifiedClassName(displayImage.content));
 			var pictureModel:PictureClip = _Model as PictureClip;
 			displayImage.removeEventListener(Event.COMPLETE, Complete);
 
