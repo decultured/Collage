@@ -27,33 +27,19 @@
 			}
 		}
 		
-		private function LoadFromFile():void
-		{
-			if (_Model) {
-				var pictureModel:PictureClip = _Model as PictureClip;
-				pictureModel.url = src.text;
-			}
-		}
-		
-		public function SaveImage():void
+		public function LoadFromFile():void
 		{
 			var file:File = File.desktopDirectory;
 			var imgFilter:FileFilter = new FileFilter("Image", "*.png;*.jpg;*.jpeg;*.gif;*.svg");
 			file.addEventListener(Event.SELECT, LoadImageEvent);
-			file.browseForOpen("Open", [txtFilter]);
+			file.browseForOpen("Open", [imgFilter]);
 		}
 			
 		protected function LoadImageEvent(event:Event):void
 		{
 			var newFile:File = event.target as File;
-			var fs:FileStream = new FileStream();
-			try{
-				fs.open(newFile,FileMode.WRITE);
-				fs.writeBytes(snapshot.data, 0, snapshot.data.length); 
-				fs.close();
-			} catch(e:Error){
-				trace(e.message);
-			}
+			var pictureModel:PictureClip = _Model as PictureClip;
+			pictureModel.url = newFile.url; 
 		}
 	]]>
     </mx:Script>

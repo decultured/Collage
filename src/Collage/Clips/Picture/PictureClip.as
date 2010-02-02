@@ -46,5 +46,11 @@ package Collage.Clips.Picture
 				height = width / aspectRatio;
 			}
 		}
+		
+		public override function LoadFromData(data:Object):Boolean
+		{
+			var view:PictureClipView = _View as PictureClipView;
+			return view.LoadFromData(data);
+		}
 	}
 }

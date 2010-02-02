@@ -46,9 +46,9 @@
 		public function HandlePaste(event:Event):void
 		{
 			if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.BITMAP_FORMAT)) {
-//				mainEditCanvas.AddImageFromBitmap(Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData, 150, 150);
+				_EditDocument.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData);
 			} else if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT)) {
-//				mainEditCanvas.AddTextBox(Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String, 150, 150);
+				_EditDocument.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String);
 			}
 		}
 		

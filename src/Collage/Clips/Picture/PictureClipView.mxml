@@ -13,16 +13,17 @@
 		import mx.core.*;
 		import mx.events.PropertyChangeEvent;
 		
-		private var _BitmapData:BitmapData = null;
-				
+		public var _BitmapData:BitmapData = null;
+		public var _Loaded:Boolean = false;
+		
 		public function Initialize():void
 		{
 			LoadImage();
 		}
 		
-		public function LoadImage():void
+		private function LoadImage():void
 		{
-			if (!displayImage)
+			if (!displayImage || _Loaded)
 				return;
 			
 			var pictureModel:PictureClip = _Model as PictureClip;
@@ -31,12 +32,17 @@
 				displayImage.addEventListener(Event.COMPLETE, Complete);
 			} else if(_BitmapData) {
 				var bitmap:BitmapAsset = new BitmapAsset(_BitmapData);
-				displayImage.addEventListener(Event.COMPLETE, Complete);
+				pictureModel.aspectRatio = _BitmapData.width / _BitmapData.height;
+                if (bitmap != null && bitmap.smoothing == false) {
+                    bitmap.smoothing = true;
+                }
 				displayImage.source = bitmap;
-				Complete(null);
-			}
+				model.width = bitmap.width;
+				model.height = bitmap.height;
+				super.onModelChange(null);
+			} 
 		}
-		
+
 		protected override function onModelChange( event:PropertyChangeEvent):void
 		{
 			if(event && event.property == "url") {
@@ -47,6 +53,9 @@
 
 		private function Complete(event:Event):void
 		{
+			_Loaded = true;
+
+			Alert.show(getQualifiedClassName(displayImage.content));
 			var pictureModel:PictureClip = _Model as PictureClip;
 			displayImage.removeEventListener(Event.COMPLETE, Complete);
 
@@ -69,12 +78,13 @@
 		{
 			if (data is BitmapData)
 			{
+				_Loaded = false;
 				_BitmapData = data as BitmapData;
 				LoadImage();
+				return true;
 			}
 			return false;
 		}
-
 		]]>
     </mx:Script>
 	<mx:Image id="displayImage" horizontalAlign="left" verticalAlign="top" top="0" left="0" right="0" bottom="0" />

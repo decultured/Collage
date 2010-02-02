@@ -59,5 +59,15 @@ package Collage.Clip
 		public function Rotated():void
 		{
 		}
+		
+		public function LoadFromData(data:Object):Boolean
+		{
+			return false;
+		}
+
+		public function LoadFromXML():Boolean
+		{
+			return false;
+		}
 	}
 }

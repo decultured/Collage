@@ -37,16 +37,35 @@ package Collage.Document
 		public function AddClipByType(clipType:String, position:Rectangle = null):Clip
 		{
 			var newClip:Clip = ClipFactory.CreateByType(clipType);
-			AddClip(newClip);
-			
-			if (position) {
-				newClip.x = position.x;
-				newClip.y = position.y;
-				newClip.width = position.width;
-				newClip.height = position.height;
-			}
+			if (!newClip || !AddClip(newClip))
+				return null;
+			PositionClip(newClip, position);
 			
 			return newClip;
+		}
+
+		public function AddClipFromData(data:Object, position:Rectangle = null):Clip
+		{
+			var newClip:Clip = ClipFactory.CreateFromData(data);
+			if (!newClip || !AddClip(newClip))
+				return null;
+			PositionClip(newClip, position);
+			
+			return newClip;
+		}
+		
+		public function PositionClip(clip:Clip, position:Rectangle):void
+		{
+			if (!clip)
+				return;
+
+			if (!position)
+				position = new Rectangle(0,0,300,300);
+			
+			clip.x = position.x;
+			clip.y = position.y;
+			clip.width = position.width;
+			clip.height = position.height;
 		}
 	}
 }

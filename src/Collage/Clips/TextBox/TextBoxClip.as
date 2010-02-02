@@ -33,5 +33,14 @@ package Collage.Clips.TextBox
 			_Editor.model = this;
 		}
 
+		public override function LoadFromData(data:Object):Boolean
+		{
+			if (data is String)
+			{
+				this.text = data as String;
+				return true;
+			}
+			return false;
+		}
 	}
 }

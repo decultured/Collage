@@ -75,19 +75,23 @@ package Collage.Document
 		{
 			if (!super.AddClip(newClip))
 				return false;
-			
 			_ObjectHandles.registerComponent(newClip, newClip.view);
-			
 			return true;
 		}
 
 		public override function AddClipByType(clipType:String, position:Rectangle = null):Clip
 		{
 			var newClip:Clip = super.AddClipByType(clipType);
-			
 			if (newClip)
 				_ObjectHandles.registerComponent(newClip, newClip.view);
-				
+			return newClip;
+		}
+
+		public override function AddClipFromData(data:Object, position:Rectangle = null):Clip
+		{
+			var newClip:Clip = super.AddClipFromData(data);
+			if (newClip)
+				_ObjectHandles.registerComponent(newClip, newClip.view);
 			return newClip;
 		}
 

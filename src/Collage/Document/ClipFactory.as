@@ -1,5 +1,6 @@
 package Collage.Document
 {
+	import flash.display.BitmapData;
 	import Collage.Clip.*;
 	import Collage.Clips.Label.*;
 	import Collage.Clips.LineChart.*;
@@ -31,6 +32,22 @@ package Collage.Document
 			else if (clipType == "linechart")
 				return new LineChartClip();
 			return null;
+		}
+		
+		public static function CreateFromData(data:Object):Clip
+		{
+			var newClip:Clip = null;
+			if (data is BitmapData)	{
+				newClip = CreateByType("image");
+				newClip.LoadFromData(data);
+				return newClip;
+			} else if (data is String) {
+				newClip = CreateByType("textbox");
+				newClip.LoadFromData(data);
+				return newClip;
+			}
+			
+			return newClip;
 		}
 		
 		public static function CreateFromXML(description:XML):Clip
