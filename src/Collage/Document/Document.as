@@ -5,13 +5,15 @@ package Collage.Document
 	public class Document extends Clip
 	{
 		private var _URL:String = null;
+		private var _BackgroundColor:Number = 0xFFFFFF;
 
 		[Bindable]
 		public function get url():String {return _URL;}
-		public function set url(url:String):void
-		{
-			_URL = url;
-		}
+		public function set url(url:String):void {_URL = url;}
+
+		[Bindable]
+		public function get backgroundColor():Number {return _BackgroundColor;}
+		public function set backgroundColor(bgColor:Number):void {_BackgroundColor = bgColor;}
 		
 		public function Document()
 		{

@@ -24,11 +24,14 @@
 			
 			if (displayLabel) {
 				displayLabel.text = labelModel.text;
+				displayLabel.setStyle("color", labelModel.color);
 				displayLabel.validateNow();
 				_Model.width = displayLabel.textWidth + 10;
 				_Model.height = displayLabel.textHeight;
 			}
 			
+			setStyle("backgroundColor", labelModel.backgroundColor);
+			setStyle("backgroundAlpha", labelModel.backgroundAlpha);
 			super.onModelChange(event);
 		}
 	]]>

@@ -116,6 +116,13 @@ package Collage.Document
 		{
 			if(event && event.property == "url")
 				LoadImage();
+
+			var docModel:Document = _Model as Document;
+			setStyle("backgroundColor", docModel.backgroundColor);
+			validateNow();
+			_BackgroundImage.mouseEnabled = false;
+			_BackgroundImage.mouseChildren = false;
+
 			super.onModelChange(event);
 		}
 

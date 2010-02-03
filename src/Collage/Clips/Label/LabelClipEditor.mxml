@@ -23,6 +23,9 @@
 			if (_Model) {
 				var labelModel:LabelClip = _Model as LabelClip;
 				labelModel.text = src.text;
+				labelModel.color = textColorPicker.selectedColor;
+				labelModel.backgroundColor = backgroundColorPicker.selectedColor;
+				labelModel.backgroundAlpha = transparencySlider.value;
 			}
 		}
 	]]>
@@ -33,13 +36,13 @@
 		<mx:TextInput id="src" text="Hello World!" color="0x323232" width="100%" change="TextChanged()" />
 		<mx:HRule width="100%" />
 		<mx:HBox width="100%" >
-			<mx:Label text="Text Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="textColorPicker" showTextField="true" selectedColor="0x000000"/>
+			<mx:Label text="Text Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="textColorPicker" showTextField="true" selectedColor="0x000000" change="TextChanged()" />
 		</mx:HBox>
 		<mx:HBox width="100%" >
-			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF"/>
+			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF" change="TextChanged()" />
 		</mx:HBox>
 		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
-		<mx:HSlider id="transparencySlider" minimum="0" maximum="100" value="100"
+		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="1"
             allowTrackClick="true" liveDragging="true" change="TextChanged()" />
 	</mx:Panel>
 	

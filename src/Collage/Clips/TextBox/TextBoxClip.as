@@ -5,13 +5,20 @@ package Collage.Clips.TextBox
 	public class TextBoxClip extends Clip
 	{
 		private var _Text:String = "Default Text.";
+		private var _BackgroundAlpha:Number = 1.0;
+		private var _BackgroundColor:Number = 0xFFFFFF;
 		
 		[Bindable]
 		public function get text():String {return _Text;}
-		public function set text(newText:String):void
-		{
-			_Text = newText;
-		}
+		public function set text(newText:String):void {_Text = newText;}
+
+		[Bindable]
+		public function get backgroundAlpha():Number {return _BackgroundAlpha;}
+		public function set backgroundAlpha(bgAlpha:Number):void {_BackgroundAlpha = bgAlpha;}
+
+		[Bindable]
+		public function get backgroundColor():Number {return _BackgroundColor;}
+		public function set backgroundColor(bgColor:Number):void {_BackgroundColor = bgColor;}
 
 		public function TextBoxClip()
 		{

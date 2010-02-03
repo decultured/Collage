@@ -29,6 +29,8 @@
 					_Model.height = displayTextBox.textHeight;
 				}
 			}
+			setStyle("backgroundColor", textBoxClip.backgroundColor);
+			setStyle("backgroundAlpha", textBoxClip.backgroundAlpha);
 			super.onModelChange(event);
 		}
 	]]>

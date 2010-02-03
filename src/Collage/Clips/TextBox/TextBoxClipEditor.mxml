@@ -25,7 +25,25 @@
 				textBoxClip.text = src.htmlText;
 			}
 		}
+
+		protected function SettingsChanged():void
+		{
+			if (_Model) {
+				var textBoxClip:TextBoxClip = _Model as TextBoxClip;
+				textBoxClip.backgroundColor = backgroundColorPicker.selectedColor;
+				textBoxClip.backgroundAlpha = transparencySlider.value;
+			}
+		}
 	]]>
     </mx:Script>
 	<mx:RichTextEditor id="src" htmlText="Hello World!" title="Text Box Settings" width="100%" change="TextChanged()" />
+	<mx:Panel title="General Settings" backgroundColor="0xC1C1C1" width="100%" dropShadowEnabled="false" >
+		<mx:HRule width="100%" />
+		<mx:HBox width="100%" >
+			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF" change="SettingsChanged()" />
+		</mx:HBox>
+		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
+		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="1"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+	</mx:Panel>
 </clg:ClipEditor>
