@@ -36,16 +36,24 @@ package Collage.Clip
 		{
 		}
 		
-		protected function CreateView():void
+		public function CreateView(newView:ClipView = null):void
 		{
-			_View = new ClipView();
-			_View.model = this;
+			if (newView)
+				_View = newView;
+			else {
+				_View = new ClipView();
+				_View.model = this;
+			}
 		}
 
-		protected function CreateEditor():void
+		public function CreateEditor(newEditor:ClipEditor = null):void
 		{
-			_Editor = new ClipEditor();
-			_Editor.model = this;
+			if (newEditor)
+				_Editor = newEditor;
+			else {
+				_Editor = new ClipEditor();
+				_Editor.model = this;
+			}
 		}
 
 		public function Resized():void

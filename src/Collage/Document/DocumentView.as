@@ -1,5 +1,6 @@
 package Collage.Document
 {
+	import mx.controls.Alert;
 	import mx.controls.Image;
 	import flash.geom.*;
 	import Collage.Clip.*;
@@ -17,29 +18,24 @@ package Collage.Document
 		protected var _BitmapData:BitmapData = null;
 		
 		protected var _Clips:Array;
-		protected var _ViewPane:UIComponent;
-
-		public function set viewPane(viewPane:UIComponent):void {_ViewPane = viewPane;}
-		public function get viewPane():UIComponent {return _ViewPane;}
 		
 		public function DocumentView()
 		{
 			_BackgroundImage = new Image();
+			_BackgroundImage.mouseEnabled = false;
+			_BackgroundImage.mouseChildren = false;
 			_BackgroundImage.setStyle("top", 0);
 			_BackgroundImage.setStyle("left", 0);
 			_BackgroundImage.setStyle("bottom", 0);
 			_BackgroundImage.setStyle("right", 0);
+			_BackgroundImage.setStyle("horizontalAlign", "center");
+			_BackgroundImage.setStyle("verticalAlign", "middle");
 			addChild(_BackgroundImage);
+			ClipFactory.RegisterClipDefinitions();
+			_Clips = new Array();
 			super();
 		}
 
-		public function Initialize(newViewPane:UIComponent):void
-		{
-			_ViewPane = newViewPane;
-			ClipFactory.RegisterClipDefinitions();
-			_Clips = new Array();
-		}
-		
 		public function ViewResized():void
 		{
 			// TODO : Reposition all objects to fit in new size
@@ -47,9 +43,9 @@ package Collage.Document
 		
 		public function AddClip(newClip:Clip):Boolean
 		{
-			if (_ViewPane && newClip && !_Clips[newClip.uid]) {
+			if (newClip && !_Clips[newClip.uid]) {
 				_Clips[newClip.uid] = newClip;
-				_ViewPane.addChild(newClip.view);
+				addChild(newClip.view);
 				return true;
 			}
 			return false;
@@ -96,7 +92,7 @@ package Collage.Document
 			
 			var docModel:Document = _Model as Document;
 			if (docModel.url) {
-				setStyle("backgroundImage", docModel.url);
+				_BackgroundImage.load(docModel.url);
 				_BackgroundImage.addEventListener(Event.COMPLETE, Complete);
 			} else if(_BitmapData) {
 				var bitmap:BitmapAsset = new BitmapAsset(_BitmapData);
@@ -108,11 +104,18 @@ package Collage.Document
 			} 
 		}
 
+		protected override function Reposition():void
+		{
+			drawFocus(false);
+			width = _Model.width;
+			height = _Model.height;
+			rotation = _Model.rotation;
+		}
+
 		protected override function onModelChange( event:PropertyChangeEvent):void
 		{
-			if(event && event.property == "url") {
+			if(event && event.property == "url")
 				LoadImage();
-			}
 			super.onModelChange(event);
 		}
 

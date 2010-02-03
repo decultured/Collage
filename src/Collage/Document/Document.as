@@ -13,32 +13,42 @@ package Collage.Document
 			_URL = url;
 		}
 		
-		public function Document(editable:Boolean = true)
+		public function Document()
 		{
 			super();
-			if (editable)
-				CreateEditView();
-			else
-				CreateView();
+			height = 768;
+			width = 1024;
 			CreateEditor();
 		}
 		
-		protected function CreateEditView():void
+		public function CreateEditView(newView:ClipView = null):void
 		{
-			_View = new EditDocumentView();
-			_View.model = this;
+			if (newView)
+				_View = newView;
+			else {
+				_View = new EditDocumentView();
+				_View.model = this;
+			}
 		}
 
-		protected override function CreateView():void
+		public override function CreateView(newView:ClipView = null):void
 		{
-			_View = new DocumentView();
-			_View.model = this;
+			if (newView)
+				_View = newView;
+			else {
+				_View = new DocumentView();
+				_View.model = this;
+			}
 		}
 
-		protected override function CreateEditor():void
+		public override function CreateEditor(newEditor:ClipEditor = null):void
 		{
-			_Editor = new DocumentEditor();
-			_Editor.model = this;
+			if (newEditor)
+				_Editor = newEditor;
+			else {
+				_Editor = new DocumentEditor();
+				_Editor.model = this;
+			}
 		}
 
 		public override function LoadFromData(data:Object):Boolean

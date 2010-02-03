@@ -21,16 +21,24 @@ package Collage.Clips.Picture
 			CreateEditor();
 		}
 		
-		protected override function CreateView():void
+		public override function CreateView(newView:ClipView = null):void
 		{
-			_View = new PictureClipView();
-			_View.model = this;
+			if (newView)
+				_View = newView;
+			else {
+				_View = new PictureClipView();
+				_View.model = this;
+			}
 		}
 
-		protected override function CreateEditor():void
+		public override function CreateEditor(newEditor:ClipEditor = null):void
 		{
-			_Editor = new PictureClipEditor();
-			_Editor.model = this;
+			if (newEditor)
+				_Editor = newEditor;
+			else {
+				_Editor = new PictureClipEditor();
+				_Editor.model = this;
+			}
 		}
 
 		public override function Resized():void

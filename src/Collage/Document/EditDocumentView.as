@@ -19,37 +19,31 @@ package Collage.Document
 		public function set optionsBox(optionsBox:UIComponent):void {_OptionsBox = optionsBox;}
 		public function get optionsBox():UIComponent {return _OptionsBox;}
 
-
-		public override function set viewPane(viewPane:UIComponent):void {
-			_ViewPane = viewPane;
-			InitObjectHandles();
-		}
-
 		public function EditDocumentView()
 		{
 			super();
+			var newModel:Document = new Document();
+			newModel.CreateEditView(this);
+			model = newModel;
 		}
 
-		public function InitializeForEdit(newViewPane:UIComponent, newInspector:UIComponent, newOptionsBox:UIComponent):void
+		public function InitializeForEdit(newInspector:UIComponent, newOptionsBox:UIComponent):void
 		{
-			super.Initialize(newViewPane);
 			_InspectorPane = newInspector;
 			_OptionsBox = newOptionsBox;
 			InitObjectHandles();
+			SelectDocument();
 		}
 
 		public function InitObjectHandles():void
 		{
-			if (!_ViewPane)
-				return;
-				
 			_SelectionManager = new ObjectHandlesSelectionManager();
-			_ObjectHandles = new ObjectHandles(_ViewPane, _SelectionManager);
+			_ObjectHandles = new ObjectHandles(this, _SelectionManager);
 			var sizeConstraint:SizeConstraint = new SizeConstraint();
 			sizeConstraint.minWidth = 20;
 			sizeConstraint.minHeight = 20;
-			sizeConstraint.maxWidth = _ViewPane.width;
-			sizeConstraint.maxHeight = _ViewPane.height;
+			sizeConstraint.maxWidth = this.width;
+			sizeConstraint.maxHeight = this.height;
 			_ObjectHandles.constraints.push(sizeConstraint);							
 
 			_SelectionManager.addEventListener(SelectionEvent.ADDED_TO_SELECTION, ObjectSelected);
@@ -70,8 +64,8 @@ package Collage.Document
 				var moveConstraint:MovementConstraint = new MovementConstraint();
 				moveConstraint.minX = 0;
 				moveConstraint.minY = 0;
-				moveConstraint.maxX = _ViewPane.width;
-				moveConstraint.maxY = _ViewPane.height;
+				moveConstraint.maxX = this.width;
+				moveConstraint.maxY = this.height;
 				_ObjectHandles.constraints.push(moveConstraint);							
 			}
 		}
@@ -104,6 +98,7 @@ package Collage.Document
 			for each (var clip:Clip in event.targets) {
 				clip.selected = true;
 				_CurrentlySelected = clip;
+				model.selected = false;
 				PositionOptionsBox();
 				if (_CurrentlySelected) {
 					ShowClipEditor();
@@ -116,7 +111,6 @@ package Collage.Document
 				_CurrentlySelected = null;
 				PositionOptionsBox();
 				clip.selected = false;
-				
 				HideClipEditor();
 			}
 		}
@@ -154,7 +148,7 @@ package Collage.Document
 			if (_CurrentlySelected && _CurrentlySelected.view) {
 				var view:ClipView = _CurrentlySelected.view;
 				_ObjectHandles.unregisterComponent(view);
-				_ViewPane.removeChild(view);
+				removeChild(view);
 			}
 			
 			// TODO : Remove from internal list
@@ -168,10 +162,21 @@ package Collage.Document
 			}
 		}
 		
-		public function BackgroundClick(event:MouseEvent) : void
+		public function BackgroundClick(event:MouseEvent):void
 		{		
-			if( event.target == _ViewPane)
+			if(event && event.target == this) {
 				_ObjectHandles.selectionManager.clearSelection();
+				SelectDocument();
+			}
+		}
+		
+		public function SelectDocument():void
+		{
+			if (!_InspectorPane || !model.editor)
+				return;
+			model.selected = true;
+			HideClipEditor();
+			_InspectorPane.addChild(model.editor);
 		}
 		
 		public function ShowClipEditor():void

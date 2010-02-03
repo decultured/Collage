@@ -38,7 +38,7 @@ package Collage.Clip
 			addChild(_BorderBox);
 		}
 		
-		protected function onModelChange( event:PropertyChangeEvent):void
+		protected function onModelChange(event:PropertyChangeEvent):void
 		{
 			Reposition();
 			
@@ -53,7 +53,7 @@ package Collage.Clip
 			}
 		}
 
-		protected function Reposition() : void
+		protected function Reposition():void
 		{
 			drawFocus(false);
 			x = _Model.x;

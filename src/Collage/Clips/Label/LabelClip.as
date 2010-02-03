@@ -23,16 +23,24 @@ package Collage.Clips.Label
 			CreateEditor();
 		}
 
-		protected override function CreateView():void
+		public override function CreateView(newView:ClipView = null):void
 		{
-			_View = new LabelClipView();
-			_View.model = this;
+			if (newView)
+				_View = newView;
+			else {
+				_View = new LabelClipView();
+				_View.model = this;
+			}
 		}
 
-		protected override function CreateEditor():void
+		public override function CreateEditor(newEditor:ClipEditor = null):void
 		{
-			_Editor = new LabelClipEditor();
-			_Editor.model = this;
+			if (newEditor)
+				_Editor = newEditor;
+			else {
+				_Editor = new LabelClipEditor();
+				_Editor.model = this;
+			}
 		}
 	}
 }
