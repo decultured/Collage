@@ -44,9 +44,11 @@ package Collage.Clip
 			
 			if (event && event.property == "selected")
 			{
-				if (_Model.selected)
+				if (_Model.selected) {
+					if (getChildIndex(_BorderBox) < numChildren - 1)
+						setChildIndex(_BorderBox, numChildren - 1);
 					_BorderBox.visible = true;
-				else
+				} else
 					_BorderBox.visible = false;
 			}
 		}

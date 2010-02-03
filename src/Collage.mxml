@@ -25,13 +25,16 @@
 	    import flash.desktop.ClipboardFormats;
 	    import flash.desktop.ClipboardTransferMode;
 
-		private var _EditDocument:ClipEditDocument;
+		private var _EditDocumentView:EditDocumentView;
+		private var _Document:Document;
 
 		private function Initialize():void
 		{
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown); 
 
-			_EditDocument = new ClipEditDocument(mainEditCanvas, inspectorWindow, optionsBox);
+			_Document = new Document();
+			_EditDocumentView = _Document.view as EditDocumentView;
+			_EditDocumentView.InitializeForEdit(mainEditCanvas, inspectorWindow, optionsBox);
 		}
 
 		private function Fullscreen():void
@@ -49,9 +52,9 @@
 		public function HandlePaste(event:Event):void
 		{
 			if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.BITMAP_FORMAT)) {
-				_EditDocument.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData);
+				_EditDocumentView.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData);
 			} else if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT)) {
-				_EditDocument.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String);
+				_EditDocumentView.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String);
 			}
 		}
 		
@@ -87,7 +90,7 @@
 				var ext:String = file.extension.toLowerCase();
 				
 				if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "gif") {
-					var newClip:PictureClip = _EditDocument.AddClipByType("image") as PictureClip;
+					var newClip:PictureClip = _EditDocumentView.AddClipByType("image") as PictureClip;
 					newClip.url = file.url;
 				} else {
 					//Alert.show("Unmapped Extension");
@@ -101,10 +104,10 @@
 		<mx:Image id="saveImageBtn" source="@Embed('../assets/icons/save_image.png')" width="32" height="32" click="SaveImage();" />
 		<mx:Image id="PasteBtn" source="@Embed('../assets/icons/paste.png')" width="32" height="32" click="HandlePaste(null);" />
 		<mx:VRule height="32" />
-		<mx:Image id="addImageBtn" source="@Embed('../assets/icons/picture.png')" width="32" height="32" click="_EditDocument.AddClipByType('image', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addLabelBtn" source="@Embed('../assets/icons/label.png')" width="32" height="32" click="_EditDocument.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addTextBoxBtn" source="@Embed('../assets/icons/text_box.png')" width="32" height="32" click="_EditDocument.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addLineChartBtn" source="@Embed('../assets/icons/line_chart.png')" width="32" height="32" click="_EditDocument.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addImageBtn" source="@Embed('../assets/icons/picture.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addLabelBtn" source="@Embed('../assets/icons/label.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addTextBoxBtn" source="@Embed('../assets/icons/text_box.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addLineChartBtn" source="@Embed('../assets/icons/line_chart.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
 	</mx:ApplicationControlBar>
     <mx:HDividedBox top="40" left="0" right="0" bottom="0">
         <mx:Canvas label="Canvas 1" width="100%" height="100%" color="0x323232" backgroundColor="#ACACAC">
@@ -112,13 +115,13 @@
 				<mx:Canvas id="mainEditCanvas" 
 					width="1024" height="768" 
 					dropShadowEnabled="true" 
-					click="_EditDocument.BackgroundClick(event);" 
+					click="_EditDocumentView.BackgroundClick(event);" 
 					backgroundColor="#FFFFFF" backgroundAlpha="1" borderThickness="0"
 					horizontalScrollPolicy="off"
 					verticalScrollPolicy="off" >
 					<mx:HBox id="optionsBox" visible="false" paddingBottom="6" paddingTop="6">
-						<mx:Image id="lockButton" source="@Embed('../assets/icons/lock.png')" />
-						<mx:Image id="deleteButton" source="@Embed('../assets/icons/delete.png')" click="_EditDocument.deleteSelected()" />
+						<mx:Image id="lockButton" source="@Embed('../assets/icons/lock.png')" click="_EditDocumentView.lockSelected()" />
+						<mx:Image id="deleteButton" source="@Embed('../assets/icons/delete.png')" click="_EditDocumentView.deleteSelected()" />
 					</mx:HBox>			
 				</mx:Canvas>
 			</mx:Box>
