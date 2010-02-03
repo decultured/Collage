@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<clg:ClipEditor xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.Clip.*"
+	backgroundColor="0x000000"
+	backgroundAlpha="0"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	creationComplete="Initialize()" 
+	width="100%" >
+	
+	<mx:Script>
+	<![CDATA[
+		private function Initialize():void
+		{
+			if (_Model) {
+				var editDocument:Document = _Model as Document;
+				if (src.text)
+					src.text = editDocument.url;
+			}
+		}
+		
+		private function FileChanged():void
+		{
+			if (_Model) {
+				var editDocument:Document = _Model as Document;
+				editDocument.url = src.text;
+			}
+		}
+		
+		public function LoadFromFile():void
+		{
+			var file:File = File.desktopDirectory;
+			var imgFilter:FileFilter = new FileFilter("Image", "*.png;*.jpg;*.jpeg;*.gif;*.svg");
+			file.addEventListener(Event.SELECT, LoadImageEvent);
+			file.browseForOpen("Open", [imgFilter]);
+		}
+			
+		protected function LoadImageEvent(event:Event):void
+		{
+			var newFile:File = event.target as File;
+			var editDocument:Document = _Model as Document;
+			editDocument.url = newFile.url;
+		}
+	]]>
+    </mx:Script>
+	<mx:Label id="src" text="Not loaded... " color="0x323232" width="100%" />
+	<mx:HRule width="100%" />
+	<mx:Button id="loadImageButton" label="Load Background Image" fontSize="14" width="100%" click="LoadFromFile()" />
+</clg:ClipEditor>
