@@ -27,5 +27,5 @@
 		}
 	]]>
     </mx:Script>
-	<mx:RichTextEditor id="src" htmlText="Hello World!" color="0x323232" width="100%" change="TextChanged()" />
+	<mx:RichTextEditor id="src" htmlText="Hello World!" title="Text Box Settings" width="100%" change="TextChanged()" />
 </clg:ClipEditor>

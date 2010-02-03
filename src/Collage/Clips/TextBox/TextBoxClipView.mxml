@@ -26,6 +26,7 @@
 				if (_Model) {
 					var textBoxClip:TextBoxClip = _Model as TextBoxClip;
 					displayTextBox.htmlText = textBoxClip.text;
+					_Model.height = displayTextBox.textHeight;
 				}
 			}
 			super.onModelChange(event);

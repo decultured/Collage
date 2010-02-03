@@ -3,6 +3,14 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Document.*"
 	layout="absolute"
+	minHeight="400"
+	minWidth="500"
+	height="600"
+	width="800"
+	showStatusBar="false"
+	borderThickness="1"
+	borderColor="#313131"
+	dropShadowEnabled="true"
 	applicationComplete="Initialize()"
     paste="HandlePaste(event)"
 	nativeDragEnter="onDragIn(event)" 
@@ -100,19 +108,9 @@
 		}
 	]]>
 	</mx:Script>
-	<mx:ApplicationControlBar height="40" top="0" left="0" right="0" paddingTop="3" paddingBottom="3" >
-		<mx:Image id="fullscreenBtn" source="@Embed('../assets/icons/fullscreen.png')" width="32" height="32" click="Fullscreen();" />
-		<mx:Image id="saveImageBtn" source="@Embed('../assets/icons/save_image.png')" width="32" height="32" click="SaveImage();" />
-		<mx:Image id="PasteBtn" source="@Embed('../assets/icons/paste.png')" width="32" height="32" click="HandlePaste(null);" />
-		<mx:VRule height="32" />
-		<mx:Image id="addImageBtn" source="@Embed('../assets/icons/picture.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addLabelBtn" source="@Embed('../assets/icons/label.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addTextBoxBtn" source="@Embed('../assets/icons/text_box.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addLineChartBtn" source="@Embed('../assets/icons/line_chart.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
-	</mx:ApplicationControlBar>
-    <mx:HDividedBox top="40" left="0" right="0" bottom="0">
+    <mx:HDividedBox top="40" left="0" right="0" bottom="0" dropShadowEnabled="false" >
         <mx:Canvas label="Canvas 1" width="100%" height="100%" color="0x323232" backgroundColor="#ACACAC">
-			<mx:Box top="0" left="0" right="0" bottom="0" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10"  horizontalAlign="center" verticalAlign="middle">
+			<mx:Box top="0" left="0" right="0" bottom="0" paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20"  horizontalAlign="center" verticalAlign="middle">
 				<clg:EditDocumentView id="_EditDocumentView" 
 					width="1024" height="768" 
 					dropShadowEnabled="true" 
@@ -127,7 +125,17 @@
 				</clg:EditDocumentView>
 			</mx:Box>
         </mx:Canvas>
-        <mx:Box id="inspectorWindow" width="250" height="100%" backgroundColor="#FFFFFF" backgroundAlpha="1" horizontalScrollPolicy="off" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5"  >
+        <mx:Box id="inspectorWindow" width="250" minWidth="250" height="100%" backgroundColor="#ACACAC" backgroundAlpha="1" horizontalScrollPolicy="off" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5"  >
         </mx:Box>
     </mx:HDividedBox>
+	<mx:ApplicationControlBar height="40" top="0" left="0" right="0" paddingTop="3" paddingBottom="3" cornerRadius="0" dropShadowEnabled="false" >
+		<mx:Image id="fullscreenBtn" source="@Embed('../assets/icons/fullscreen.png')" width="32" height="32" click="Fullscreen();" />
+		<mx:Image id="saveImageBtn" source="@Embed('../assets/icons/save_image.png')" width="32" height="32" click="SaveImage();" />
+		<mx:Image id="PasteBtn" source="@Embed('../assets/icons/paste.png')" width="32" height="32" click="HandlePaste(null);" />
+		<mx:VRule height="32" />
+		<mx:Image id="addImageBtn" source="@Embed('../assets/icons/picture.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addLabelBtn" source="@Embed('../assets/icons/label.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addTextBoxBtn" source="@Embed('../assets/icons/text_box.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addLineChartBtn" source="@Embed('../assets/icons/line_chart.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
+	</mx:ApplicationControlBar>
 </mx:WindowedApplication>

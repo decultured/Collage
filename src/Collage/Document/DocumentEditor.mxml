@@ -14,7 +14,7 @@
 		{
 			if (_Model) {
 				var editDocument:Document = _Model as Document;
-				if (src.text)
+				if (editDocument.url)
 					src.text = editDocument.url;
 			}
 		}
@@ -23,7 +23,8 @@
 		{
 			if (_Model) {
 				var editDocument:Document = _Model as Document;
-				editDocument.url = src.text;
+				if (src.text != "Unknown")
+					editDocument.url = src.text;
 			}
 		}
 		
@@ -40,10 +41,19 @@
 			var newFile:File = event.target as File;
 			var editDocument:Document = _Model as Document;
 			editDocument.url = newFile.url;
+			src.text = editDocument.url; 
 		}
 	]]>
     </mx:Script>
-	<mx:Label id="src" text="Not loaded... " color="0x323232" width="100%" />
-	<mx:HRule width="100%" />
-	<mx:Button id="loadImageButton" label="Load Background Image" fontSize="14" width="100%" click="LoadFromFile()" />
+	<mx:Panel title="Document Settings" backgroundColor="0xC1C1C1" width="100%" dropShadowEnabled="false" >
+		<mx:HRule width="100%" />
+		<mx:HBox width="100%" >
+			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF"/>
+		</mx:HBox>
+		<mx:HRule width="100%" />
+		<mx:HBox width="100%" clipContent="true" horizontalScrollPolicy="off" >
+			<mx:Label text="Image:" color="#000000" fontWeight="bold" /><mx:Label id="src" text="Unknown" color="#323232" />
+		</mx:HBox>
+		<mx:Button id="loadImageButton" label="Load Background Image" click="LoadFromFile()" />
+	</mx:Panel>
 </clg:ClipEditor>

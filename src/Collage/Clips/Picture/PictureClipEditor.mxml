@@ -14,7 +14,7 @@
 		{
 			if (_Model) {
 				var pictureModel:PictureClip = _Model as PictureClip;
-				if (src.text)
+				if (pictureModel.url)
 					src.text = pictureModel.url;
 			}
 		}
@@ -39,11 +39,16 @@
 		{
 			var newFile:File = event.target as File;
 			var pictureModel:PictureClip = _Model as PictureClip;
-			pictureModel.url = newFile.url; 
+			pictureModel.url = newFile.url;
+			src.text = pictureModel.url; 
 		}
 	]]>
     </mx:Script>
-	<mx:Label id="src" text="Not loaded... " color="0x323232" width="100%" />
-	<mx:HRule width="100%" />
-	<mx:Button id="loadImageButton" label="Load from file" fontSize="14" width="100%" click="LoadFromFile()" />
+	<mx:Panel title="Picture Settings" backgroundColor="0xC1C1C1" width="100%" dropShadowEnabled="false" >
+		<mx:HRule width="100%" />
+		<mx:HBox width="100%" clipContent="true" horizontalScrollPolicy="off" >
+			<mx:Label text="File:" color="#000000" fontWeight="bold" /><mx:Label id="src" text="Unknown" color="#323232" />
+		</mx:HBox>
+		<mx:Button id="loadImageButton" label="Load from file" click="LoadFromFile()" />
+	</mx:Panel>
 </clg:ClipEditor>

@@ -134,6 +134,9 @@ package Collage.Document
 			}
 			_OptionsBox.visible = true;
 			
+			if (getChildIndex(_OptionsBox) < numChildren - 1)
+				setChildIndex(_OptionsBox, numChildren - 1);
+						
 			if (_CurrentlySelected.y < 30) {
 				_OptionsBox.y = _CurrentlySelected.y + _CurrentlySelected.height;
 				_OptionsBox.x = _CurrentlySelected.x + _CurrentlySelected.width - optionsBox.width;
