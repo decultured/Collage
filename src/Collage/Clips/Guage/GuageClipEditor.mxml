@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<clg:ClipEditor xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.Clip.*"
+	backgroundColor="0x000000"
+	backgroundAlpha="0"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	creationComplete="Initialize()" 
+	width="100%" >
+	
+	<mx:Script>
+	<![CDATA[
+		private function Initialize():void
+		{
+			if (_Model) {
+				var guageModel:GuageClip = _Model as GuageClip;
+				guageValue.minimum = guageModel.minimum;
+				guageValue.maximum = guageModel.maximum;
+				guageValue.value = guageModel.value;
+			}
+		}
+		
+		private function SettingsChanged():void
+		{
+			if (_Model) {
+				var guageModel:GuageClip = _Model as GuageClip;
+				guageModel.minimum = guageValue.minimum;
+				guageModel.maximum = guageValue.maximum;
+				guageModel.value = guageValue.value;
+				guageModel.backgroundColor = backgroundColorPicker.selectedColor;
+				guageModel.bezelColor = bezelColorPicker.selectedColor;
+				guageModel.measureMarksColor = tickMarksColorPicker.selectedColor;
+				guageModel.measureMarksAlpha = tickMarksAlpha.value;
+
+				guageModel.startAngle = minMaxAngle.values[0];
+				guageModel.endAngle = minMaxAngle.values[1];
+				guageModel.indicatorColor = indicatorColorPicker.selectedColor;
+				guageModel.indicatorCrownColor = crownColorPicker.selectedColor;
+			}
+		}
+	]]>
+    </mx:Script>
+	<mx:Panel title="Guage Chart Settings" backgroundColor="0xC1C1C1" width="100%" dropShadowEnabled="false" >
+	<mx:Form>
+		<mx:FormItem label="Value">
+			<mx:HSlider id="guageValue" width="105" change="SettingsChanged()" />
+		</mx:FormItem>
+		<mx:HRule width="100%" />
+		<mx:FormItem label="Face">
+			<mx:ColorPicker selectedColor="0x327bc2" id="backgroundColorPicker" change="SettingsChanged()" />
+		</mx:FormItem>
+		<mx:FormItem label="Rim (Bezel)">
+			<mx:ColorPicker selectedColor="0xAAAAAA" id="bezelColorPicker" change="SettingsChanged()" />
+		</mx:FormItem>
+		<mx:FormItem label="Indicator">
+			<mx:ColorPicker id="indicatorColorPicker" selectedColor="0xFC5976" change="SettingsChanged()" />
+		</mx:FormItem>
+		<mx:FormItem label="Indicator Crown">
+			<mx:ColorPicker id="crownColorPicker" selectedColor="0xAAAAAA" change="SettingsChanged()" />
+		</mx:FormItem>
+		<mx:FormItem label="Tick Marks">
+			<mx:ColorPicker selectedColor="0xFFFFFF" id="tickMarksColorPicker" change="SettingsChanged()" />
+		</mx:FormItem>
+		<mx:FormItem label="Tick Alpha">
+			<mx:HSlider value="1" minimum="0" maximum="1" snapInterval=".01" width="105" id="tickMarksAlpha" change="SettingsChanged()" />
+		</mx:FormItem>
+		<mx:HRule width="100%" />
+		<mx:FormItem label="Min/Max Angle">
+			<mx:HSlider id="minMaxAngle" thumbCount="2" allowThumbOverlap="false" width="105" minimum="0" maximum="360" values="{[45,315]}" change="SettingsChanged()" />
+		</mx:FormItem>
+	</mx:Form>
+</mx:Panel>
+</clg:ClipEditor>

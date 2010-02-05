@@ -22,12 +22,12 @@
 		
 		protected override function onModelChange( event:PropertyChangeEvent):void
 		{
-			var lineChartModel:LineChartClip = _Model as LineChartClip;
-			setStyle("backgroundColor", lineChartModel.backgroundColor);
-			setStyle("backgroundAlpha", lineChartModel.backgroundAlpha);
+			var barChartModel:BarChartClip = _Model as BarChartClip;
+			setStyle("backgroundColor", barChartModel.backgroundColor);
+			setStyle("backgroundAlpha", barChartModel.backgroundAlpha);
 			super.onModelChange(event);
 		}
 		]]>
     </mx:Script>
-	<mx:Image id="displayImage" horizontalAlign="left" verticalAlign="top" top="0" left="0" right="0" bottom="0" source="@Embed('../../../../assets/linechart.png')" />
+	<mx:Image id="displayImage" horizontalAlign="left" verticalAlign="top" top="0" left="0" right="0" bottom="0" source="@Embed('../../../../assets/barchart.png')" />
 </clg:ClipView>

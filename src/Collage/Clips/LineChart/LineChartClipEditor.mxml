@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<clg:ClipEditor xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.Clip.*"
+	backgroundColor="0x000000"
+	backgroundAlpha="0"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	creationComplete="Initialize()" 
+	width="100%" >
+	
+	<mx:Script>
+	<![CDATA[
+		private function Initialize():void
+		{
+			if (_Model) {
+				var lineChartModel:LineChartClip = _Model as LineChartClip;
+			}
+		}
+		
+		private function SettingsChanged():void
+		{
+			if (_Model) {
+				var lineChartModel:LineChartClip = _Model as LineChartClip;
+				lineChartModel.backgroundColor = backgroundColorPicker.selectedColor;
+				lineChartModel.backgroundAlpha = transparencySlider.value;
+			}
+		}
+	]]>
+    </mx:Script>
+	<mx:Panel title="Line Chart Settings" backgroundColor="0xC1C1C1" width="100%" dropShadowEnabled="false" >
+		<mx:HRule width="100%" />
+		<mx:HBox width="100%" >
+			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF" change="SettingsChanged()" />
+		</mx:HBox>
+		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
+		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="1"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+	</mx:Panel>
+	
+</clg:ClipEditor>

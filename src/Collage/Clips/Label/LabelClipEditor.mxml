@@ -18,7 +18,7 @@
 			}
 		}
 		
-		private function TextChanged():void
+		private function SettingsChanged():void
 		{
 			if (_Model) {
 				var labelModel:LabelClip = _Model as LabelClip;
@@ -26,6 +26,7 @@
 				labelModel.color = textColorPicker.selectedColor;
 				labelModel.backgroundColor = backgroundColorPicker.selectedColor;
 				labelModel.backgroundAlpha = transparencySlider.value;
+				labelModel.fontSize = textFontSize.value;
 			}
 		}
 	]]>
@@ -33,17 +34,19 @@
 	<mx:Panel title="Label Settings" backgroundColor="0xC1C1C1" width="100%" dropShadowEnabled="false" >
 		<mx:HRule width="100%" />
 		<mx:Label text="Text:" color="#000000" fontWeight="bold" />
-		<mx:TextInput id="src" text="Hello World!" color="0x323232" width="100%" change="TextChanged()" />
+		<mx:TextInput id="src" text="Hello World!" color="0x323232" width="100%" change="SettingsChanged()" />
 		<mx:HRule width="100%" />
 		<mx:HBox width="100%" >
-			<mx:Label text="Text Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="textColorPicker" showTextField="true" selectedColor="0x000000" change="TextChanged()" />
+			<mx:Label text="Text Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="textColorPicker" showTextField="true" selectedColor="0x000000" change="SettingsChanged()" />
 		</mx:HBox>
 		<mx:HBox width="100%" >
-			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF" change="TextChanged()" />
+			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF" change="SettingsChanged()" />
 		</mx:HBox>
 		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
 		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="1"
-            allowTrackClick="true" liveDragging="true" change="TextChanged()" />
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="Font Size:" color="#000000" fontWeight="bold" />
+		<mx:HSlider id="textFontSize" minimum="6" maximum="96" value="18" change="SettingsChanged()" />
 	</mx:Panel>
 	
 </clg:ClipEditor>

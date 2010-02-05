@@ -18,16 +18,19 @@
 			onModelChange(null);
 		}
 
-		protected override function onModelChange( event:PropertyChangeEvent):void
+		protected override function onModelChange(event:PropertyChangeEvent):void
 		{
 			var labelModel:LabelClip = _Model as LabelClip;
 			
 			if (displayLabel) {
+				displayLabel.validateNow();
 				displayLabel.text = labelModel.text;
 				displayLabel.setStyle("color", labelModel.color);
+				displayLabel.setStyle("fontSize", labelModel.fontSize);
+				labelModel.textWidth = displayLabel.textWidth + 20;
+				labelModel.textHeight = displayLabel.textHeight;
 				displayLabel.validateNow();
-				_Model.width = displayLabel.textWidth + 10;
-				_Model.height = displayLabel.textHeight;
+				labelModel.Resized();
 			}
 			
 			setStyle("backgroundColor", labelModel.backgroundColor);

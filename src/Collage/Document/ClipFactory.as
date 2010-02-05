@@ -4,6 +4,9 @@ package Collage.Document
 	import Collage.Clip.*;
 	import Collage.Clips.Label.*;
 	import Collage.Clips.LineChart.*;
+	import Collage.Clips.PieChart.*;
+	import Collage.Clips.BarChart.*;
+	import Collage.Clips.Guage.*;
 	import Collage.Clips.Picture.*;
 	import Collage.Clips.TextBox.*;
 	
@@ -19,6 +22,9 @@ package Collage.Document
 			_ClipTypes["label"] = LabelClip;
 			_ClipTypes["textbox"] = TextBoxClip;
 			_ClipTypes["linechart"] = LineChartClip;
+			_ClipTypes["piechart"] = PieChartClip;
+			_ClipTypes["barchart"] = BarChartClip;
+			_ClipTypes["guage"] = GuageClip;
 		}
 
 		public static function CreateByType(clipType:String):Clip
@@ -31,6 +37,12 @@ package Collage.Document
 				return new TextBoxClip();
 			else if (clipType == "linechart")
 				return new LineChartClip();
+			else if (clipType == "piechart")
+				return new PieChartClip();
+			else if (clipType == "barchart")
+				return new BarChartClip();
+			else if (clipType == "guage")
+				return new GuageClip();
 			return null;
 		}
 		

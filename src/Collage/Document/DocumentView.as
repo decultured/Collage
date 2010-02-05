@@ -22,8 +22,6 @@ package Collage.Document
 		public function DocumentView()
 		{
 			_BackgroundImage = new Image();
-			_BackgroundImage.mouseEnabled = false;
-			_BackgroundImage.mouseChildren = false;
 			_BackgroundImage.setStyle("top", 0);
 			_BackgroundImage.setStyle("left", 0);
 			_BackgroundImage.setStyle("bottom", 0);
@@ -120,8 +118,6 @@ package Collage.Document
 			var docModel:Document = _Model as Document;
 			setStyle("backgroundColor", docModel.backgroundColor);
 			validateNow();
-			_BackgroundImage.mouseEnabled = false;
-			_BackgroundImage.mouseChildren = false;
 
 			super.onModelChange(event);
 		}

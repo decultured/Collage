@@ -22,9 +22,9 @@
 		
 		protected override function onModelChange( event:PropertyChangeEvent):void
 		{
+			var textBoxClip:TextBoxClip = _Model as TextBoxClip;
 			if(event && displayTextBox && event.property == "text") {
 				if (_Model) {
-					var textBoxClip:TextBoxClip = _Model as TextBoxClip;
 					displayTextBox.htmlText = textBoxClip.text;
 					_Model.height = displayTextBox.textHeight;
 				}

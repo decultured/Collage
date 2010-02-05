@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GraphicBorderSkin xmlns:mx="http://www.adobe.com/2006/mxml" 
+				   xmlns:flash.filters='flash.filters.*'
+                   xmlns="http://www.degrafa.com/2007" 
+                   xmlns:geometry="com.degrafa.geometry.*" 
+                   xmlns:degrafa="com.degrafa.*" 
+                   xmlns:coreRepeaters="com.degrafa.repeaters.*"
+                   xmlns:repeaters="com.degrafa.geometry.repeaters.*"> 
+	<mx:Script>
+		<![CDATA[
+
+		import mx.controls.Button;
+		import mx.utils.ColorUtil;
+		import com.brightPoint.controls.DegrafaGauge;
+		import com.degrafa.skins.GraphicBorderSkin;
+		
+		[Bindable]
+		private var _diameter:Number=200;
+		
+		[Bindable]
+		private var _indicatorFillRotation:Number;
+		
+		[Bindable]
+		private var _indicatorColor:Number=0xFC5976;
+		
+		[Bindable]
+		private var _measureMarksColor:Number=0xFFFFFFF;
+		
+		[Bindable]
+		private var _measureMarksAlpha:Number=1;
+		
+		[Bindable]
+		private var _faceColor:Number=0x327bc2;
+		
+		[Bindable]
+		private var _bezelColor:Number=0xAAAAAA;
+		
+		[Bindable]
+		private var _indicatorCrownColor:Number=0xAAAAAA;
+		
+		[Bindable]
+		private var _startAngle:Number=45;
+		
+		[Bindable]
+		private var _endAngle:Number=315;
+		
+		override public function set rotation(value:Number):void { 
+			_indicatorFillRotation=value+270; //this accounts for the offset of how we have drawn our indicator in relation to the guage angle
+			super.rotation=value; 
+		}
+
+	
+		[Bindable]
+		private var majorTickOffset:Number=30;
+		
+		[Bindable]
+		private var minorTickOffset:Number=30;
+		
+		override protected function updateDisplayList( w:Number, h:Number ) : void
+		{	
+			_diameter=w;
+			this.x=_diameter/2;
+			this.y=_diameter/2;
+			super.updateDisplayList(w,h);
+			
+			// the name property determines which skin is being drawn.
+			switch( name )
+			{
+				case "faceSkin":
+					if (getStyle("backgroundColor")!=null) _faceColor=getStyle("backgroundColor");
+					if (getStyle("bezelColor")!=null) _bezelColor=getStyle("bezelColor");
+					if (getStyle("startAngle")!=null) _startAngle=360-getStyle("startAngle");
+					if (getStyle("endAngle")!=null) _endAngle=360-getStyle("endAngle");
+					
+					//Adjust angles to match tick marks using best fit rounding - 
+					//this prevents boundary conditions where the tick marks don't match the exact range of motion
+					var angleRange:Number=_endAngle-_startAngle;
+					var majorOffsetCount:Number=angleRange/30;
+					majorTickOffset=angleRange/Math.round(majorOffsetCount);
+					minorTickOffset=majorTickOffset/5;
+					
+					//Get values for alerts and translate into angles
+					var values:Array=getStyle("alertValues");
+					var colors:Array=getStyle("alertColors");
+					var alphas:Array=getStyle("alertAlphas");
+
+					if (values && colors && alphas) {
+						values.reverse();
+						colors.reverse();
+						alphas.reverse();
+						if (colors.length==values.length-1 && alphas.length==values.length-1) { 
+							var startOffsets:Array=new Array();
+							var arcs:Array=new Array();
+							for (var i:int=0;i<values.length-1;i++) {
+									startOffsets.push(270-DegrafaGauge(parent).calculateAngleFromValue(values[i+1]));
+									arcs.push((DegrafaGauge(parent).calculateAngleFromValue(values[i+1])-DegrafaGauge(parent).calculateAngleFromValue(values[i])));
+							}
+							startAngleOffsets.offset=startOffsets;
+							arcOffsets.offset=arcs;
+							colorOffsets.offset=colors;
+						 	alphaOffsets.offset=alphas;
+							alertRepeater.count=colors.length;
+							alertRepeater.invalidated=true;
+						}
+					}
+					else {
+							alertRepeater.count=0;
+					}
+					
+					//Force a draw cycle on face 
+					face.draw(this.graphics,null);
+					
+					if (getStyle("measureMarksColor")!=null) _measureMarksColor=getStyle("measureMarksColor");
+					if (getStyle("measureMarksAlpha")!=null) _measureMarksAlpha=getStyle("measureMarksAlpha");
+					face.visible=true;
+					break;
+				case "indicatorSkin":
+					if (getStyle("indicatorColor")!=null) _indicatorColor=getStyle("indicatorColor");
+					indicator.visible=true;
+					break;
+				case "indicatorCrownSkin":
+					if (getStyle("indicatorCrownColor")!=null) _indicatorCrownColor=getStyle("indicatorCrownColor");
+					indicatorCrown.visible=true;
+					break;
+				case "highlightSkin":
+					faceReflection.visible=true;
+					break;
+			}
+		}
+			
+		]]>
+	</mx:Script>
+	
+ 	<fills>
+		<RadialGradientFill id="faceFill">
+			<GradientStop alpha="1" color="{_faceColor}" ratio=".7"/>
+			<GradientStop alpha="1" color="{ColorUtil.adjustBrightness2(_faceColor,-10)}" ratio=".96"/>
+			<GradientStop alpha="1" color="{ColorUtil.adjustBrightness2(_faceColor,-30)}" ratio="1"/>
+		</RadialGradientFill>
+		
+		<LinearGradientFill angle="90" id="reflectionFillTop">
+			<GradientStop alpha=".6" color="#FFFFFF" ratio="0"/>
+			<GradientStop alpha="0" color="#FFFFFF" ratio=".65"/>
+		</LinearGradientFill>
+		
+		<LinearGradientFill angle="270" id="reflectionFillBottom">
+			<GradientStop alpha=".2" color="#FFFFFF"/>
+			<GradientStop alpha="0" color="#FFFFFF" ratio=".3"/>
+		</LinearGradientFill>
+		
+		<LinearGradientFill id="indicatorFill" angle="{_indicatorFillRotation}">
+			<GradientStop color="{_indicatorColor}"/>
+			<GradientStop color="{ColorUtil.adjustBrightness2(_indicatorColor,-45)}"/>
+		</LinearGradientFill>
+		
+		<LinearGradientFill angle="90" id="highlightFill">
+			<GradientStop alpha="0" color="#FFFFFF"/>
+			<GradientStop alpha=".3" color="#FFFFFF"/>
+		</LinearGradientFill>
+
+		<LinearGradientFill id="indicatorCrownFillOuter" angle="45">
+			<GradientStop color="{ColorUtil.adjustBrightness2(_indicatorCrownColor,60)}" ratio="0"/>
+			<GradientStop color="{ColorUtil.adjustBrightness2(_indicatorCrownColor,-40)}" ratio="1"/>
+		</LinearGradientFill>
+		
+		<LinearGradientFill id="indicatorCrownFillInner" angle="225">
+			<GradientStop color="{ColorUtil.adjustBrightness2(_indicatorCrownColor,60)}" ratio="0"/>
+			<GradientStop color="{ColorUtil.adjustBrightness2(_indicatorCrownColor,-40)}" ratio="1"/>
+		</LinearGradientFill>
+		
+		<LinearGradientFill id="outerBezelFill" angle="315">
+			<GradientStop color="{ColorUtil.adjustBrightness2(_bezelColor,70)}" ratio="0"/>
+			<GradientStop color="{ColorUtil.adjustBrightness2(_bezelColor,-40)}" ratio="1"/>
+		</LinearGradientFill>
+		
+		<LinearGradientFill id="centerBezelFill" angle="45">
+			<GradientStop color="{ColorUtil.adjustBrightness2(_bezelColor,85)}" ratio="0"/>
+			<GradientStop color="{ColorUtil.adjustBrightness2(_bezelColor,-50)}" ratio="1"/>
+		</LinearGradientFill>
+		
+		<LinearGradientFill id="innerBezelFill" angle="135">
+			<GradientStop color="{ColorUtil.adjustBrightness2(_bezelColor,60)}" ratio="0"/>
+			<GradientStop color="{ColorUtil.adjustBrightness2(_bezelColor,-40)}" ratio="1"/>
+		</LinearGradientFill>
+    </fills>
+
+    <strokes>
+			<LinearGradientStroke id="indicatorStroke" weight="{_diameter/300}" angle="{_indicatorFillRotation-90}">
+				<GradientStop color="{ColorUtil.adjustBrightness2(_indicatorColor,-30)" alpha=".5"/>
+				<GradientStop color="{ColorUtil.adjustBrightness2(_indicatorColor,0)" alpha=".5"/>
+			</LinearGradientStroke>
+     		<SolidStroke id="measureMarksStroke" color="{_measureMarksColor}" weight="{_diameter/200}" alpha="{_measureMarksAlpha}"/>
+     		<SolidStroke id="innerBezelStroke" color="{ColorUtil.adjustBrightness2(_faceColor,-40)}" weight="{_diameter/200}" alpha=".7"/>
+     		<LinearGradientStroke id="greyGradStroke" angle="45">
+				<GradientStop alpha=".8" color="#999999"/>
+				<GradientStop alpha=".2" color="#444444"/>
+			</LinearGradientStroke>
+    </strokes>
+	
+   	<geometry>
+   		
+		<degrafa:GeometryComposition id="face" visible="false">
+			<Circle radius="{_diameter*.5}" fill="{outerBezelFill}" stroke="{greyGradStroke}"/>
+			<Circle radius="{_diameter*.495}" fill="{centerBezelFill}"/>
+			<Circle radius="{_diameter*.46}" fill="{innerBezelFill}"/>
+			<Circle radius="{_diameter*.45}" fill="{outerBezelFill}"/>
+			<Circle radius="{_diameter*.45}" fill="{faceFill}" stroke="{innerBezelStroke}" />
+			
+			<coreRepeaters:GeometryRepeater count="0" id="alertRepeater" suppressEventProcessing="true">
+				<EllipticalArc x="{-_diameter*.395}" y="{-_diameter*.395}" width="{_diameter*.395*2}" height="{_diameter*.395*2}" closureType="open">
+						<stroke>
+							<SolidStroke color="0xFFFFFF" weight="{30*_diameter/400}" suppressEventProcessing="true" caps="none"/>
+						</stroke>
+				</EllipticalArc>
+				<coreRepeaters:modifiers>
+					<PropertyModifier property="startAngle" offsetOperator="none" id="startAngleOffsets" />
+					<PropertyModifier property="arc" offsetOperator="none" id="arcOffsets" />
+					<PropertyModifier property="stroke.color" offsetOperator="none" id="colorOffsets" />
+					<PropertyModifier property="stroke.alpha" offsetOperator="none" id="alphaOffsets" />
+				</coreRepeaters:modifiers>
+			</coreRepeaters:GeometryRepeater>
+			
+			<repeaters:ArcLineRepeater centerXOffset="0" centerYOffset="0" 
+				startAngle="{_endAngle}" endAngle="{_startAngle}" angleOffset="{minorTickOffset}" 
+				innerRadius="{_diameter*.37}" outerRadius="{_diameter*.43}"
+				stroke="{measureMarksStroke}"/>	
+			<repeaters:ArcLineRepeater centerXOffset="0" centerYOffset="0"
+				startAngle="{_endAngle}" endAngle="{_startAngle}" angleOffset="{majorTickOffset}" 
+				innerRadius="{_diameter*.34}" outerRadius="{_diameter*.43}"
+				stroke="{measureMarksStroke}"/>	
+							
+		</degrafa:GeometryComposition>
+			
+		<degrafa:GeometryComposition id="indicator" visible="false">
+			<!-- rotated to face straight down -->
+			<Polygon fill="{indicatorFill}" stroke="{indicatorStroke}"
+				data="{
+				String(_diameter*-.03) + ',' + String(_diameter*-.16) + ' ' + 
+				String(_diameter*-.04) + ',' + String(_diameter*-.15) + ' ' +
+				String(_diameter*-.01) + ',' + String(_diameter*.40) + ' ' +
+				String(0) + ',' + String(_diameter*.41) + ' ' +
+				String(_diameter*.01) + ',' + String(_diameter*.40) + ' ' +
+				String(_diameter*.04) + ',' + String(_diameter*-.15) + ' ' +
+				String(_diameter*.03) + ',' + String(_diameter*-.16) 
+				}"/>
+		</degrafa:GeometryComposition>
+		
+		<degrafa:GeometryComposition id="indicatorCrown" visible="false">
+			<Circle radius="{_diameter*.06}" fill="{indicatorCrownFillOuter}" stroke="{greyGradStroke}"/>
+			<Circle radius="{_diameter*.05}" fill="{indicatorCrownFillInner}"/>
+			<Circle radius="{_diameter*.04}" fill="{indicatorCrownFillInner}"/>
+			<Circle radius="{_diameter*.02}" fill="{indicatorCrownFillOuter}"/>
+		</degrafa:GeometryComposition>
+		
+		<degrafa:GeometryComposition id="faceReflection" visible="false">
+			<Ellipse width="{_diameter*.65}" height="{_diameter*.48}" fill="{reflectionFillTop}" y="{_diameter*-.43}" x="{_diameter*-.325}" />
+			<Ellipse width="{_diameter*.5}" height="{_diameter*.25}" fill="{reflectionFillBottom}"  y="{_diameter*.23}" x="{_diameter*-.235}"/>
+		</degrafa:GeometryComposition>
+		
+	</geometry>
+</GraphicBorderSkin>

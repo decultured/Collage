@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<clg:ClipView xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.Clip.*"
+	backgroundColor="0x000000"
+	backgroundAlpha="0"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	creationComplete="Initialize()"
+	xmlns:degrafa="http://www.degrafa.com/2007"
+	xmlns:flash.filters="flash.filters.*"
+	xmlns:controls="com.brightPoint.controls.*"
+	>
+	
+	<mx:Style>
+		.dialSkin {
+			faceSkin: ClassReference("com.brightPoint.controls.gauge.DialSkin");
+			indicatorSkin: ClassReference("com.brightPoint.controls.gauge.DialSkin");
+			indicatorCrownSkin: ClassReference("com.brightPoint.controls.gauge.DialSkin");
+			highlightSkin: ClassReference("com.brightPoint.controls.gauge.DialSkin");
+		}
+		
+		.gaugeSkin {
+			faceSkin: ClassReference("com.brightPoint.controls.gauge.GaugeSkin");
+			indicatorSkin: ClassReference("com.brightPoint.controls.gauge.GaugeSkin");
+			indicatorCrownSkin: ClassReference("com.brightPoint.controls.gauge.GaugeSkin");
+			highlightSkin: ClassReference("com.brightPoint.controls.gauge.GaugeSkin");
+		}
+		
+		.gaugeLabel {
+			fontSize:14pt;
+			color:#FFFFFF;	
+		}
+	
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+		import com.brightPoint.controls.gauge.GaugeSkin;
+        import mx.collections.ArrayCollection;
+		import mx.events.PropertyChangeEvent;
+
+		protected function Initialize():void
+		{
+			
+		}
+		
+		protected override function onModelChange( event:PropertyChangeEvent):void
+		{
+			var guageModel:GuageClip = _Model as GuageClip;
+			gauge.minimum 	= guageModel.minimum;
+			gauge.maximum 	= guageModel.maximum;
+			gauge.value 	= guageModel.value;
+			if (guageModel.width > guageModel.height)
+				gauge.diameter	= guageModel.height - 10;
+			else
+				gauge.diameter	= guageModel.width - 10;
+				
+			gauge.setStyle('backgroundColor', guageModel.backgroundColor);
+			gauge.setStyle('bezelColor', guageModel.bezelColor);
+			gauge.setStyle('measureMarksColor', guageModel.measureMarksColor);
+			gauge.setStyle('measureMarksAlpha', guageModel.measureMarksAlpha);
+			gauge.setStyle('startAngle', guageModel.startAngle);
+			gauge.setStyle('endAngle', guageModel.endAngle);
+			gauge.setStyle('indicatorColor', guageModel.indicatorColor);
+			gauge.setStyle('indicatorCrownColor', guageModel.indicatorCrownColor);
+			
+			super.onModelChange(event);
+		}
+		]]>
+    </mx:Script>
+	<controls:DegrafaGauge 	id="gauge" diameter="400" liveDragging="true"
+		horizontalCenter="0" verticalCenter="0"
+		styleName="gauge"
+		startAngle="45" minimum="1" maximum="100" 
+		endAngle="315" 
+		labelStyleName="gaugeLabel" labelFormatter="{formatter}"
+		/>
+	<mx:NumberFormatter precision="0" id="formatter"/>
+</clg:ClipView>

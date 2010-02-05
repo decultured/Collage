@@ -25,6 +25,7 @@ package Collage.Document
 			var newModel:Document = new Document();
 			newModel.CreateEditView(this);
 			model = newModel;
+			_BackgroundImage.addEventListener(MouseEvent.CLICK, BackgroundClick);
 		}
 
 		public function InitializeForEdit(newInspector:UIComponent, newOptionsBox:UIComponent):void
@@ -167,10 +168,14 @@ package Collage.Document
 		
 		public function BackgroundClick(event:MouseEvent):void
 		{		
-			if(event && event.target == this) {
-				_ObjectHandles.selectionManager.clearSelection();
-				SelectDocument();
+			if(event && (event.target == this || event.target == _BackgroundImage)) {
+				ClearSelection();
 			}
+		}
+		
+		public function ClearSelection():void {
+			_ObjectHandles.selectionManager.clearSelection();
+			SelectDocument();
 		}
 		
 		public function SelectDocument():void
