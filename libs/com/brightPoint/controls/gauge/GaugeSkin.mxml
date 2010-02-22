@@ -186,8 +186,8 @@
 
     <strokes>
 			<LinearGradientStroke id="indicatorStroke" weight="{_diameter/300}" angle="{_indicatorFillRotation-90}">
-				<GradientStop color="{ColorUtil.adjustBrightness2(_indicatorColor,-30)" alpha=".5"/>
-				<GradientStop color="{ColorUtil.adjustBrightness2(_indicatorColor,0)" alpha=".5"/>
+				<GradientStop color="{ColorUtil.adjustBrightness2(_indicatorColor,-30)}" alpha=".5"/>
+				<GradientStop color="{ColorUtil.adjustBrightness2(_indicatorColor,0)}" alpha=".5"/>
 			</LinearGradientStroke>
      		<SolidStroke id="measureMarksStroke" color="{_measureMarksColor}" weight="{_diameter/200}" alpha="{_measureMarksAlpha}"/>
      		<SolidStroke id="innerBezelStroke" color="{ColorUtil.adjustBrightness2(_faceColor,-40)}" weight="{_diameter/200}" alpha=".7"/>

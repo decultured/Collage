@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <clg:ClipView xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Clip.*"
+	xmlns:ofc="*"
 	backgroundColor="0x000000"
 	backgroundAlpha="0"
 	horizontalScrollPolicy="off"
@@ -12,12 +13,11 @@
         import mx.collections.ArrayCollection;
 		import mx.events.PropertyChangeEvent;
 
+		[Bindable]
+		private var dataJSON:String='{ "elements": [ { "type": "bar","alpha":0.8,"colour":"#663366", "values": [ 9.5, 9, 8.5,8, 7.5, 7, 6.5, 6, 5.5,5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1 ] } ], "title": { "text": "Wed May 20 2009" },"bg_colour":"#fcfcfc" }';
+
 		protected function Initialize():void
 		{
-			var bitmap:Bitmap = displayImage.content as Bitmap;
-			if (bitmap != null && bitmap.smoothing == false) {
-			    bitmap.smoothing = true;
-			}
 		}
 		
 		protected override function onModelChange( event:PropertyChangeEvent):void
@@ -25,9 +25,11 @@
 			var pieChartModel:PieChartClip = _Model as PieChartClip;
 			setStyle("backgroundColor", pieChartModel.backgroundColor);
 			setStyle("backgroundAlpha", pieChartModel.backgroundAlpha);
+			myChart.width = pieChartModel.width;
+			myChart.height = pieChartModel.height;
 			super.onModelChange(event);
 		}
 		]]>
     </mx:Script>
-	<mx:Image id="displayImage" horizontalAlign="left" verticalAlign="top" top="0" left="0" right="0" bottom="0" source="@Embed('../../../../assets/piechart.png')" />
+	<ofc:Chart id="myChart" width="400" height="300" loadingString="Loading…" chartData="{dataJSON}"/>
 </clg:ClipView>

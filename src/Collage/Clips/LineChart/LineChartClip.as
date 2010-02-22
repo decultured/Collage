@@ -44,17 +44,7 @@ package Collage.Clips.LineChart
 		
 		public override function Resized():void
 		{
-			if (!height)
-				return;
-				
-			var modelRatio:Number = width / height;
-		
-			if (modelRatio > 1.67114) {
-				width = height * 1.67114;
-			} else if (modelRatio < 1.67114) {
-				height = width / 1.67114;
-			}
+			
 		}
-		
 	}
 }

@@ -44,16 +44,6 @@ package Collage.Clips.BarChart
 
 		public override function Resized():void
 		{
-			if (!height)
-				return;
-				
-			var modelRatio:Number = width / height;
-		
-			if (modelRatio > 2.0067) {
-				width = height * 2.0067;
-			} else if (modelRatio < 2.0067) {
-				height = width / 2.0067;
-			}
 		}
 	}
 }

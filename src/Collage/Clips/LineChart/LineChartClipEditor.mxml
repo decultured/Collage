@@ -1,13 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <clg:ClipEditor xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Clip.*"
+	xmlns:flexlib="flexlib.containers.*"
 	backgroundColor="0x000000"
 	backgroundAlpha="0"
 	horizontalScrollPolicy="off"
 	verticalScrollPolicy="off"
 	creationComplete="Initialize()" 
 	width="100%" >
-	
+	<mx:Style>
+	    .linkButtonWindowShade {
+	      	headerClass:ClassReference('mx.controls.LinkButton');
+	      	header-style-name: linkButtonStyle;
+	     	drop-shadow-enabled:false;
+	      	corner-radius:3;
+	      	border-style:solid;
+	    	background-color:#efefef;
+	    	background-alpha:.7;
+			padding-left:7;
+			padding-right:7;
+			padding-top:7;
+			padding-bottom:7;
+	    }         
+	    
+	    .linkButtonStyle {
+	    	corner-radius:3;
+	    	fill-alphas:1,1;
+	    	padding-left:10;
+	    }
+	</mx:Style>
 	<mx:Script>
 	<![CDATA[
 		private function Initialize():void
@@ -22,19 +43,35 @@
 			if (_Model) {
 				var lineChartModel:LineChartClip = _Model as LineChartClip;
 				lineChartModel.backgroundColor = backgroundColorPicker.selectedColor;
-				lineChartModel.backgroundAlpha = transparencySlider.value;
 			}
 		}
 	]]>
     </mx:Script>
-	<mx:Panel title="Line Chart Settings" backgroundColor="0xC1C1C1" width="100%" dropShadowEnabled="false" >
-		<mx:HRule width="100%" />
+	<flexlib:WindowShade label="General" styleName="linkButtonWindowShade" width="100%">
+		<mx:Label text="Title:" color="#000000" fontWeight="bold" />
+		<mx:TextInput id="titleText" text="" color="0x323232" width="100%" change="SettingsChanged()" />
+		<mx:HBox width="100%" >
+			<mx:Label text="Text Color:" color="#000000" fontWeight="bold" />
+			<mx:ColorPicker id="titleColor" showTextField="true" selectedColor="0x000000" change="SettingsChanged()" />
+		</mx:HBox>
 		<mx:HBox width="100%" >
 			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF" change="SettingsChanged()" />
 		</mx:HBox>
-		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
-		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="1"
-            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
-	</mx:Panel>
-	
+	</flexlib:WindowShade>
+	<flexlib:WindowShade label="Axis" styleName="linkButtonWindowShade" width="100%">
+		<mx:HRule width="100%" />
+		<mx:Label text="X Axis:" color="#000000" fontWeight="bold" />
+		<mx:TextInput id="xAxisText" text="" color="0x323232" width="100%" change="SettingsChanged()" />
+		<mx:HBox width="100%" >
+			<mx:Label text="Text Color:" color="#000000" fontWeight="bold" />
+			<mx:ColorPicker id="xAxisTextColor" showTextField="true" selectedColor="0x000000" change="SettingsChanged()" />
+		</mx:HBox>
+		<mx:HRule width="100%" />
+		<mx:Label text="Y Axis:" color="#000000" fontWeight="bold" />
+		<mx:TextInput id="yAxisText" text="" color="0x323232" width="100%" change="SettingsChanged()" />
+		<mx:HBox width="100%" >
+			<mx:Label text="Text Color:" color="#000000" fontWeight="bold" />
+			<mx:ColorPicker id="yAxisTextColor" showTextField="true" selectedColor="0x000000" change="SettingsChanged()" />
+		</mx:HBox>
+	</flexlib:WindowShade>	
 </clg:ClipEditor>
