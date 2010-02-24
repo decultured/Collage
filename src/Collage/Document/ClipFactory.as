@@ -9,6 +9,8 @@ package Collage.Document
 	import Collage.Clips.Guage.*;
 	import Collage.Clips.Picture.*;
 	import Collage.Clips.TextBox.*;
+	import Collage.Clips.Table.*;
+	import Collage.Clips.DataLabel.*;
 	
 	public class ClipFactory
 	{
@@ -25,6 +27,8 @@ package Collage.Document
 			_ClipTypes["piechart"] = PieChartClip;
 			_ClipTypes["barchart"] = BarChartClip;
 			_ClipTypes["guage"] = GuageClip;
+			_ClipTypes["table"] = TableClip;
+			_ClipTypes["datalabel"] = DataLabelClip;
 		}
 
 		public static function CreateByType(clipType:String):Clip
@@ -43,6 +47,10 @@ package Collage.Document
 				return new BarChartClip();
 			else if (clipType == "guage")
 				return new GuageClip();
+			else if (clipType == "table")
+				return new TableClip();
+			else if (clipType == "datalabel")
+				return new DataLabelClip();
 			return null;
 		}
 		

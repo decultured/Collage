@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<clg:ClipView xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.Clip.*"
+	backgroundColor="0x000000"
+	backgroundAlpha="0"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	creationComplete="Initialize()" >
+	
+	<mx:Script>
+	<![CDATA[
+		import mx.controls.Alert;
+		import mx.events.PropertyChangeEvent;
+		import mx.events.FlexEvent;
+		
+		public function Initialize():void
+		{
+			onModelChange(null);
+		}
+
+		protected override function onModelChange(event:PropertyChangeEvent):void
+		{
+			var dataLabelModel:DataLabelClip = _Model as DataLabelClip;
+			
+			if (displayLabel) {
+				displayLabel.validateNow();
+				displayLabel.text = dataLabelModel.text;
+				displayLabel.setStyle("color", dataLabelModel.color);
+				displayLabel.setStyle("fontSize", dataLabelModel.fontSize);
+				dataLabelModel.textWidth = displayLabel.textWidth + 20;
+				dataLabelModel.textHeight = displayLabel.textHeight;
+				displayLabel.validateNow();
+				dataLabelModel.Resized();
+			}
+			
+			setStyle("backgroundColor", dataLabelModel.backgroundColor);
+			setStyle("backgroundAlpha", dataLabelModel.backgroundAlpha);
+			super.onModelChange(event);
+		}
+	]]>
+    </mx:Script>
+	<mx:Label id="displayLabel" text="This Label displays plain text." fontSize="18" textAlign="center" left="0" right="0" top="0" bottom="0" />
+</clg:ClipView>

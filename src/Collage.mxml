@@ -140,5 +140,7 @@
 		<mx:Image id="addBarChartBtn" source="@Embed('../assets/icons/bar-chart-icon.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('barchart', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addPieChartBtn" source="@Embed('../assets/icons/pie-chart-icon.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('piechart', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addGuageBtn" source="@Embed('../assets/icons/guage.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('guage', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addTableBtn" source="@Embed('../assets/icons/table.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('table', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addDataLabelBtn" source="@Embed('../assets/icons/data-label.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('datalabel', new Rectangle(150, 150, 300, 300));" />
 	</mx:ApplicationControlBar>
 </mx:WindowedApplication>
