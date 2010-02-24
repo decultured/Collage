@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <clg:ClipEditor xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Clip.*"
+	xmlns:flexlib="flexlib.containers.*"
 	backgroundColor="0x000000"
 	backgroundAlpha="0"
 	horizontalScrollPolicy="off"
@@ -73,7 +74,7 @@
 		}
 	]]>
     </mx:Script>
-	<mx:Panel title="Document Settings" backgroundColor="0xC1C1C1" width="100%" dropShadowEnabled="false" >
+	<flexlib:WindowShade label="Document Settings" styleName="linkButtonWindowShade" width="100%">
 		<mx:HRule width="100%" />
 		<mx:HBox width="100%" >
 			<mx:Label text="Width:" color="#000000" fontWeight="bold" /><mx:TextInput id="canvasWidth" text="800" color="0x323232" width="100%" />
@@ -91,5 +92,5 @@
 			<mx:Label text="Image:" color="#000000" fontWeight="bold" /><mx:Label id="src" text="Unknown" color="#323232" />
 		</mx:HBox>
 		<mx:Button id="loadImageButton" label="Load Background Image" click="LoadFromFile()" />
-	</mx:Panel>
+	</flexlib:WindowShade>
 </clg:ClipEditor>

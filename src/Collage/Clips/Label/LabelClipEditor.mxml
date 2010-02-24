@@ -46,7 +46,7 @@
 		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="1"
             allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
 		<mx:Label text="Font Size:" color="#000000" fontWeight="bold" />
-		<mx:HSlider id="textFontSize" minimum="6" maximum="96" value="18" change="SettingsChanged()" />
+		<mx:HSlider id="textFontSize" minimum="6" maximum="96" value="18" snapInterval="1" change="SettingsChanged()" />
 	</mx:Panel>
 	
 </clg:ClipEditor>

@@ -4,16 +4,28 @@ package Collage.Clips.LineChart
 	
 	public class LineChartClip extends Clip
 	{		
-		private var _BackgroundAlpha:Number = 1.0;
-		private var _BackgroundColor:Number = 0xFFFFFF;
+		[Bindable] public var ChartStyle:String = "line";
+		
+		[Bindable] public var lineColor:Number = 0x0000FF;
+		[Bindable] public var lineWidth:Number = 2;
+		[Bindable] public var dotSize:Number = 2;
 
-		[Bindable]
-		public function get backgroundAlpha():Number {return _BackgroundAlpha;}
-		public function set backgroundAlpha(bgAlpha:Number):void {_BackgroundAlpha = bgAlpha;}
+		[Bindable] public var backgroundColor:Number = 0xFFFFEE;
+                              
+		[Bindable] public var showTitleText:Boolean = true;
+		[Bindable] public var titleTextFontSize:Number = 20;
+		[Bindable] public var titleText:String = "Title";
+		[Bindable] public var titleTextColor:Number = 0xFF0000;
+                              
+		[Bindable] public var showYAxisText:Boolean = false;
+		[Bindable] public var yAxisTextFontSize:Number = 20;
+		[Bindable] public var yAxisText:String = null;
+		[Bindable] public var yAxisTextColor:Number = 0xFF0000;
 
-		[Bindable]
-		public function get backgroundColor():Number {return _BackgroundColor;}
-		public function set backgroundColor(bgColor:Number):void {_BackgroundColor = bgColor;}
+		[Bindable] public var xAxisColor:Number = 0xFFCC00;
+		[Bindable] public var yAxisColor:Number = 0xFFCC00;
+		[Bindable] public var xAxisGridColor:Number = 0xFFEEAA;
+		[Bindable] public var yAxisGridColor:Number = 0xFFEEAA;
 
 		public function LineChartClip()
 		{

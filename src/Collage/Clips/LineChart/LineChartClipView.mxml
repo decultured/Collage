@@ -14,22 +14,61 @@
 		import mx.events.PropertyChangeEvent;
 		import mx.controls.Alert;
 
+//		private var dataJSONTemplate:String='
+
 		[Bindable]
-		private var dataJSON:String='{ "elements": [ { "type": "line","alpha":0.8,"colour":"#663366", "values": [ 9.5, 9, 8.5,8, 7.5, 7, 6.5, 6, 5.5,5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1 ] } ], "title": { "text": "Wed May 20 2009" },"bg_colour":"#fcfcfc" }';
+		private var dataJSON:String='{ "elements": [ { "type": "line","alpha":0.1,"colour":"#663366", "values": [ 9.5, 9, 8.5,8, 7.5, 7, 6.5, 6, 5.5,5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1 ] } ], "title": { "text": "Wed May 20 2009" },"bg_colour":"#fcfcfc" }';
 
 		protected function Initialize():void
 		{
+			WriteJSONDataString();
 		}
 		
 		protected override function onModelChange( event:PropertyChangeEvent):void
 		{
 			var lineChartModel:LineChartClip = _Model as LineChartClip;
-			setStyle("backgroundColor", lineChartModel.backgroundColor);
-			setStyle("backgroundAlpha", lineChartModel.backgroundAlpha);
-			myChart.width = lineChartModel.width;
-			myChart.height = lineChartModel.height;
-			myChart.load();
+			if (event && event.property != "x" && event.property != "y")
+			{
+				myChart.width = lineChartModel.width;
+				myChart.height = lineChartModel.height;
+				WriteJSONDataString();
+				myChart.load();
+			}
 			super.onModelChange(event);
+		}
+		
+		protected function WriteJSONDataString():void
+		{
+			var lineChartModel:LineChartClip = _Model as LineChartClip;
+
+			dataJSON = '{ "elements": [ { ';
+			dataJSON += '"type": "' + lineChartModel.ChartStyle + '",';
+			dataJSON += '"colour": "#' + lineChartModel.lineColor.toString(16) + '",';
+			dataJSON += '"width": ' + lineChartModel.lineWidth + ',';
+	      	dataJSON += '"dot-size": ' + lineChartModel.dotSize + ',';
+			dataJSON += '"grid_colour": "#' + lineChartModel.yAxisGridColor.toString(16) + '",';
+			dataJSON += '"values": [9.5, 9, 8.5,8, 7.5, 7, 6.5, 6, 5.5,5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1 ] } ], ';
+
+			if (lineChartModel.showTitleText) {
+				dataJSON += '"title": { "text": "' + lineChartModel.titleText;
+				dataJSON += '","style": "{font-size: ' + lineChartModel.titleTextFontSize + '; color:#' + lineChartModel.titleTextColor + '; font-family: Verdana; text-align: center;}" },'
+			}
+			if (lineChartModel.showYAxisText) {
+				dataJSON += '"y_legend": { "text": "' + lineChartModel.yAxisText;
+				dataJSON += '","style": "{font-size: ' + lineChartModel.titleTextFontSize + '; color:#' + lineChartModel.yAxisTextColor + '; font-family: Verdana; text-align: center;}" },'
+			}
+			
+			dataJSON += '"x_axis":{';
+			dataJSON += '"grid-colour": "#' + lineChartModel.xAxisGridColor.toString(16) + '",';
+			dataJSON += '"colour": "#' + lineChartModel.xAxisColor.toString(16) + '"';
+			dataJSON += '},';
+
+			dataJSON += '"y_axis":{';
+			dataJSON += '"grid-colour": "#' + lineChartModel.yAxisGridColor.toString(16) + '",';
+			dataJSON += '"colour": "#' + lineChartModel.yAxisColor.toString(16) + '"';
+			dataJSON += '},';
+			
+			dataJSON += '"bg_colour":"#' + lineChartModel.backgroundColor.toString(16) + '" }';
 		}
 		]]>
     </mx:Script>
