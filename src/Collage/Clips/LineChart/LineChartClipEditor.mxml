@@ -30,16 +30,22 @@
 	</mx:Style>
 	<mx:Script>
 	<![CDATA[
+		import mx.controls.Alert;
+		import Collage.DataEngine.*
 		import mx.collections.ArrayCollection;
-
+		
 		[Bindable]
 		public var chartStyles:ArrayCollection = new ArrayCollection(
 		    [ {label:"Solid Line", data:1}, 
 		      {label:"Dotted Line", data:2}, 
 		      {label:"Hollow Dots", data:3} ]);
-	
+		
+		[Bindable] public var dataSetSelections:Array = new Array();
+		[Bindable] public var dataSetColumnSelections:Array = new Array();
+		
 		private function Initialize():void
 		{
+			DataEngineConnect();
 			if (_Model) {
 				var lineChartModel:LineChartClip = _Model as LineChartClip;
 //				titleText = lineChartModel.
@@ -99,9 +105,61 @@
 				lineChartModel.yAxisTextColor = yAxisTextColor.selectedColor;
 			}
 		}
+		
+		private function DataEngineConnect():void
+		{
+			if (!DataEngine.loaded) {
+				DataEngine.events.addEventListener(DataEngine.COMPLETE, DatasLoaded);
+			}
+			DatasLoaded(null);
+		}
+		
+		private function DatasLoaded(event:Event):void
+		{
+			dataConnectionResults.text = DataEngine.resultsString;
+			
+			dataSetSelections = new Array();
+			
+			for (var key:String in DataEngine.datasets) {
+				var newObject:Object = new Object;
+				newObject["label"] = DataEngine.datasets[key].title;
+				newObject["data"] = DataEngine.datasets[key].id;
+				dataSetSelections.push(newObject);
+			}
+		}
+		
+		private function DataSetSelectorChanged():void
+		{
+			dataSetColumnSelector.enabled = true;
+		
+			if (!dataSetSelector.selectedItem.data || !DataEngine.datasets[dataSetSelector.selectedItem.data])
+				return;
+				
+			var dataset:DataSet = DataEngine.datasets[dataSetSelector.selectedItem.data];
+			
+			if (!dataset.loaded || !dataset.columns)
+				return;
+				
+			dataSetColumnSelections = new Array();
+
+			dataConnectionResults.text = dataset.resultsString;
+			
+			for (var key:String in dataset.columns) {
+				var newObject:Object = new Object;
+				newObject["label"] = dataset.columns[key].label;
+				newObject["data"] = dataset.columns[key].internalLabel;
+				dataSetColumnSelections.push(newObject);
+			}
+		}
 	]]>
     </mx:Script>
-	<flexlib:WindowShade label="General" styleName="linkButtonWindowShade" width="100%">
+	<flexlib:WindowShade label="Data Connection" styleName="linkButtonWindowShade" width="100%">
+		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="100%" change="DataSetSelectorChanged()"/>
+		<mx:ComboBox id="dataSetColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="100%" change="DataSetSelectorChanged()"/>
+		<mx:Button id="dataConnectButton" label="Connect to DataEngine" click="DataEngineConnect()"  />
+		<mx:TextArea id="dataConnectionResults" width="100%" height="160" color="0x323232" />
+	</flexlib:WindowShade>
+	<flexlib:WindowShade opened="false" label="General Styles" styleName="linkButtonWindowShade" width="100%">
 		<mx:ComboBox id="chartStyle" dataProvider="{chartStyles}" width="150" change="SettingsChanged()"/>
 		<mx:HBox width="100%" >
 			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" />
@@ -143,8 +201,8 @@
 		<mx:HSlider id="lineWidth" minimum="1" maximum="32" value="2" snapInterval="1" change="SettingsChanged()" />
 		<mx:Label text="Dot Size:" color="#000000" fontWeight="bold" />
 		<mx:HSlider id="dotSize" minimum="1" maximum="32" value="2" snapInterval="1" change="SettingsChanged()" />
-			</flexlib:WindowShade>
-	<flexlib:WindowShade label="Labels" styleName="linkButtonWindowShade" width="100%">
+	</flexlib:WindowShade>
+	<flexlib:WindowShade opened="false" label="Labels" styleName="linkButtonWindowShade" width="100%">
 		<mx:HRule width="100%" />
 		<mx:HBox width="100%" >
 			<mx:Label text="Title:" color="#000000" fontWeight="bold" />

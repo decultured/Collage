@@ -1,17 +1,109 @@
 package Collage.DataEngine
 {
-	public class DataSet
+	import flash.net.*;
+	import flash.events.*;
+	import mx.controls.Alert;
+	import com.adobe.serialization.json.JSON;
+
+	public class DataSet extends EventDispatcher
 	{
+		public static var COMPLETE:String = "complete";
+
+		[Bindable] public var loaded:Boolean = false;
+		[Bindable] public var loading:Boolean = false;
+
+		[Bindable] public var id:String = "";
+		[Bindable] public var title:String = "";
+
+		[Bindable] public var totalRows:Number = 0;
+
 		[Bindable] public var uploaded:Boolean = false;
-		[Bindable] public var title:String;
-		[Bindable] public var changed:Number;
-		[Bindable] public var created:Number;
 		[Bindable] public var processed:Boolean = false;
-		[Bindable] public var identifier:String;
-		[Bindable] public var id:String;
+
+		[Bindable] public var created:String = "";
+		[Bindable] public var changed:String = "";
+		[Bindable] public var accessed:String = "";
 		
-		public static function DataSet():void
+		public var columns:Object = new Object();
+
+		public var resultsString:String = "";
+
+		public function DataSet():void
 		{
+			
 		}
+
+		public function GetFields():void
+		{
+			loading = true;
+
+			if (!id || id.length < 5)
+				return;
+			
+			var request:URLRequest = new URLRequest("http://dataengine.endlesspaths.com/api/v1/dataset/" + id + "/metadata");
+			var loader:URLLoader = new URLLoader();
+			var params:URLVariables = new URLVariables();
+			//params.WHATEVER = WHATEVER YOU WANT IT TO BE;
+			request.data = params;
+			request.method = URLRequestMethod.GET;
+			loader.addEventListener(Event.COMPLETE, CompleteHandler);
+            loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, SecurityErrorHandler);
+            loader.addEventListener(IOErrorEvent.IO_ERROR, IOErrorHandler);
+			
+			loader.load(request);
+		}
+		
+		private function IOErrorHandler(event:IOErrorEvent):void
+		{
+            event.target.removeEventListener(IOErrorEvent.IO_ERROR, IOErrorHandler);
+			Alert.show("ioErrorHandler: " + event);
+		}
+		
+        private function SecurityErrorHandler(event:SecurityErrorEvent):void
+		{
+            event.target.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, SecurityErrorHandler);
+            Alert.show("securityErrorHandler: " + event);
+        }
+
+		private function CompleteHandler(event:Event):void
+		{
+			event.target.removeEventListener(Event.COMPLETE, CompleteHandler);
+			var results:Object = JSON.decode(event.target.data);
+
+			for (var key:String in results)
+			{
+				resultsString += key + " " + results[key].toString() + "\n";
+				if (key == "total_rows") {
+					totalRows == parseInt(results[key]);
+				} else if (key == "columns") {
+					for (var columnKey:String in results[key]) {
+						if (!results[key][columnKey]["internal"])
+							continue;
+						if (!columns[results[key][columnKey]["internal"]])
+							columns[results[key][columnKey]["internal"]] = new DataSetColumn();
+
+						var newColumn:DataSetColumn = columns[results[key][columnKey]["internal"]];
+						for (var columnDataKey:String in results[key][columnKey])
+						{
+							if (columnDataKey == "internal")
+								newColumn.internalLabel = results[key][columnKey][columnDataKey];
+							else if (columnDataKey == "label")
+								newColumn.label = results[key][columnKey][columnDataKey];
+							else if (columnDataKey == "index")
+								newColumn.index = results[key][columnKey][columnDataKey];
+							else if (columnDataKey == "datatype")
+								newColumn.datatype = results[key][columnKey][columnDataKey];
+
+							resultsString += columnDataKey + " " + results[key][columnKey][columnDataKey].toString() + "\n";
+						}
+					}
+				}
+			}
+			
+			dispatchEvent(new Event(COMPLETE));
+			loading = false;
+			loaded = true;
+		}
+
 	}
 }

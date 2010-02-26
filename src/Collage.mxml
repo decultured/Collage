@@ -7,6 +7,8 @@
 	minWidth="500"
 	height="600"
 	width="800"
+	x="0"
+	y="0"
 	showStatusBar="false"
 	borderThickness="1"
 	borderColor="#313131"
@@ -33,13 +35,15 @@
 		import flash.desktop.Clipboard;
 	    import flash.desktop.ClipboardFormats;
 	    import flash.desktop.ClipboardTransferMode;
-
+		import Collage.DataEngine.*;
+		
 //		private var _EditDocumentView:EditDocumentView;
 		private var _Document:Document;
 
 		private function Initialize():void
 		{
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown); 
+			DataEngine.GetAllDataSets();
 
 //			_Document = new Document(true);
 //			_EditDocumentView = mainEditCanvas.view as EditDocumentView;

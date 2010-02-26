@@ -5,7 +5,7 @@ package Collage.DataEngine
 		public var limit:Number = 10;
 		public var dataset:String;
 		
-		public static function DataQuery():void
+		public function DataQuery():void
 		{
 		}
 	}

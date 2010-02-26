@@ -7,7 +7,7 @@ package Collage.DataEngine
 		public var group:Boolean = false;
 		public var name:String;
 		
-		public static function DataQuery():void
+		public function DataQuery():void
 		{
 		}
 	}
