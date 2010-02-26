@@ -121,18 +121,43 @@
 		private function DatasLoaded(event:Event):void
 		{
 			DataEngine.events.removeEventListener(DataEngine.COMPLETE, DatasLoaded);
-
 			dataSetSelections = DataEngine.GetDataSetsComboBox();
 		}
 
-		private function XColumnSelectorChanged():void
+		private function ColumnSelectorChanged():void
 		{
+			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
 
-		}
-		
-		private function YColumnSelectorChanged():void
-		{
-		
+			if (!dataset || !_Model)
+				return;
+			
+			var lineChartModel:LineChartClip = _Model as LineChartClip;
+
+			var xDataColumn:DataSetColumn = dataset.GetColumnByID(dataSetXColumnSelector.selectedItem.data);
+			var yDataColumn:DataSetColumn = dataset.GetColumnByID(dataSetYColumnSelector.selectedItem.data);
+
+			if (yDataColumn) {
+				lineChartModel.showYAxisText = true;
+				yAxisText.text = yDataColumn.label;
+				lineChartModel.yAxisText = yDataColumn.label;	
+				lineChartModel.yAxisDataColumn = yDataColumn.label;
+			}
+
+			if (xDataColumn) {
+				lineChartModel.showXAxisText = true;
+				xAxisText.text = xDataColumn.label;
+				lineChartModel.xAxisText = xDataColumn.label;
+				lineChartModel.xAxisDataColumn = xDataColumn.label;
+			}
+			
+			if (yDataColumn && xDataColumn) {
+				var query:DataQuery = new DataQuery();
+				
+				query.dataset = dataset.id;
+				query.AddField(xDataColumn.label, true);
+				query.AddField(yDataColumn.label);
+				query.LoadQueryResults();
+			}			
 		}
 		
 		private function DataSetSelectorChanged():void
@@ -142,18 +167,26 @@
 		
 			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
 
-			if (dataset)
+			if (dataset) {
+				if (_Model) {
+					var lineChartModel:LineChartClip = _Model as LineChartClip;
+					lineChartModel.showTitleText = true;
+					titleText.text = dataset.title;
+					lineChartModel.titleText = dataset.title;
+					lineChartModel.dataSetID = dataset.id;
+				}
 				dataSetColumnSelections = dataset.GetColumnsComboBox();
+			}
 		}
 	]]>
     </mx:Script>
 	<flexlib:WindowShade label="Data Connection" styleName="linkButtonWindowShade" width="100%">
 		<mx:Label text="Data Set:" color="#000000" fontWeight="bold" />
-		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="100%" change="DataSetSelectorChanged()"/>
+		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="230" change="DataSetSelectorChanged()"/>
 		<mx:Label text="Y Axis Value:" color="#000000" fontWeight="bold" />
-		<mx:ComboBox id="dataSetYColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="100%" change="YColumnSelectorChanged()"/>
+		<mx:ComboBox id="dataSetYColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
 		<mx:Label text="X Axis Value:" color="#000000" fontWeight="bold" />
-		<mx:ComboBox id="dataSetXColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="100%" change="XColumnSelectorChanged()"/>
+		<mx:ComboBox id="dataSetXColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
 	</flexlib:WindowShade>
 	<flexlib:WindowShade opened="false" label="General Styles" styleName="linkButtonWindowShade" width="100%">
 		<mx:ComboBox id="chartStyle" dataProvider="{chartStyles}" width="150" change="SettingsChanged()"/>

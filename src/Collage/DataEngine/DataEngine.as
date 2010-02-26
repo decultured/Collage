@@ -32,6 +32,12 @@ package Collage.DataEngine
 		public static function GetDataSetsComboBox():Array
 		{
 			var dataSetSelections:Array = new Array();
+
+			var firstObject:Object = new Object;
+			firstObject["label"] = "Please Select a Dataset...";
+			firstObject["data"] = "";
+			dataSetSelections.push(firstObject);
+			
 			for (var key:String in datasets) {
 				var newObject:Object = new Object;
 				newObject["label"] = datasets[key].title;

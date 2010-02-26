@@ -31,7 +31,7 @@ package Collage.DataEngine
 			
 		}
 
-		public function GetColumnByID(id:String):DataSet
+		public function GetColumnByID(id:String):DataSetColumn
 		{
 			if (columns[id])
 				return columns[id];
@@ -41,6 +41,12 @@ package Collage.DataEngine
 		public function GetColumnsComboBox():Array
 		{
 			var columnSelections:Array = new Array();
+
+			var firstObject:Object = new Object;
+			firstObject["label"] = "Please Select a Data Column...";
+			firstObject["data"] = "";
+			columnSelections.push(firstObject);
+
 			for (var key:String in columns) {
 				var newObject:Object = new Object;
 				newObject["label"] = columns[key].label;

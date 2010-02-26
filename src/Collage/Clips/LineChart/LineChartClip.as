@@ -4,6 +4,12 @@ package Collage.Clips.LineChart
 	
 	public class LineChartClip extends Clip
 	{		
+		[Bindable] public var dataSetID:String = null;
+		[Bindable] public var xAxisDataColumn:String = null;
+		[Bindable] public var yAxisDataColumn:String = null; 
+		
+		[Bindable] public var Data:Array = new Array();
+		
 		[Bindable] public var ChartStyle:String = "line";
 		
 		[Bindable] public var lineColor:Number = 0x0000FF;
