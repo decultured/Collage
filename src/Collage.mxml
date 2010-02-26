@@ -43,7 +43,7 @@
 		private function Initialize():void
 		{
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown); 
-			DataEngine.GetAllDataSets();
+			DataEngine.LoadAllDataSets();
 
 //			_Document = new Document(true);
 //			_EditDocumentView = mainEditCanvas.view as EditDocumentView;

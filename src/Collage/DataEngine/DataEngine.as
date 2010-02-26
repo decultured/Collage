@@ -12,7 +12,6 @@ package Collage.DataEngine
 		public static var datasets:Object = new Object();
 		public static var numDataSets:Number = 0;
 		
-		public static var resultsString:String = "";
 		public static var events:EventDispatcher = new EventDispatcher();
 
 		[Bindable]public static var loaded:Boolean = false;
@@ -21,6 +20,25 @@ package Collage.DataEngine
 		public function DataEngine():void
 		{
 			
+		}
+		
+		public static function GetDataSetByID(id:String):DataSet
+		{
+			if (datasets[id])
+				return datasets[id];
+			return null;
+		}
+		
+		public static function GetDataSetsComboBox():Array
+		{
+			var dataSetSelections:Array = new Array();
+			for (var key:String in datasets) {
+				var newObject:Object = new Object;
+				newObject["label"] = datasets[key].title;
+				newObject["data"] = datasets[key].id;
+				dataSetSelections.push(newObject);
+			}
+			return dataSetSelections;
 		}
 		
 		public static function get DataSetsLoaded():Boolean
@@ -33,7 +51,7 @@ package Collage.DataEngine
 			return true;
 		}
 		
-		public static function GetAllDataSets():void
+		public static function LoadAllDataSets():void
 		{
 			// http://dataengine.local/api/v1/dataset/list
 			
@@ -82,19 +100,15 @@ package Collage.DataEngine
 				}
 				var newDataSet:DataSet = datasets[results[key]["id"]];
 
-				resultsString += key + " " + results[key].toString() + " " + newDataSet.title + "\n";
-
 				for (var dataSetKey:String in results[key]) {
 					if (dataSetKey == "uploaded" || dataSetKey == "processed") {
 						(results[key][dataSetKey] == "true") ? newDataSet[dataSetKey] = true : newDataSet[dataSetKey] = false;
 					} else {
 						newDataSet[dataSetKey] = results[key][dataSetKey];
 					}
-						
-					resultsString += "    " + dataSetKey + " " + results[key][dataSetKey].toString() + "\n";
 				}
 				
-				newDataSet.GetFields();
+				newDataSet.LoadColumns();
 			}
 			
 			events.dispatchEvent(new Event(COMPLETE));

@@ -12,15 +12,20 @@ package Collage.Clips.LineChart
 
 		[Bindable] public var backgroundColor:Number = 0xFFFFEE;
                               
-		[Bindable] public var showTitleText:Boolean = true;
+		[Bindable] public var showTitleText:Boolean = false;
 		[Bindable] public var titleTextFontSize:Number = 20;
-		[Bindable] public var titleText:String = "Title";
+		[Bindable] public var titleText:String = "";
 		[Bindable] public var titleTextColor:Number = 0xFF0000;
                               
 		[Bindable] public var showYAxisText:Boolean = false;
 		[Bindable] public var yAxisTextFontSize:Number = 20;
-		[Bindable] public var yAxisText:String = null;
+		[Bindable] public var yAxisText:String = "";
 		[Bindable] public var yAxisTextColor:Number = 0xFF0000;
+
+		[Bindable] public var showXAxisText:Boolean = false;
+		[Bindable] public var xAxisTextFontSize:Number = 20;
+		[Bindable] public var xAxisText:String = "";
+		[Bindable] public var xAxisTextColor:Number = 0xFF0000;
 
 		[Bindable] public var xAxisColor:Number = 0xFFCC00;
 		[Bindable] public var yAxisColor:Number = 0xFFCC00;

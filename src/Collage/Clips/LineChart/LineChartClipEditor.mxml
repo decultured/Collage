@@ -103,61 +103,57 @@
 				lineChartModel.yAxisText = yAxisText.text;
 				lineChartModel.yAxisTextFontSize = yAxisTextFontSize.value;
 				lineChartModel.yAxisTextColor = yAxisTextColor.selectedColor;
+
+				lineChartModel.showXAxisText = showXAxisText.selected;
+				lineChartModel.xAxisText = xAxisText.text;
+				lineChartModel.xAxisTextFontSize = xAxisTextFontSize.value;
+				lineChartModel.xAxisTextColor = xAxisTextColor.selectedColor;
 			}
 		}
 		
 		private function DataEngineConnect():void
 		{
-			if (!DataEngine.loaded) {
+			if (!DataEngine.loaded)
 				DataEngine.events.addEventListener(DataEngine.COMPLETE, DatasLoaded);
-			}
-			DatasLoaded(null);
+			else DatasLoaded(null);
 		}
 		
 		private function DatasLoaded(event:Event):void
 		{
-			dataConnectionResults.text = DataEngine.resultsString;
-			
-			dataSetSelections = new Array();
-			
-			for (var key:String in DataEngine.datasets) {
-				var newObject:Object = new Object;
-				newObject["label"] = DataEngine.datasets[key].title;
-				newObject["data"] = DataEngine.datasets[key].id;
-				dataSetSelections.push(newObject);
-			}
+			DataEngine.events.removeEventListener(DataEngine.COMPLETE, DatasLoaded);
+
+			dataSetSelections = DataEngine.GetDataSetsComboBox();
+		}
+
+		private function XColumnSelectorChanged():void
+		{
+
+		}
+		
+		private function YColumnSelectorChanged():void
+		{
+		
 		}
 		
 		private function DataSetSelectorChanged():void
 		{
-			dataSetColumnSelector.enabled = true;
+			dataSetYColumnSelector.enabled = true;
+			dataSetXColumnSelector.enabled = true;
 		
-			if (!dataSetSelector.selectedItem.data || !DataEngine.datasets[dataSetSelector.selectedItem.data])
-				return;
-				
-			var dataset:DataSet = DataEngine.datasets[dataSetSelector.selectedItem.data];
-			
-			if (!dataset.loaded || !dataset.columns)
-				return;
-				
-			dataSetColumnSelections = new Array();
+			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
 
-			dataConnectionResults.text = dataset.resultsString;
-			
-			for (var key:String in dataset.columns) {
-				var newObject:Object = new Object;
-				newObject["label"] = dataset.columns[key].label;
-				newObject["data"] = dataset.columns[key].internalLabel;
-				dataSetColumnSelections.push(newObject);
-			}
+			if (dataset)
+				dataSetColumnSelections = dataset.GetColumnsComboBox();
 		}
 	]]>
     </mx:Script>
 	<flexlib:WindowShade label="Data Connection" styleName="linkButtonWindowShade" width="100%">
+		<mx:Label text="Data Set:" color="#000000" fontWeight="bold" />
 		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="100%" change="DataSetSelectorChanged()"/>
-		<mx:ComboBox id="dataSetColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="100%" change="DataSetSelectorChanged()"/>
-		<mx:Button id="dataConnectButton" label="Connect to DataEngine" click="DataEngineConnect()"  />
-		<mx:TextArea id="dataConnectionResults" width="100%" height="160" color="0x323232" />
+		<mx:Label text="Y Axis Value:" color="#000000" fontWeight="bold" />
+		<mx:ComboBox id="dataSetYColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="100%" change="YColumnSelectorChanged()"/>
+		<mx:Label text="X Axis Value:" color="#000000" fontWeight="bold" />
+		<mx:ComboBox id="dataSetXColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="100%" change="XColumnSelectorChanged()"/>
 	</flexlib:WindowShade>
 	<flexlib:WindowShade opened="false" label="General Styles" styleName="linkButtonWindowShade" width="100%">
 		<mx:ComboBox id="chartStyle" dataProvider="{chartStyles}" width="150" change="SettingsChanged()"/>
@@ -207,9 +203,9 @@
 		<mx:HBox width="100%" >
 			<mx:Label text="Title:" color="#000000" fontWeight="bold" />
 			<mx:Spacer width="100%" />
-			<mx:CheckBox id="showTitleText" label="Show" selected="true" change="SettingsChanged()" />
+			<mx:CheckBox id="showTitleText" label="Show" selected="false" change="SettingsChanged()" />
 		</mx:HBox>
-		<mx:TextInput id="titleText" text="Title" color="0x323232" width="100%" change="SettingsChanged()" />
+		<mx:TextInput id="titleText" text="" color="0x323232" width="100%" change="SettingsChanged()" />
 		<mx:Label text="Font Size:" color="#000000" fontWeight="bold" />
 		<mx:HSlider id="titleTextFontSize" minimum="6" maximum="96" value="20" snapInterval="1" change="SettingsChanged()" />
 		<mx:HBox width="100%" >
@@ -229,6 +225,20 @@
 		<mx:HBox width="100%" >
 			<mx:Label text="Text Color:" color="#000000" fontWeight="bold" />
 			<mx:ColorPicker id="yAxisTextColor" showTextField="true" selectedColor="0x000000" change="SettingsChanged()" />
+		</mx:HBox>
+
+		<mx:HRule width="100%" />
+		<mx:HBox width="100%" >
+			<mx:Label text="X Axis Legend:" color="#000000" fontWeight="bold" />
+			<mx:Spacer width="100%" />
+			<mx:CheckBox id="showXAxisText" label="Show" change="SettingsChanged()" />
+		</mx:HBox>
+		<mx:TextInput id="xAxisText" text="" color="0x323232" width="100%" change="SettingsChanged()" />
+		<mx:Label text="Font Size:" color="#000000" fontWeight="bold" />
+		<mx:HSlider id="xAxisTextFontSize" minimum="6" maximum="96" value="20" snapInterval="1" change="SettingsChanged()" />
+		<mx:HBox width="100%" >
+			<mx:Label text="Text Color:" color="#000000" fontWeight="bold" />
+			<mx:ColorPicker id="xAxisTextColor" showTextField="true" selectedColor="0x000000" change="SettingsChanged()" />
 		</mx:HBox>
 	</flexlib:WindowShade>	
 </clg:ClipEditor>

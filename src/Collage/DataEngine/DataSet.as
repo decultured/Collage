@@ -26,14 +26,31 @@ package Collage.DataEngine
 		
 		public var columns:Object = new Object();
 
-		public var resultsString:String = "";
-
 		public function DataSet():void
 		{
 			
 		}
 
-		public function GetFields():void
+		public function GetColumnByID(id:String):DataSet
+		{
+			if (columns[id])
+				return columns[id];
+			return null;
+		}
+		
+		public function GetColumnsComboBox():Array
+		{
+			var columnSelections:Array = new Array();
+			for (var key:String in columns) {
+				var newObject:Object = new Object;
+				newObject["label"] = columns[key].label;
+				newObject["data"] = columns[key].internalLabel;
+				columnSelections.push(newObject);
+			}
+			return columnSelections;
+		}
+
+		public function LoadColumns():void
 		{
 			loading = true;
 
@@ -72,7 +89,6 @@ package Collage.DataEngine
 
 			for (var key:String in results)
 			{
-				resultsString += key + " " + results[key].toString() + "\n";
 				if (key == "total_rows") {
 					totalRows == parseInt(results[key]);
 				} else if (key == "columns") {
@@ -93,8 +109,6 @@ package Collage.DataEngine
 								newColumn.index = results[key][columnKey][columnDataKey];
 							else if (columnDataKey == "datatype")
 								newColumn.datatype = results[key][columnKey][columnDataKey];
-
-							resultsString += columnDataKey + " " + results[key][columnKey][columnDataKey].toString() + "\n";
 						}
 					}
 				}

@@ -53,9 +53,13 @@
 				dataJSON += '"title": { "text": "' + lineChartModel.titleText;
 				dataJSON += '","style": "{font-size: ' + lineChartModel.titleTextFontSize + '; color:#' + lineChartModel.titleTextColor + '; font-family: Verdana; text-align: center;}" },'
 			}
-			if (lineChartModel.showYAxisText) {
+			if (lineChartModel.showYAxisText && lineChartModel.yAxisText && lineChartModel.yAxisText.length > 0) {
 				dataJSON += '"y_legend": { "text": "' + lineChartModel.yAxisText;
-				dataJSON += '","style": "{font-size: ' + lineChartModel.titleTextFontSize + '; color:#' + lineChartModel.yAxisTextColor + '; font-family: Verdana; text-align: center;}" },'
+				dataJSON += '","style": "{font-size: ' + lineChartModel.yAxisTextFontSize + '; color:#' + lineChartModel.yAxisTextColor + '; font-family: Verdana; text-align: center;}" },'
+			}
+			if (lineChartModel.showXAxisText && lineChartModel.xAxisText && lineChartModel.xAxisText.length > 0) {
+				dataJSON += '"x_legend": { "text": "' + lineChartModel.xAxisText;
+				dataJSON += '","style": "{font-size: ' + lineChartModel.xAxisTextFontSize + '; color:#' + lineChartModel.xAxisTextColor + '; font-family: Verdana; text-align: center;}" },'
 			}
 			
 			dataJSON += '"x_axis":{';
