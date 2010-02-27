@@ -48,8 +48,6 @@
 			DataEngineConnect();
 			if (_Model) {
 				var lineChartModel:LineChartClip = _Model as LineChartClip;
-//				titleText = lineChartModel.
-//				titleColor = 
 				
 				lineColorPicker.selectedColor = lineChartModel.lineColor;
 				lineWidth.value = lineChartModel.lineWidth;
@@ -83,7 +81,7 @@
 				else if (chartStyle.selectedItem.data == 3)
 					lineChartModel.ChartStyle = "line_hollow";
 				else
-					lineChartModel.ChartStyle = "line";
+					lineChartModel.ChartStyle = "scatter_line";
 
 				lineChartModel.lineColor = lineColorPicker.selectedColor;
 				lineChartModel.lineWidth = lineWidth.value;
@@ -150,14 +148,12 @@
 				lineChartModel.xAxisDataColumn = xDataColumn.label;
 			}
 			
-			if (yDataColumn && xDataColumn) {
-				var query:DataQuery = new DataQuery();
-				
-				query.dataset = dataset.id;
-				query.AddField(xDataColumn.label, true);
-				query.AddField(yDataColumn.label);
-				query.LoadQueryResults();
-			}			
+			lineChartModel.RunQuery();
+		}
+		
+		private function SubmitDataRequest():void
+		{
+			lineChartModel.RunQuery();
 		}
 		
 		private function DataSetSelectorChanged():void
@@ -175,8 +171,11 @@
 					lineChartModel.titleText = dataset.title;
 					lineChartModel.dataSetID = dataset.id;
 				}
-				dataSetColumnSelections = dataset.GetColumnsComboBox();
+				dataSetColumnSelections = dataset.GetColumnsComboBox(new Array("numeric", "datetime"));
 			}
+			
+			lineChartModel.yAxisDataColumn = null;
+			lineChartModel.xAxisDataColumn = null;
 		}
 	]]>
     </mx:Script>
@@ -187,6 +186,7 @@
 		<mx:ComboBox id="dataSetYColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
 		<mx:Label text="X Axis Value:" color="#000000" fontWeight="bold" />
 		<mx:ComboBox id="dataSetXColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
+		<mx:Button id="submitDataButton" color="0x323232" label="Apply" click="SubmitDataRequest()"  />
 	</flexlib:WindowShade>
 	<flexlib:WindowShade opened="false" label="General Styles" styleName="linkButtonWindowShade" width="100%">
 		<mx:ComboBox id="chartStyle" dataProvider="{chartStyles}" width="150" change="SettingsChanged()"/>

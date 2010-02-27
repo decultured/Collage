@@ -14,5 +14,29 @@ package Collage.DataEngine
 		{
 			
 		}
+
+		// TODO: cleanup this nastiness???
+		public function AdjustRowFieldTypes():void
+		{
+			for (var rowKey:String in rows) {
+				for (var rowFieldKey:String in rows[rowKey]) {
+					for (var columnKey:String in columns) {
+						if (!columns[columnKey]["datatype"] || columns[columnKey]["label"] != rowFieldKey)
+							continue;
+						// The "type" paramter can be: string, numeric, datetime, boolean, or url
+						if (columns[columnKey]["datatype"] == "numeric") {
+							rows[rowKey][rowFieldKey] = parseFloat(rows[rowKey][rowFieldKey]);
+						} else if (columns[columnKey]["datatype"] == "datetime") {
+							rows[rowKey][rowFieldKey] = Date.parse(rows[rowKey][rowFieldKey]);
+						} else if (columns[columnKey]["datatype"] == "boolean") {
+							if (rows[rowKey][rowFieldKey] == "true")
+								rows[rowKey][rowFieldKey] = true;
+							else
+								rows[rowKey][rowFieldKey] = false;
+						}
+					} 
+				}
+			} 
+		}
 	}
 }

@@ -38,21 +38,36 @@ package Collage.DataEngine
 			return null;
 		}
 		
-		public function GetColumnsComboBox():Array
+		public function GetColumnsComboBox(allowedTypes:Array = null):Array
 		{
 			var columnSelections:Array = new Array();
 
-			var firstObject:Object = new Object;
-			firstObject["label"] = "Please Select a Data Column...";
-			firstObject["data"] = "";
-			columnSelections.push(firstObject);
 
 			for (var key:String in columns) {
+				if (allowedTypes) {
+					var typeFound:Boolean = false;
+					for each (var type:String in allowedTypes) {
+						if (type == columns[key].datatype) {
+							typeFound = true;
+							break;
+						}
+					}
+					if (!typeFound)
+						continue;
+				}
 				var newObject:Object = new Object;
 				newObject["label"] = columns[key].label;
 				newObject["data"] = columns[key].internalLabel;
 				columnSelections.push(newObject);
 			}
+			
+			columnSelections.sortOn("label", Array.CASEINSENSITIVE);
+
+			var firstObject:Object = new Object;
+			firstObject["label"] = "Please Select a Data Column...";
+			firstObject["data"] = "";
+			columnSelections.unshift(firstObject);
+
 			return columnSelections;
 		}
 

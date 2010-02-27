@@ -33,17 +33,20 @@ package Collage.DataEngine
 		{
 			var dataSetSelections:Array = new Array();
 
-			var firstObject:Object = new Object;
-			firstObject["label"] = "Please Select a Dataset...";
-			firstObject["data"] = "";
-			dataSetSelections.push(firstObject);
-			
 			for (var key:String in datasets) {
 				var newObject:Object = new Object;
 				newObject["label"] = datasets[key].title;
 				newObject["data"] = datasets[key].id;
 				dataSetSelections.push(newObject);
 			}
+
+			dataSetSelections.sortOn("label", Array.CASEINSENSITIVE);
+
+			var firstObject:Object = new Object;
+			firstObject["label"] = "Please Select a Dataset...";
+			firstObject["data"] = "";
+			dataSetSelections.unshift(firstObject);
+			
 			return dataSetSelections;
 		}
 		
