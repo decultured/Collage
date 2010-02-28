@@ -1,6 +1,7 @@
 package Collage.Document
 {
 	import Collage.Clip.*;
+	import com.adobe.serialization.json.JSON;
 	
 	public class Document extends Clip
 	{
@@ -58,5 +59,23 @@ package Collage.Document
 			var view:DocumentView = _View as DocumentView;
 			return view.LoadFromData(data);
 		}
+
+		public override function SaveToObject():Object
+		{
+			var newObject:Object = new Object();
+
+			newObject["document"] = super.SaveToObject();
+			newObject["document"]["url"] = _URL;
+			newObject["document"]["backgroundColor"] = _BackgroundColor;
+			newObject["clips"] = new Array();
+
+			var view:DocumentView = _View as DocumentView;
+			for (var clipKey:String in view.clips) {
+				newObject["clips"].push(view.clips[clipKey].SaveToObject());
+			}
+
+			return newObject;
+		}
+
 	}
 }

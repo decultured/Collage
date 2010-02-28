@@ -1,38 +1,28 @@
 package Collage.Clips.Table
 {
+	import mx.controls.Alert;
 	import Collage.Clip.*;
-	
+	import flash.events.*;
+	import Collage.DataEngine.*;
+	import com.adobe.serialization.json.JSON;
+	import mx.collections.*;
+	import mx.controls.dataGridClasses.*;	
+
 	public class TableClip extends Clip
 	{
-		private var _Text:String = "Default Text";
-		private var _Color:Number = 0x000000;
-		private var _BackgroundAlpha:Number = 1.0;
-		private var _BackgroundColor:Number = 0xFFFFFF;
+		[Bindable] public var dataSetID:String = null;
+		[Bindable] public var backgroundAlpha:Number = 1.0;
+		[Bindable] public var backgroundColor:Number = 0xFFFFFF;
 
-		[Bindable]public var textWidth:Number = 200;
-		[Bindable]public var textHeight:Number = 24;
-		[Bindable]public var fontSize:Number = 18;
+		public var dataLoaded:Boolean = false;
 
-		[Bindable]
-		public function get text():String {return _Text;}
-		public function set text(newText:String):void {_Text = newText;}
+		public var columns:Array = new Array();
+		public var data:Array = new Array();
 
-		[Bindable]
-		public function get color():Number {return _Color;}
-		public function set color(color:Number):void {_Color = color;}
-
-		[Bindable]
-		public function get backgroundAlpha():Number {return _BackgroundAlpha;}
-		public function set backgroundAlpha(bgAlpha:Number):void {_BackgroundAlpha = bgAlpha;}
-
-		[Bindable]
-		public function get backgroundColor():Number {return _BackgroundColor;}
-		public function set backgroundColor(bgColor:Number):void {_BackgroundColor = bgColor;}
+		private var _DataQuery:DataQuery = null;
 
 		public function TableClip()
 		{
-			verticalSizable = false;
-			horizontalSizable = false;
 			rotatable = false;
 			super();
 			CreateView();
@@ -61,8 +51,88 @@ package Collage.Clips.Table
 		
 		public override function Resized():void
 		{
-			width = textWidth;
-			height = textHeight;
 		}
+		
+		public function RunQuery():void
+		{
+			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetID);
+			
+			if (!dataset)
+				return;
+				
+			_DataQuery = new DataQuery();
+			_DataQuery.dataset = dataSetID;
+
+			columns = new Array();
+			for (var key:String in dataset.columns) {
+				var newColumn:DataGridColumn = new DataGridColumn();
+				newColumn.dataField = dataset.columns[key]["label"];
+				newColumn.headerText = dataset.columns[key]["label"];
+				_DataQuery.AddField(dataset.columns[key]["label"]);
+				columns.push(newColumn);
+			}
+				
+			_DataQuery.limit = 50;
+			_DataQuery.LoadQueryResults();
+			_DataQuery.addEventListener(DataQuery.COMPLETE, QueryFinished);
+		}
+		
+		public function ResetData():void
+		{
+			dataLoaded = false;
+			data = new Array();
+			columns = new Array();
+			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+		}
+
+		private function QueryFinished(event:Event):void
+		{
+			if (!_DataQuery || !_DataQuery.result || !_DataQuery.result.rows is Array)
+				return;
+
+			data = new Array();
+			var rows:Array = _DataQuery.result.rows;
+			for (var rowKey:uint = 0; rowKey < rows.length; rowKey++)
+			{
+				var newObject:Object = new Object();
+
+				for (var fieldKey:String in rows[rowKey])
+				{
+					newObject[fieldKey] = rows[rowKey][fieldKey];
+				}
+				
+				data.push(newObject);
+			}
+			
+			dataLoaded = true;
+			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+			Alert.show("Query Run!");
+			_DataQuery = null;
+		}
+		
+		public override function SaveToObject():Object
+		{
+			var newObject:Object = super.SaveToObject();
+
+			newObject["type"] = "table";
+			newObject["dataSetID"] = dataSetID;
+			newObject["backgroundAlpha"] = backgroundAlpha;
+			newObject["backgroundColor"] = backgroundColor;
+			newObject["dataLoaded"] = dataLoaded;
+
+			if (columns) {
+				newObject["columns"] = new Array();
+				for (var i:uint = 0; i < columns.length; i++) {
+					var newColumn:DataGridColumn = columns[i] as DataGridColumn;
+					newObject["columns"][i] = new Object();
+					newObject["columns"][i]["dataField"] = newColumn.dataField;
+					newObject["columns"][i]["headerText"] = newColumn.headerText;
+				}
+			}
+			newObject["data"] = data;
+
+			return newObject;
+		}
+		
 	}
 }

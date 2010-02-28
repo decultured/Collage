@@ -55,5 +55,16 @@ package Collage.Clips.PieChart
 				height = width / 1.3068;
 			}
 		}
+		
+		public override function SaveToObject():Object
+		{
+			var newObject:Object = super.SaveToObject();
+
+			newObject["type"] = "piechart";
+			newObject["backgroundAlpha"] = backgroundAlpha;
+			newObject["backgroundColor"] = backgroundColor;
+
+			return newObject;
+		}
 	}
 }

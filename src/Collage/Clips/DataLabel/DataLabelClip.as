@@ -1,33 +1,30 @@
 package Collage.Clips.DataLabel
 {
+	import mx.controls.Alert;
+	import Collage.Clip.*;
+	import flash.events.*;
+	import Collage.DataEngine.*;
+	import com.adobe.serialization.json.JSON;
 	import Collage.Clip.*;
 	
 	public class DataLabelClip extends Clip
 	{
-		private var _Text:String = "Default Text";
-		private var _Color:Number = 0x000000;
-		private var _BackgroundAlpha:Number = 1.0;
-		private var _BackgroundColor:Number = 0xFFFFFF;
+		public var dataLoaded:Boolean = false;
 
-		[Bindable]public var textWidth:Number = 200;
-		[Bindable]public var textHeight:Number = 24;
-		[Bindable]public var fontSize:Number = 18;
+		[Bindable] public var dataSetID:String = null;
+		[Bindable] public var dataSetColumn:String = null;
+		[Bindable] public var dataSetColumnModifier:String = null;
 
-		[Bindable]
-		public function get text():String {return _Text;}
-		public function set text(newText:String):void {_Text = newText;}
+		[Bindable] public var text:String = "No Data";
+		[Bindable] public var color:Number = 0x000000;
+		[Bindable] public var backgroundAlpha:Number = 1.0;
+		[Bindable] public var backgroundColor:Number = 0xFFFFFF;
 
-		[Bindable]
-		public function get color():Number {return _Color;}
-		public function set color(color:Number):void {_Color = color;}
+		[Bindable] public var textWidth:Number = 200;
+		[Bindable] public var textHeight:Number = 24;
+		[Bindable] public var fontSize:Number = 18;
 
-		[Bindable]
-		public function get backgroundAlpha():Number {return _BackgroundAlpha;}
-		public function set backgroundAlpha(bgAlpha:Number):void {_BackgroundAlpha = bgAlpha;}
-
-		[Bindable]
-		public function get backgroundColor():Number {return _BackgroundColor;}
-		public function set backgroundColor(bgColor:Number):void {_BackgroundColor = bgColor;}
+		private var _DataQuery:DataQuery = null;
 
 		public function DataLabelClip()
 		{
@@ -63,6 +60,61 @@ package Collage.Clips.DataLabel
 		{
 			width = textWidth;
 			height = textHeight;
+		}
+		
+		public function RunQuery():void
+		{
+			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetID);
+			
+			if (!dataset)
+				return;
+				
+			_DataQuery = new DataQuery();
+			_DataQuery.dataset = dataSetID;
+			_DataQuery.AddField(dataSetColumn);//, null, dataSetColumnModifier);
+			_DataQuery.limit = 1;
+			_DataQuery.LoadQueryResults();
+			_DataQuery.addEventListener(DataQuery.COMPLETE, QueryFinished);
+		}
+		
+		public function ResetData():void
+		{
+			dataLoaded = false;
+			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+		}
+
+		private function QueryFinished(event:Event):void
+		{
+			if (!_DataQuery || !_DataQuery.result || !_DataQuery.result.rows is Array || _DataQuery.result.rows.length < 1)
+				return;
+
+			if (!_DataQuery.result.rows[0][dataSetColumn])
+				return;
+			
+			text = _DataQuery.result.rows[0][dataSetColumn].toString();
+			
+			dataLoaded = true;
+			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+			_DataQuery = null;
+		}
+		
+		public override function SaveToObject():Object
+		{
+			var newObject:Object = super.SaveToObject();
+
+			newObject["type"] = "datalabel";
+			newObject["dataSetID"] = dataSetID;
+			newObject["dataSetColumn"] = dataSetColumn;
+			newObject["dataSetColumnModifier"] = dataSetColumnModifier;
+			newObject["text"] = text;
+			newObject["color"] = color;
+			newObject["backgroundAlpha"] = backgroundAlpha;
+			newObject["backgroundColor"] = backgroundColor;
+			newObject["textWidth"] = textWidth;
+			newObject["textHeight"] = textHeight;
+			newObject["fontSize"] = fontSize;
+
+			return newObject;
 		}
 	}
 }

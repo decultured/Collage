@@ -60,5 +60,15 @@ package Collage.Clips.Picture
 			var view:PictureClipView = _View as PictureClipView;
 			return view.LoadFromData(data);
 		}
+		
+		public override function SaveToObject():Object
+		{
+			var newObject:Object = super.SaveToObject();
+
+			newObject["type"] = "image";
+			newObject["url"] = url;
+
+			return newObject;
+		}
 	}
 }

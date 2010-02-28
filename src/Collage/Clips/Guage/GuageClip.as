@@ -42,5 +42,25 @@ package Collage.Clips.Guage
 				_Editor.model = this;
 			}
 		}
+		
+		public override function SaveToObject():Object
+		{
+			var newObject:Object = super.SaveToObject();
+
+			newObject["type"] = "guage";
+			newObject["value"] = value;
+			newObject["minimum"] = minimum;
+			newObject["maximum"] = maximum;
+			newObject["backgroundColor"] = backgroundColor;
+			newObject["bezelColor"] = bezelColor;
+			newObject["measureMarksColor"] = measureMarksColor;
+			newObject["measureMarksAlpha"] = measureMarksAlpha;
+			newObject["startAngle"] = startAngle;
+			newObject["endAngle"] = endAngle;
+			newObject["indicatorColor"] = indicatorColor;
+			newObject["indicatorCrownColor"] = indicatorCrownColor;
+
+			return newObject;
+		}
 	}
 }

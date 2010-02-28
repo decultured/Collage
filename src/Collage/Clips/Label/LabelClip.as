@@ -64,5 +64,22 @@ package Collage.Clips.Label
 			width = textWidth;
 			height = textHeight;
 		}
+
+		public override function SaveToObject():Object
+		{
+			var newObject:Object = super.SaveToObject();
+
+			newObject["type"] = "label";
+			newObject["text"] = text;
+			newObject["color"] = color;
+			newObject["backgroundAlpha"] = backgroundAlpha;
+			newObject["backgroundColor"] = backgroundColor;
+			newObject["textWidth"] = textWidth;
+			newObject["textHeight"] = textHeight;
+			newObject["fontSize"] = fontSize;
+
+			return newObject;
+		}
+
 	}
 }

@@ -28,12 +28,19 @@ package Collage.DataEngine
 				return datasets[id];
 			return null;
 		}
-		
-		public static function GetDataSetsComboBox():Array
+
+		// TODO : Implement Params
+		public static function GetDataSetsComboBox(allowedTypes:Array = null, minAllowedColumns:uint = 0, minAllowedRows:uint = 0):Array
 		{
 			var dataSetSelections:Array = new Array();
 
 			for (var key:String in datasets) {
+				if (datasets[key].GetNumColumnsOfType(allowedTypes) < minAllowedColumns)// || datasets[key].totalRows < minAllowedRows)
+				{
+//					Alert.show(datasets[key].title + "\n" + Number(datasets[key].GetNumColumnsOfType(allowedTypes)) + " " + minAllowedColumns + "\n" + datasets[key].totalRows + " " + minAllowedRows);
+					continue;
+				}
+				
 				var newObject:Object = new Object;
 				newObject["label"] = datasets[key].title;
 				newObject["data"] = datasets[key].id;
@@ -96,8 +103,6 @@ package Collage.DataEngine
 			event.target.removeEventListener(Event.COMPLETE, CompleteHandler);
 			var results:Object = JSON.decode(event.target.data);
 
-			//resultsString += Parser(results);
-
 			for (var key:String in results)
 			{
 				if (!results[key]["id"])
@@ -117,12 +122,23 @@ package Collage.DataEngine
 					}
 				}
 				
+				newDataSet.addEventListener(DataSet.COMPLETE, DataSetFinishedLoading);
 				newDataSet.LoadColumns();
 			}
-			
-			events.dispatchEvent(new Event(COMPLETE));
-			loading = false;
-			loaded = true;
+		}
+		
+		public static function DataSetFinishedLoading(event:Event):void
+		{
+			if (DataSetsLoaded) {
+				events.dispatchEvent(new Event(COMPLETE));
+				loading = false;
+				loaded = true;
+				Alert.show("Data Load Complete.");
+			}
+		}
+		
+		public static function UploadCSV(fileURL:String):void {
+			Alert.show("File Dropped: " + fileURL);
 		}
 	}
 }

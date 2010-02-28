@@ -38,42 +38,8 @@
 		protected function WriteJSONDataString():void
 		{
 			var lineChartModel:LineChartClip = _Model as LineChartClip;
-
+			
 			dataJSON = lineChartModel.BuildChartJSONString();
-/*			
-			dataJSON = '{ "elements": [ { ';
-			dataJSON += '"type": "' + lineChartModel.ChartStyle + '",';
-			dataJSON += '"colour": "#' + lineChartModel.lineColor.toString(16) + '",';
-			dataJSON += '"width": ' + lineChartModel.lineWidth + ',';
-	      	dataJSON += '"dot-size": ' + lineChartModel.dotSize + ',';
-			dataJSON += '"grid_colour": "#' + lineChartModel.yAxisGridColor.toString(16) + '",';
-			dataJSON += '"values": [9.5, 9, 8.5,8, 7.5, 7, 6.5, 6, 5.5,5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1 ] } ], ';
-
-			if (lineChartModel.showTitleText) {
-				dataJSON += '"title": { "text": "' + lineChartModel.titleText;
-				dataJSON += '","style": "{font-size: ' + lineChartModel.titleTextFontSize + '; color:#' + lineChartModel.titleTextColor + '; font-family: Verdana; text-align: center;}" },'
-			}
-			if (lineChartModel.showYAxisText && lineChartModel.yAxisText && lineChartModel.yAxisText.length > 0) {
-				dataJSON += '"y_legend": { "text": "' + lineChartModel.yAxisText;
-				dataJSON += '","style": "{font-size: ' + lineChartModel.yAxisTextFontSize + '; color:#' + lineChartModel.yAxisTextColor + '; font-family: Verdana; text-align: center;}" },'
-			}
-			if (lineChartModel.showXAxisText && lineChartModel.xAxisText && lineChartModel.xAxisText.length > 0) {
-				dataJSON += '"x_legend": { "text": "' + lineChartModel.xAxisText;
-				dataJSON += '","style": "{font-size: ' + lineChartModel.xAxisTextFontSize + '; color:#' + lineChartModel.xAxisTextColor + '; font-family: Verdana; text-align: center;}" },'
-			}
-			
-			dataJSON += '"x_axis":{';
-			dataJSON += '"grid-colour": "#' + lineChartModel.xAxisGridColor.toString(16) + '",';
-			dataJSON += '"colour": "#' + lineChartModel.xAxisColor.toString(16) + '"';
-			dataJSON += '},';
-
-			dataJSON += '"y_axis":{';
-			dataJSON += '"grid-colour": "#' + lineChartModel.yAxisGridColor.toString(16) + '",';
-			dataJSON += '"colour": "#' + lineChartModel.yAxisColor.toString(16) + '"';
-			dataJSON += '},';
-			
-			dataJSON += '"bg_colour":"#' + lineChartModel.backgroundColor.toString(16) + '" }';
-*/
 		}
 		]]>
     </mx:Script>

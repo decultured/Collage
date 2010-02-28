@@ -3,6 +3,7 @@ package Collage.Clip
 	import mx.controls.Alert;
 	import com.roguedevelopment.objecthandles.IMoveable;
 	import com.roguedevelopment.objecthandles.IResizeable;
+	import com.adobe.serialization.json.JSON;
 
 	public class Clip implements IResizeable, IMoveable
 	{
@@ -76,6 +77,20 @@ package Collage.Clip
 		public function LoadFromXML():Boolean
 		{
 			return false;
+		}
+		
+		public function SaveToObject():Object
+		{
+			var newObject:Object = new Object();
+
+			newObject["type"] = "clip";
+			newObject["x"] = x;
+			newObject["y"] = y;
+			newObject["height"] = height;
+			newObject["width"] = width;
+			newObject["rotation"] = rotation;
+
+			return newObject;
 		}
 	}
 }

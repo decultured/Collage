@@ -29,7 +29,7 @@ package Collage.DataEngine
 			fields = new Array();
 		}
 		
-		public function AddField(name:String, sort:Boolean = false,  modifier:String = null, group:Boolean = false):void
+		public function AddField(name:String, sort:String = null,  modifier:String = null, group:Boolean = false):void
 		{
 			var newDataQueryField:DataQueryField = new DataQueryField(name, sort,  modifier, group);
 			fields.push(newDataQueryField);
@@ -47,7 +47,8 @@ package Collage.DataEngine
 			{
 				var fieldQuery:Object = new Object();
 
-				fieldQuery["sort"] = field.sort;
+				if (field.sort)
+					fieldQuery["sort"] = field.sort;
 				fieldQuery["modifier"] = field.modifier;
 				fieldQuery["group"] = field.group;
 				fieldQuery["name"] = field.name;
@@ -85,16 +86,16 @@ package Collage.DataEngine
 		}
 		
         private function OpenHandler(event:Event):void {
-            Alert.show("openHandler: " + event);
+//            Alert.show("openHandler: " + event);
         }
 
         private function ProgressHandler(event:ProgressEvent):void {
-            Alert.show("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal);
+//            Alert.show("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal);
         }
 
         private function HttpStatusHandler(event:HTTPStatusEvent):void {
-            if (event.target
-			Alert.show("httpStatusHandler: " + event);
+//            if (event.target
+//			Alert.show("httpStatusHandler: " + event);
         }
 
 		private function IOErrorHandler(event:IOErrorEvent):void
@@ -148,8 +149,8 @@ package Collage.DataEngine
 					}
 				}
 			}
-			
-//			result.AdjustRowFieldTypes();
+
+			result.AdjustRowFieldTypes();
 			dispatchEvent(new Event(COMPLETE));
 			loading = false;
 			loaded = true;

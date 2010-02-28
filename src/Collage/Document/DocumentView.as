@@ -16,8 +16,12 @@ package Collage.Document
 		protected var _BackgroundImage:Image;
 		protected var _BackgroundLoaded:Boolean = false;
 		protected var _BitmapData:BitmapData = null;
+
+		// TODO : Move clips to model
+		protected var _Clips:Object;
 		
-		protected var _Clips:Array;
+		public function get clips():Object {return _Clips;}
+		public function set clips(newClips:Object):void {_Clips = newClips;}
 		
 		public function DocumentView()
 		{
@@ -30,7 +34,7 @@ package Collage.Document
 			_BackgroundImage.setStyle("verticalAlign", "middle");
 			addChild(_BackgroundImage);
 			ClipFactory.RegisterClipDefinitions();
-			_Clips = new Array();
+			_Clips = new Object();
 			super();
 		}
 

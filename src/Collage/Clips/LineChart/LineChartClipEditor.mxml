@@ -31,14 +31,13 @@
 	<mx:Script>
 	<![CDATA[
 		import mx.controls.Alert;
-		import Collage.DataEngine.*
+		import Collage.DataEngine.*;
 		import mx.collections.ArrayCollection;
 		
 		[Bindable]
 		public var chartStyles:ArrayCollection = new ArrayCollection(
-		    [ {label:"Solid Line", data:1}, 
-		      {label:"Dotted Line", data:2}, 
-		      {label:"Hollow Dots", data:3} ]);
+		    [ {label:"Solid", data:1}, 
+		      {label:"Hollow", data:2} ]);
 		
 		[Bindable] public var dataSetSelections:Array = new Array();
 		[Bindable] public var dataSetColumnSelections:Array = new Array();
@@ -46,9 +45,15 @@
 		private function Initialize():void
 		{
 			DataEngineConnect();
+			UpdateInspector();
+		}
+		
+		private function UpdateInspector():void
+		{
 			if (_Model) {
 				var lineChartModel:LineChartClip = _Model as LineChartClip;
 				
+				backgroundColorPicker.selectedColor = lineChartModel.backgroundColor;
 				lineColorPicker.selectedColor = lineChartModel.lineColor;
 				lineWidth.value = lineChartModel.lineWidth;
 				dotSize.value = lineChartModel.dotSize;
@@ -67,6 +72,11 @@
 				yAxisText.text = lineChartModel.yAxisText;
 				yAxisTextFontSize.value = lineChartModel.yAxisTextFontSize;
 				yAxisTextColor.selectedColor = lineChartModel.yAxisTextColor;
+				
+				showXAxisText.selected = lineChartModel.showXAxisText;
+				xAxisText.text = lineChartModel.xAxisText;
+				xAxisTextFontSize.value = lineChartModel.xAxisTextFontSize;
+				xAxisTextColor.selectedColor = lineChartModel.xAxisTextColor;
 			}
 		}
 		
@@ -77,11 +87,9 @@
 				lineChartModel.backgroundColor = backgroundColorPicker.selectedColor;
 
 				if (chartStyle.selectedItem.data == 2)
-					lineChartModel.ChartStyle = "line_dot";
-				else if (chartStyle.selectedItem.data == 3)
-					lineChartModel.ChartStyle = "line_hollow";
+					lineChartModel.ChartStyle = "hollow-dot";
 				else
-					lineChartModel.ChartStyle = "scatter_line";
+					lineChartModel.ChartStyle = "solid-dot";
 
 				lineChartModel.lineColor = lineColorPicker.selectedColor;
 				lineChartModel.lineWidth = lineWidth.value;
@@ -119,7 +127,7 @@
 		private function DatasLoaded(event:Event):void
 		{
 			DataEngine.events.removeEventListener(DataEngine.COMPLETE, DatasLoaded);
-			dataSetSelections = DataEngine.GetDataSetsComboBox();
+			dataSetSelections = DataEngine.GetDataSetsComboBox(new Array("numeric", "datetime"), 2, 3);
 		}
 
 		private function ColumnSelectorChanged():void
@@ -149,33 +157,43 @@
 			}
 			
 			lineChartModel.RunQuery();
+			UpdateInspector();
 		}
 		
 		private function SubmitDataRequest():void
 		{
+			var lineChartModel:LineChartClip = _Model as LineChartClip;
 			lineChartModel.RunQuery();
 		}
 		
 		private function DataSetSelectorChanged():void
 		{
-			dataSetYColumnSelector.enabled = true;
-			dataSetXColumnSelector.enabled = true;
-		
+			if (!_Model)
+				return;
+				
+			var lineChartModel:LineChartClip = _Model as LineChartClip;
+
+			lineChartModel.yAxisDataColumn = null;
+			lineChartModel.xAxisDataColumn = null;
+			lineChartModel.ResetData();
+
 			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
 
 			if (dataset) {
-				if (_Model) {
-					var lineChartModel:LineChartClip = _Model as LineChartClip;
-					lineChartModel.showTitleText = true;
-					titleText.text = dataset.title;
-					lineChartModel.titleText = dataset.title;
-					lineChartModel.dataSetID = dataset.id;
-				}
+				lineChartModel.showTitleText = true;
+				titleText.text = dataset.title;
+				lineChartModel.titleText = dataset.title;
+				lineChartModel.dataSetID = dataset.id;
 				dataSetColumnSelections = dataset.GetColumnsComboBox(new Array("numeric", "datetime"));
+				dataSetYColumnSelector.enabled = true;
+				dataSetXColumnSelector.enabled = true;
+			} else {
+				dataSetYColumnSelector.enabled = false;
+				dataSetXColumnSelector.enabled = false;
+				lineChartModel.ResetData();
 			}
 			
-			lineChartModel.yAxisDataColumn = null;
-			lineChartModel.xAxisDataColumn = null;
+			UpdateInspector();
 		}
 	]]>
     </mx:Script>
@@ -186,10 +204,9 @@
 		<mx:ComboBox id="dataSetYColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
 		<mx:Label text="X Axis Value:" color="#000000" fontWeight="bold" />
 		<mx:ComboBox id="dataSetXColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
-		<mx:Button id="submitDataButton" color="0x323232" label="Apply" click="SubmitDataRequest()"  />
+		<!-- <mx:Button id="submitDataButton" color="0x323232" label="Apply" click="SubmitDataRequest()"  /> -->
 	</flexlib:WindowShade>
 	<flexlib:WindowShade opened="false" label="General Styles" styleName="linkButtonWindowShade" width="100%">
-		<mx:ComboBox id="chartStyle" dataProvider="{chartStyles}" width="150" change="SettingsChanged()"/>
 		<mx:HBox width="100%" >
 			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" />
 			<mx:Spacer width="100%" />
@@ -228,6 +245,8 @@
 		</mx:HBox>
 		<mx:Label text="Line Width:" color="#000000" fontWeight="bold" />
 		<mx:HSlider id="lineWidth" minimum="1" maximum="32" value="2" snapInterval="1" change="SettingsChanged()" />
+		<mx:Label text="Dot Style:" color="#000000" fontWeight="bold" />
+		<mx:ComboBox id="chartStyle" dataProvider="{chartStyles}" width="150" change="SettingsChanged()"/>
 		<mx:Label text="Dot Size:" color="#000000" fontWeight="bold" />
 		<mx:HSlider id="dotSize" minimum="1" maximum="32" value="2" snapInterval="1" change="SettingsChanged()" />
 	</flexlib:WindowShade>
@@ -240,7 +259,7 @@
 		</mx:HBox>
 		<mx:TextInput id="titleText" text="" color="0x323232" width="100%" change="SettingsChanged()" />
 		<mx:Label text="Font Size:" color="#000000" fontWeight="bold" />
-		<mx:HSlider id="titleTextFontSize" minimum="6" maximum="96" value="20" snapInterval="1" change="SettingsChanged()" />
+		<mx:HSlider id="titleTextFontSize" minimum="6" maximum="96" value="16" snapInterval="1" change="SettingsChanged()" />
 		<mx:HBox width="100%" >
 			<mx:Label text="Text Color:" color="#000000" fontWeight="bold" />
 			<mx:ColorPicker id="titleColor" showTextField="true" selectedColor="0x000000" change="SettingsChanged()" />
@@ -254,7 +273,7 @@
 		</mx:HBox>
 		<mx:TextInput id="yAxisText" text="" color="0x323232" width="100%" change="SettingsChanged()" />
 		<mx:Label text="Font Size:" color="#000000" fontWeight="bold" />
-		<mx:HSlider id="yAxisTextFontSize" minimum="6" maximum="96" value="20" snapInterval="1" change="SettingsChanged()" />
+		<mx:HSlider id="yAxisTextFontSize" minimum="6" maximum="96" value="16" snapInterval="1" change="SettingsChanged()" />
 		<mx:HBox width="100%" >
 			<mx:Label text="Text Color:" color="#000000" fontWeight="bold" />
 			<mx:ColorPicker id="yAxisTextColor" showTextField="true" selectedColor="0x000000" change="SettingsChanged()" />
@@ -268,7 +287,7 @@
 		</mx:HBox>
 		<mx:TextInput id="xAxisText" text="" color="0x323232" width="100%" change="SettingsChanged()" />
 		<mx:Label text="Font Size:" color="#000000" fontWeight="bold" />
-		<mx:HSlider id="xAxisTextFontSize" minimum="6" maximum="96" value="20" snapInterval="1" change="SettingsChanged()" />
+		<mx:HSlider id="xAxisTextFontSize" minimum="6" maximum="96" value="16" snapInterval="1" change="SettingsChanged()" />
 		<mx:HBox width="100%" >
 			<mx:Label text="Text Color:" color="#000000" fontWeight="bold" />
 			<mx:ColorPicker id="xAxisTextColor" showTextField="true" selectedColor="0x000000" change="SettingsChanged()" />

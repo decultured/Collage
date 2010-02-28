@@ -21,23 +21,18 @@
 		protected override function onModelChange(event:PropertyChangeEvent):void
 		{
 			var tableModel:TableClip = _Model as TableClip;
-			
-			if (displayLabel) {
-				displayLabel.validateNow();
-				displayLabel.text = tableModel.text;
-				displayLabel.setStyle("color", tableModel.color);
-				displayLabel.setStyle("fontSize", tableModel.fontSize);
-				tableModel.textWidth = displayLabel.textWidth + 20;
-				tableModel.textHeight = displayLabel.textHeight;
-				displayLabel.validateNow();
-				tableModel.Resized();
-			}
-			
+						
 			setStyle("backgroundColor", tableModel.backgroundColor);
 			setStyle("backgroundAlpha", tableModel.backgroundAlpha);
+			
+			if (datagrid) {
+				datagrid.columns = tableModel.columns;
+				datagrid.dataProvider = tableModel.data;
+			}
+
 			super.onModelChange(event);
 		}
 	]]>
     </mx:Script>
-	<mx:Label id="displayLabel" text="This Label displays plain text." fontSize="18" textAlign="center" left="0" right="0" top="0" bottom="0" />
+	<mx:DataGrid id="datagrid" color="0x323232" width="100%" height="100%" />
 </clg:ClipView>

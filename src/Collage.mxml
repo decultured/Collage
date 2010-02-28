@@ -27,16 +27,24 @@
 	</mx:Style>
 	<mx:Script>
 	<![CDATA[
+		import com.adobe.serialization.json.JSON;
 		import Collage.Document.*;
 		import Collage.Clips.Picture.*;
 		import mx.graphics.ImageSnapshot;
+		import mx.graphics.codec.*;
 		import mx.controls.Alert;
 		import mx.events.FlexEvent;
 		import flash.desktop.Clipboard;
 	    import flash.desktop.ClipboardFormats;
 	    import flash.desktop.ClipboardTransferMode;
 		import Collage.DataEngine.*;
-		
+		import Collage.DataEngine.*;
+		import org.alivepdf.pdf.*;
+		import org.alivepdf.pdf.PDF;	
+		import org.alivepdf.display.*;
+		import org.alivepdf.images.*;
+		import org.alivepdf.layout.*;
+		import org.alivepdf.saving.*;
 //		private var _EditDocumentView:EditDocumentView;
 		private var _Document:Document;
 
@@ -71,6 +79,29 @@
 			}
 		}
 		
+		public function SaveFile():void
+		{
+			var file:File = File.desktopDirectory.resolvePath("file.json");
+			file.addEventListener(Event.SELECT, SaveFileEvent);
+			file.browseForSave("Save As");
+		}
+			
+		protected function SaveFileEvent(event:Event):void
+		{
+			var jsonFile:String = JSON.encode(_EditDocumentView.model.SaveToObject());
+			
+			var newFile:File = event.target as File;
+			var fs:FileStream = new FileStream();
+			try{
+				fs.open(newFile,FileMode.WRITE);
+				jsonFile = jsonFile.replace(/\n/g, File.lineEnding);
+				fs.writeUTFBytes(jsonFile); 
+				fs.close();
+			} catch(e:Error){
+				trace(e.message);
+			}
+		}
+		
 		public function SaveImage():void
 		{
 			var file:File = File.desktopDirectory.resolvePath("snapshot.png");
@@ -93,6 +124,49 @@
 			}
 		}
 		
+		public function SavePDF():void
+		{
+			var file:File = File.desktopDirectory.resolvePath("report.pdf");
+			file.addEventListener(Event.SELECT, SavePDFEvent);
+			file.browseForSave("Save As");
+		}
+			
+		protected function SavePDFEvent(event:Event):void
+		{
+			var snapshot:ImageSnapshot = ImageSnapshot.captureImage(_EditDocumentView, 0, new JPEGEncoder());
+			var snapshotBitmap:BitmapData = ImageSnapshot.captureBitmapData(_EditDocumentView);
+
+			var newPDF:PDF = new PDF(Orientation.LANDSCAPE, Unit.MM, Size.LETTER);
+			newPDF.setDisplayMode(Display.FULL_WIDTH); 
+
+			newPDF.addPage();
+//			newPDF.addImageStream(snapshot.data, ColorSpace.DEVICE_RGB, new Resize ( Mode.FIT_TO_PAGE, Position.CENTERED ));
+			newPDF.addImage(new Bitmap(snapshotBitmap), new Resize ( Mode.FIT_TO_PAGE, Position.CENTERED ));
+/*
+			newPDF.setFont(FontFamily.ARIAL , Style.NORMAL, 12);
+			newPDF.addText("Claimant Name: " + this.firstName.text + " " + lastName.text,10,40);
+			newPDF.addText("Date: " + this.date.text,10,50);
+			newPDF.addTextNote(48,45,100,2,"Claim Filed on: " + this.date.text + " today's date: " + new Date());
+			newPDF.addText("Policy #: " + this.policyNum.text,10,60);
+			newPDF.addText("Contact #: " + this.contact.text,10,70);
+			newPDF.addText(this.claimNum.text,10,80);
+			newPDF.addText("Claim Description:",10,90);
+			newPDF.setXY(10,95);
+			newPDF.addMultiCell(200,5,desc.text);
+*/
+			
+			var newFile:File = event.target as File;
+			var fs:FileStream = new FileStream();
+			try{
+				fs.open(newFile,FileMode.WRITE);
+				var pdfBytes:ByteArray = newPDF.save(Method.LOCAL);
+				fs.writeBytes(pdfBytes); 
+				fs.close();
+			} catch(e:Error){
+				trace(e.message);
+			}
+		}
+		
 		private function onDragIn(event:NativeDragEvent):void{
 			NativeDragManager.acceptDragDrop(this);
 		}
@@ -105,7 +179,10 @@
 				if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "gif") {
 					var newClip:PictureClip = _EditDocumentView.AddClipByType("image") as PictureClip;
 					newClip.url = file.url;
-				} else {
+				} if (ext == "csv") {
+					DataEngine.UploadCSV(file.url);
+				}
+				else {
 					//Alert.show("Unmapped Extension");
 				}
 			}
@@ -135,6 +212,8 @@
 	<mx:ApplicationControlBar height="40" top="0" left="0" right="0" paddingTop="3" paddingBottom="3" cornerRadius="0" dropShadowEnabled="false" >
 		<mx:Image id="fullscreenBtn" source="@Embed('../assets/icons/fullscreen.png')" width="32" height="32" click="Fullscreen();" />
 		<mx:Image id="saveImageBtn" source="@Embed('../assets/icons/save_image.png')" width="32" height="32" click="SaveImage();" />
+		<mx:Image id="savePDFBtn" source="@Embed('../assets/icons/pdf_icon.png')" width="32" height="32" click="SavePDF();" />
+		<mx:Image id="saveFileBtn" source="@Embed('../assets/icons/document-save.png')" width="32" height="32" click="SaveFile();" />
 		<mx:Image id="PasteBtn" source="@Embed('../assets/icons/paste.png')" width="32" height="32" click="HandlePaste(null);" />
 		<mx:VRule height="32" />
 		<mx:Image id="addImageBtn" source="@Embed('../assets/icons/picture.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300));" />

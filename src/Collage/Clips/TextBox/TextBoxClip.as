@@ -57,5 +57,18 @@ package Collage.Clips.TextBox
 			}
 			return false;
 		}
+		
+		public override function SaveToObject():Object
+		{
+			var newObject:Object = super.SaveToObject();
+
+			newObject["type"] = "textbox";
+			newObject["text"] = text;
+			newObject["backgroundAlpha"] = backgroundAlpha;
+			newObject["backgroundColor"] = backgroundColor;
+
+			return newObject;
+		}
+		
 	}
 }

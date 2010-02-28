@@ -45,5 +45,16 @@ package Collage.Clips.BarChart
 		public override function Resized():void
 		{
 		}
+		
+		public override function SaveToObject():Object
+		{
+			var newObject:Object = super.SaveToObject();
+
+			newObject["type"] = "barchart";
+			newObject["backgroundAlpha"] = backgroundAlpha;
+			newObject["backgroundColor"] = backgroundColor;
+
+			return newObject;
+		}
 	}
 }
