@@ -106,7 +106,6 @@ package Collage.Clips.Table
 			
 			dataLoaded = true;
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-			Alert.show("Query Run!");
 			_DataQuery = null;
 		}
 		
