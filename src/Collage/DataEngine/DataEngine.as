@@ -4,7 +4,8 @@ package Collage.DataEngine
 	import flash.events.*;
 	import mx.controls.Alert;
 	import com.adobe.serialization.json.JSON;
-
+	import flash.filesystem.*;
+	
 	public class DataEngine extends EventDispatcher
 	{
 		public static var COMPLETE:String = "complete";
@@ -137,8 +138,42 @@ package Collage.DataEngine
 			}
 		}
 		
-		public static function UploadCSV(fileURL:String):void {
-			Alert.show("File Dropped: " + fileURL);
+		public static function UploadCSV(file:File):void {
+			var request:URLRequest = new URLRequest("http://dataengine.endlesspaths.com/api/v1/dataset/upload");
+			var loader:URLLoader = new URLLoader();
+			var header:URLRequestHeader = new URLRequestHeader("X-Requested-With", "XMLHttpRequest");
+			request.method = URLRequestMethod.POST;
+            request.requestHeaders.push(header);
+
+			file.addEventListener(Event.COMPLETE, FileUploadCompleteHandler);
+            file.addEventListener(SecurityErrorEvent.SECURITY_ERROR, FileUploadSecurityErrorHandler);
+            file.addEventListener(IOErrorEvent.IO_ERROR, FileUploadIOErrorHandler);
+            file.addEventListener(HTTPStatusEvent.HTTP_STATUS, FileUploadHttpStatusHandler);
+			file.upload(request,"datafile");
+
+			Alert.show("File Dropped: " + file.url);
+		}
+		
+        private static function FileUploadHttpStatusHandler(event:HTTPStatusEvent):void {
+			Alert.show("httpStatusHandler: \n" + event + "\n" + event.target.data);
+        }
+
+		private static function FileUploadIOErrorHandler(event:IOErrorEvent):void
+		{
+            event.target.removeEventListener(IOErrorEvent.IO_ERROR, IOErrorHandler);
+			Alert.show("ioErrorHandler: \n" + "http://dataengine.endlesspaths.com/api/v1/dataset/upload\n" + event + " " + event.target.data);
+		}
+
+        private static function FileUploadSecurityErrorHandler(event:SecurityErrorEvent):void
+		{
+            event.target.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, SecurityErrorHandler);
+            Alert.show("securityErrorHandler: \n" + "http://dataengine.endlesspaths.com/api/v1/dataset/upload");
+        }
+
+		private static function FileUploadCompleteHandler(event:Event):void
+		{
+			event.target.removeEventListener(Event.COMPLETE, CompleteHandler);
+            Alert.show("Complete! \n: " + "http://dataengine.endlesspaths.com/dataset/upload");
 		}
 	}
 }

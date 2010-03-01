@@ -180,7 +180,7 @@
 					var newClip:PictureClip = _EditDocumentView.AddClipByType("image") as PictureClip;
 					newClip.url = file.url;
 				} if (ext == "csv") {
-					DataEngine.UploadCSV(file.url);
+					DataEngine.UploadCSV(file);
 				}
 				else {
 					//Alert.show("Unmapped Extension");
