@@ -5,10 +5,9 @@
 	layout="absolute"
 	minHeight="400"
 	minWidth="500"
-	height="600"
-	width="800"
-	x="0"
-	y="0"
+	height="700"
+	width="1000"
+	menu="{nativeMenu}"
 	showStatusBar="false"
 	borderThickness="1"
 	borderColor="#313131"
@@ -17,7 +16,6 @@
     paste="HandlePaste(event)"
 	nativeDragEnter="onDragIn(event)" 
 	nativeDragDrop="onDrop(event)" >
-	
 	<mx:Style> 
 		WindowedApplication
 		{
@@ -33,7 +31,7 @@
 		import mx.graphics.ImageSnapshot;
 		import mx.graphics.codec.*;
 		import mx.controls.Alert;
-		import mx.events.FlexEvent;
+		import mx.events.*;
 		import flash.desktop.Clipboard;
 	    import flash.desktop.ClipboardFormats;
 	    import flash.desktop.ClipboardTransferMode;
@@ -58,6 +56,16 @@
 			_EditDocumentView.InitializeForEdit(inspectorWindow, optionsBox);
 		}
 
+		private function StandardOSModifier(item:Object):Array{
+			var modifiers:Array = new Array();
+			if((Capabilities.os.indexOf("Windows") >= 0)){
+				modifiers.push(Keyboard.CONTROL);
+			} else if (Capabilities.os.indexOf("Mac OS") >= 0){
+				modifiers.push(Keyboard.COMMAND);
+			} 
+			return modifiers;
+		}
+					
 		private function Fullscreen():void
 		{
 			if (stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE)
@@ -187,9 +195,147 @@
 				}
 			}
 		}
+
+		private function menuItemClicked(menuEvent:FlexNativeMenuEvent):void
+		{
+			var command:String = menuEvent.item.@command;
+			switch(command){
+				case "cut":
+					this.nativeApplication.cut();
+					break;
+				case "copy":
+					this.nativeApplication.copy();
+					break;
+				case "paste":
+					this.nativeApplication.paste();
+					break;
+				case "quit":
+					nativeApplication.exit();
+					break;
+				case "new":
+					break;
+				case "about":
+					break;
+				case "open":
+					break;
+				case "save":
+					SaveFile();
+					break;
+				case "saveImage":
+					SaveImage();
+					break;
+				case "savePDF":
+					SavePDF();
+					break;
+				case "print":
+					break;
+				case "undo":
+					break;
+				case "redo":
+					break;
+				case "insertImage":
+					_EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300));
+					break;
+				case "insertLabel":
+					_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 300, 300));
+					break;
+				case "insertTextBox":
+					_EditDocumentView.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));
+					break;
+				case "insertDataLabel":
+					_EditDocumentView.AddClipByType('datalabel', new Rectangle(150, 150, 300, 300));
+					break;
+				case "insertTable":
+					_EditDocumentView.AddClipByType('table', new Rectangle(150, 150, 300, 300));
+					break;
+				case "insertLineChart":
+					_EditDocumentView.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));
+					break;
+				case "insertBarChart":
+					_EditDocumentView.AddClipByType('barchart', new Rectangle(150, 150, 300, 300));
+					break;
+				case "insertPieChart":
+					_EditDocumentView.AddClipByType('piechart', new Rectangle(150, 150, 300, 300));
+					break;
+				case "insertGuage":
+					_EditDocumentView.AddClipByType('guage', new Rectangle(150, 150, 300, 300));
+					break;
+				case "fullscreen":
+					Fullscreen();
+					menuEvent.item.@toggled = !menuEvent.item.@toggled;
+					break;
+				default:
+					Alert.show("Unrecognized Menu Command: " + command + "  " + menuEvent.item.@label);
+			}
+		}		
 	]]>
 	</mx:Script>
-    <mx:HDividedBox top="40" left="0" right="0" bottom="0" dropShadowEnabled="false" >
+	<mx:FlexNativeMenu id="nativeMenu" dataProvider="{collageMenuData}" 
+		labelField="@label" 
+		showRoot="false"
+		itemClick="{menuItemClicked(event)}"
+		keyEquivalentField="@key" keyEquivalentModifiersFunction="StandardOSModifier"
+		mnemonicIndexField="@mnemonicIndex"			
+		/>
+    <mx:XML format="e4x" id="collageMenuData">
+        <root>
+            <menuitem label="Collage">
+                <menuitem label="About" command="about" enabled="false"/>
+                <menuitem label="Quit" command="quit" key="q"/>
+            </menuitem>
+            <menuitem label="File">
+                <menuitem label="New" command="new" key="n" enabled="false"/>
+                <menuitem label="Open..." command="open" key="o"/>
+                <menuitem type="separator"/>     
+                <menuitem label="Save..." command="save" key="s"/>
+                <menuitem label="Save Image..." command="saveImage"/>
+                <menuitem label="Save PDF..." command="savePDF"/>
+                <menuitem type="separator"/>     
+                <menuitem label="Print..." key="p" command="print" enabled="false"/>
+            </menuitem>
+            <menuitem label="Edit">
+                <menuitem label="Undo" key="z" command="undo" enabled="false"/>
+                <menuitem label="Redo" command="redo" enabled="false"/>
+                <menuitem type="separator"/>     
+				<menuitem label="Cut" enabled="false" command="cut" key="x"/>
+				<menuitem label="Copy" enabled="false" command="copy" key="c"/>
+				<menuitem label="Paste" command="paste" key="v"/>
+            </menuitem>
+            <menuitem label="Insert">
+                <menuitem label="Image" 				command="insertImage"/>
+                <menuitem label="Label" 				command="insertLabel"/>
+                <menuitem label="Text Box" 				command="insertTextBox"/>
+                <menuitem type="separator" />     
+                <menuitem label="Data Label" 			command="insertDataLabel"/>
+                <menuitem label="Table" 				command="insertTable"/>
+                <menuitem label="Line / Scatter Chart"  command="insertLineChart"/>
+                <menuitem label="Bar Chart" 			command="insertBarChart"/>
+                <menuitem label="Pie Chart"				command="insertPieChart"/>
+                <menuitem label="Guage" 				command="insertGuage"/>
+            </menuitem>
+            <menuitem label="Window">
+                <menuitem label="Fullscreen" type="check" command="fullscreen" toggled="false"/>
+            </menuitem>
+        </root>
+    </mx:XML>
+	<mx:VBox height="100%" left="0" width="32" backgroundColor="#999999" backgroundAlpha="1" horizontalScrollPolicy="off" verticalScrollPolicy="off" paddingLeft="4" paddingRight="4" paddingTop="4" paddingBottom="4">
+		<mx:Image id="fullscreenBtn" source="@Embed('../assets/icons/fullscreen.png')" width="24" height="24" click="Fullscreen();" />
+		<mx:Image id="saveImageBtn" source="@Embed('../assets/icons/save_image.png')" width="24" height="24" click="SaveImage();" />
+		<mx:Image id="savePDFBtn" source="@Embed('../assets/icons/pdf_icon-sm.png')" width="24" height="24" click="SavePDF();" />
+		<mx:Image id="saveFileBtn" source="@Embed('../assets/icons/document-save.png')" width="24" height="24" click="SaveFile();" />
+		<mx:Image id="PasteBtn" source="@Embed('../assets/icons/paste.png')" width="24" height="24" click="HandlePaste(null);" />
+		<mx:HRule width="24" />
+		<mx:Image id="addImageBtn" source="@Embed('../assets/themes/dark/image.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addLabelBtn" source="@Embed('../assets/themes/dark/label.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addTextBoxBtn" source="@Embed('../assets/themes/dark/label.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addLineChartBtn" source="@Embed('../assets/themes/dark/line-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addBarChartBtn" source="@Embed('../assets/themes/dark/bar-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('barchart', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addPieChartBtn" source="@Embed('../assets/themes/dark/pie-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('piechart', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addGuageBtn" source="@Embed('../assets/themes/dark/guage.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('guage', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addTableBtn" source="@Embed('../assets/themes/light/table.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('table', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addDataLabelBtn" source="@Embed('../assets/themes/light/data-label.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('datalabel', new Rectangle(150, 150, 300, 300));" />
+	</mx:VBox>
+    <mx:HDividedBox top="0" left="32" right="0" bottom="0" dropShadowEnabled="false" horizontalScrollPolicy="off" verticalScrollPolicy="off" dividerAffordance="4">
         <mx:Canvas label="Canvas 1" width="100%" height="100%" color="0x323232" backgroundColor="#ACACAC" click="_EditDocumentView.BackgroundClick(event);">
 			<mx:Box top="0" left="0" right="0" bottom="0" paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20"  horizontalAlign="center" verticalAlign="middle">
 				<clg:EditDocumentView id="_EditDocumentView" 
@@ -206,24 +352,7 @@
 				</clg:EditDocumentView>
 			</mx:Box>
         </mx:Canvas>
-        <mx:Box id="inspectorWindow" width="250" minWidth="250" height="100%" backgroundColor="#ACACAC" backgroundAlpha="1" horizontalScrollPolicy="off" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5"  >
+        <mx:Box id="inspectorWindow" width="250" minWidth="250" height="100%" backgroundColor="#ACACAC" backgroundAlpha="1" horizontalScrollPolicy="off" paddingLeft="4" paddingRight="4" paddingTop="4" paddingBottom="4"  >
         </mx:Box>
     </mx:HDividedBox>
-	<mx:ApplicationControlBar height="40" top="0" left="0" right="0" paddingTop="3" paddingBottom="3" cornerRadius="0" dropShadowEnabled="false" backgroundColor="#d6d6d6">
-		<mx:Image id="fullscreenBtn" source="@Embed('../assets/icons/fullscreen.png')" width="32" height="32" click="Fullscreen();" />
-		<mx:Image id="saveImageBtn" source="@Embed('../assets/icons/save_image.png')" width="32" height="32" click="SaveImage();" />
-		<mx:Image id="savePDFBtn" source="@Embed('../assets/icons/pdf_icon.png')" width="32" height="32" click="SavePDF();" />
-		<mx:Image id="saveFileBtn" source="@Embed('../assets/icons/document-save.png')" width="32" height="32" click="SaveFile();" />
-		<mx:Image id="PasteBtn" source="@Embed('../assets/icons/paste.png')" width="32" height="32" click="HandlePaste(null);" />
-		<mx:VRule height="32" />
-		<mx:Image id="addImageBtn" source="@Embed('../assets/icons/new/image.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addLabelBtn" source="@Embed('../assets/icons/new/label.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addTextBoxBtn" source="@Embed('../assets/icons/text_box.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addLineChartBtn" source="@Embed('../assets/icons/new/line-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addBarChartBtn" source="@Embed('../assets/icons/new/bar-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('barchart', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addPieChartBtn" source="@Embed('../assets/icons/new/pie-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('piechart', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addGuageBtn" source="@Embed('../assets/icons/new/guage.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('guage', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addTableBtn" source="@Embed('../assets/icons/table.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('table', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addDataLabelBtn" source="@Embed('../assets/icons/data-label.png')" width="32" height="32" click="_EditDocumentView.AddClipByType('datalabel', new Rectangle(150, 150, 300, 300));" />
-	</mx:ApplicationControlBar>
 </mx:WindowedApplication>

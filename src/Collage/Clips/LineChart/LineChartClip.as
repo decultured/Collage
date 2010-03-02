@@ -185,7 +185,6 @@ package Collage.Clips.LineChart
 			}
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 			
-			Alert.show("Query Run!" + BuildChartJSONString());
 			_DataQuery = null;
 		}
 		

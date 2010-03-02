@@ -114,8 +114,6 @@ package Collage.DataEngine
 		{
 			event.target.removeEventListener(Event.COMPLETE, CompleteHandler);
 
-            Alert.show("http://dataengine.endlesspaths.com/api/v1/dataset/" + dataset + "/query \n" + event.target.data);
-
 			var results:Object = JSON.decode(event.target.data);
 			result = new DataQueryResult();
 
