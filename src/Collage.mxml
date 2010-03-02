@@ -321,10 +321,6 @@
     </mx:XML>
 	<mx:VBox height="100%" left="0" width="32" backgroundColor="#D6D6D6" backgroundAlpha="1" horizontalScrollPolicy="off" verticalScrollPolicy="off" paddingLeft="4" paddingRight="4" paddingTop="4" paddingBottom="4">
 		<mx:Image id="fullscreenBtn" source="@Embed('../assets/themes/light/fullscreen.png')" width="24" height="24" click="Fullscreen();" />
-		<mx:Image id="saveImageBtn" source="@Embed('../assets/themes/light/save_image.png')" width="24" height="24" click="SaveImage();" />
-		<mx:Image id="savePDFBtn" source="@Embed('../assets/themes/light/pdf_icon-sm.png')" width="24" height="24" click="SavePDF();" />
-		<mx:Image id="saveFileBtn" source="@Embed('../assets/themes/light/document-save.png')" width="24" height="24" click="SaveFile();" />
-		<mx:Image id="PasteBtn" source="@Embed('../assets/themes/light/paste.png')" width="24" height="24" click="HandlePaste(null);" />
 		<mx:HRule width="24" />
 		<mx:Image id="addImageBtn" source="@Embed('../assets/themes/dark/image.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addLabelBtn" source="@Embed('../assets/themes/dark/label.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
