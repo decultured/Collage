@@ -21,6 +21,7 @@
 		{
 			background-color:"0x777777";
 			background-alpha:"1.0";
+			border-color: "0x555555";
 		}
 	</mx:Style>
 	<mx:Script>
@@ -318,21 +319,21 @@
             </menuitem>
         </root>
     </mx:XML>
-	<mx:VBox height="100%" left="0" width="32" backgroundColor="#999999" backgroundAlpha="1" horizontalScrollPolicy="off" verticalScrollPolicy="off" paddingLeft="4" paddingRight="4" paddingTop="4" paddingBottom="4">
-		<mx:Image id="fullscreenBtn" source="@Embed('../assets/icons/fullscreen.png')" width="24" height="24" click="Fullscreen();" />
-		<mx:Image id="saveImageBtn" source="@Embed('../assets/icons/save_image.png')" width="24" height="24" click="SaveImage();" />
-		<mx:Image id="savePDFBtn" source="@Embed('../assets/icons/pdf_icon-sm.png')" width="24" height="24" click="SavePDF();" />
-		<mx:Image id="saveFileBtn" source="@Embed('../assets/icons/document-save.png')" width="24" height="24" click="SaveFile();" />
-		<mx:Image id="PasteBtn" source="@Embed('../assets/icons/paste.png')" width="24" height="24" click="HandlePaste(null);" />
+	<mx:VBox height="100%" left="0" width="32" backgroundColor="#D6D6D6" backgroundAlpha="1" horizontalScrollPolicy="off" verticalScrollPolicy="off" paddingLeft="4" paddingRight="4" paddingTop="4" paddingBottom="4">
+		<mx:Image id="fullscreenBtn" source="@Embed('../assets/themes/light/fullscreen.png')" width="24" height="24" click="Fullscreen();" />
+		<mx:Image id="saveImageBtn" source="@Embed('../assets/themes/light/save_image.png')" width="24" height="24" click="SaveImage();" />
+		<mx:Image id="savePDFBtn" source="@Embed('../assets/themes/light/pdf_icon-sm.png')" width="24" height="24" click="SavePDF();" />
+		<mx:Image id="saveFileBtn" source="@Embed('../assets/themes/light/document-save.png')" width="24" height="24" click="SaveFile();" />
+		<mx:Image id="PasteBtn" source="@Embed('../assets/themes/light/paste.png')" width="24" height="24" click="HandlePaste(null);" />
 		<mx:HRule width="24" />
 		<mx:Image id="addImageBtn" source="@Embed('../assets/themes/dark/image.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addLabelBtn" source="@Embed('../assets/themes/dark/label.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addTextBoxBtn" source="@Embed('../assets/themes/dark/label.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addTextBoxBtn" source="@Embed('../assets/themes/dark/text-box.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addLineChartBtn" source="@Embed('../assets/themes/dark/line-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addBarChartBtn" source="@Embed('../assets/themes/dark/bar-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('barchart', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addPieChartBtn" source="@Embed('../assets/themes/dark/pie-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('piechart', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addGuageBtn" source="@Embed('../assets/themes/dark/guage.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('guage', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addTableBtn" source="@Embed('../assets/themes/light/table.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('table', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addTableBtn" source="@Embed('../assets/themes/dark/datagrid.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('table', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addDataLabelBtn" source="@Embed('../assets/themes/light/data-label.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('datalabel', new Rectangle(150, 150, 300, 300));" />
 	</mx:VBox>
     <mx:HDividedBox top="0" left="32" right="0" bottom="0" dropShadowEnabled="false" horizontalScrollPolicy="off" verticalScrollPolicy="off" dividerAffordance="4">
@@ -346,8 +347,8 @@
 					horizontalScrollPolicy="off"
 					verticalScrollPolicy="off" >
 					<mx:HBox id="optionsBox" visible="false" paddingBottom="6" paddingTop="6">
-						<mx:Image id="lockButton" source="@Embed('../assets/icons/lock.png')" click="_EditDocumentView.lockSelected()" />
-						<mx:Image id="deleteButton" source="@Embed('../assets/icons/delete.png')" click="_EditDocumentView.deleteSelected()" />
+						<mx:Image id="lockButton" source="@Embed('../assets/themes/light/lock.png')" click="_EditDocumentView.lockSelected()" />
+						<mx:Image id="deleteButton" source="@Embed('../assets/themes/light/delete.png')" click="_EditDocumentView.deleteSelected()" />
 					</mx:HBox>			
 				</clg:EditDocumentView>
 			</mx:Box>
