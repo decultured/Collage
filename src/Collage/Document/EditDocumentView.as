@@ -34,6 +34,7 @@ package Collage.Document
 			_OptionsBox = newOptionsBox;
 			InitObjectHandles();
 			SelectDocument();
+			ViewResized();
 		}
 
 		public function InitObjectHandles():void
