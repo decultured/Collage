@@ -34,7 +34,7 @@ package Collage.Document
 			this.rawChildren.addChild(_Grid);
 			DrawGrid();
 			
-			_BackgroundImage.addEventListener(MouseEvent.CLICK, BackgroundClick);
+//			_BackgroundImage.addEventListener(MouseEvent.CLICK, BackgroundClick);
 		}
 
 		public function InitializeForEdit(newInspector:UIComponent, newOptionsBox:UIComponent):void
@@ -310,14 +310,24 @@ package Collage.Document
 			}
 		}
 		
+		public override function OnClick(event:MouseEvent):void {
+
+ 		}
+		
 		public function BackgroundClick(event:MouseEvent):void
 		{		
 			if(event) {
-			 	if (!(event.target is ClipView) || event.target is DocumentView) {
+				if (event.currentTarget is ClipView && !(event.currentTarget is DocumentView)) {
+					event.stopPropagation();
+					event.stopImmediatePropagation();
+					return;
+			 	} else {//if (event.currentTarget is DocumentView || event.currentTarget == parent) {
 					ClearSelection();
+					event.stopPropagation();
+					event.stopImmediatePropagation();
 				}
 			} else {
-				ClearSelection();
+//				ClearSelection();
 			}
 		}
 		

@@ -5,6 +5,7 @@ package Collage.Clip
 	import mx.containers.Canvas;
 	import mx.managers.*;
 	import mx.events.PropertyChangeEvent;
+	import flash.events.*;
 	import mx.controls.Alert;
 
 	public class ClipView extends Canvas
@@ -20,6 +21,13 @@ package Collage.Clip
 				_Model.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onModelChange);
 				Reposition();
 			}
+			
+			addEventListener(MouseEvent.CLICK, OnClick);
+		}
+		
+		public function OnClick(event:MouseEvent):void {
+			event.stopPropagation();
+			event.stopImmediatePropagation();
 		}
 		
 		public function ClipView()

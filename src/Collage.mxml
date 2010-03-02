@@ -231,6 +231,13 @@
 			}
 		}
 
+		private function menuShow(menuEvent:FlexNativeMenuEvent):void
+		{
+			if (!_EditDocumentView.IsObjectSelected()) {
+//				collageMenuData..
+			}
+		}
+
 		private function menuItemClicked(menuEvent:FlexNativeMenuEvent):void
 		{
 			var command:String = menuEvent.item.@command;
@@ -325,6 +332,7 @@
 		labelField="@label" 
 		showRoot="false"
 		itemClick="{menuItemClicked(event)}"
+		menuShow="{menuShow(event)}"
 		keyEquivalentField="@key" keyEquivalentModifiersFunction="StandardOSModifier"
 		mnemonicIndexField="@mnemonicIndex"			
 		/>
@@ -389,7 +397,7 @@
 	</mx:VBox>
     <mx:HDividedBox top="0" left="32" right="0" bottom="0" dropShadowEnabled="false" horizontalScrollPolicy="off" verticalScrollPolicy="off" dividerAffordance="4">
         <mx:Canvas label="Canvas 1" width="100%" height="100%" color="0x323232" backgroundColor="#ACACAC" backgroundAlpha="1" click="_EditDocumentView.BackgroundClick(event);">
-			<mx:Box top="0" left="0" right="0" bottom="0" paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20"  horizontalAlign="center" verticalAlign="middle">
+			<mx:Box top="0" left="0" right="0" bottom="0" paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20"  horizontalAlign="center" verticalAlign="middle" backgroundAlpha="0" backgroundColor="0xffffff">
 				<clg:EditDocumentView id="_EditDocumentView" 
 					width="800" height="600" 
 					dropShadowEnabled="true" 
