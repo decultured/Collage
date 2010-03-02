@@ -1,7 +1,10 @@
 package Collage.Document
 {
 	import flash.geom.*;
+	import flash.display.*;
 	import Collage.Clip.*;
+	import mx.controls.Alert;
+	import mx.events.PropertyChangeEvent;
 	import flash.events.*;
 	import mx.core.UIComponent;
 	import com.roguedevelopment.objecthandles.*;
@@ -19,12 +22,18 @@ package Collage.Document
 		public function set optionsBox(optionsBox:UIComponent):void {_OptionsBox = optionsBox;}
 		public function get optionsBox():UIComponent {return _OptionsBox;}
 
+		private var _Grid:Shape = new Shape(); 
+		
 		public function EditDocumentView()
 		{
 			super();
 			var newModel:Document = new Document();
 			newModel.CreateEditView(this);
 			model = newModel;
+			_Grid.visible = false;
+			this.rawChildren.addChild(_Grid);
+			DrawGrid();
+			
 			_BackgroundImage.addEventListener(MouseEvent.CLICK, BackgroundClick);
 		}
 
@@ -77,6 +86,7 @@ package Collage.Document
 			if (!super.AddClip(newClip))
 				return false;
 			_ObjectHandles.registerComponent(newClip, newClip.view);
+			DrawGrid();
 			return true;
 		}
 
@@ -85,6 +95,7 @@ package Collage.Document
 			var newClip:Clip = super.AddClipByType(clipType);
 			if (newClip)
 				_ObjectHandles.registerComponent(newClip, newClip.view);
+			DrawGrid();
 			return newClip;
 		}
 
@@ -93,6 +104,7 @@ package Collage.Document
 			var newClip:Clip = super.AddClipFromData(data);
 			if (newClip)
 				_ObjectHandles.registerComponent(newClip, newClip.view);
+			DrawGrid();
 			return newClip;
 		}
 
@@ -120,13 +132,60 @@ package Collage.Document
 
 		private function ObjectChanged(event:ObjectChangedEvent):void{
 			for each (var clip:Clip in event.relatedObjects) {
-				if (event.type == ObjectChangedEvent.OBJECT_MOVED) {clip.Moved();}
+				if (event.type == ObjectChangedEvent.OBJECT_MOVED) {
+					var docModel:Document = _Model as Document;
+					if (docModel.snap && docModel.gridSize)
+					{
+						var num:Number = (clip.x % docModel.gridSize) - (docModel.gridSize * 0.5);
+						if (num)
+							clip.x = clip.x - (clip.x % docModel.gridSize);
+						else
+							clip.x = clip.x - (clip.x % docModel.gridSize) + docModel.gridSize;
+						
+						num = (clip.y % docModel.gridSize) - (docModel.gridSize * 0.5);
+						if (num)
+							clip.y = clip.y - (clip.y % docModel.gridSize);
+						else
+							clip.y = clip.y - (clip.y % docModel.gridSize) + docModel.gridSize;
+					}
+					
+					clip.Moved();
+				}
 				else if (event.type == ObjectChangedEvent.OBJECT_RESIZED) {clip.Resized();}
 				else if (event.type == ObjectChangedEvent.OBJECT_ROTATED) {clip.Rotated();}
 				PositionOptionsBox();
 			}
 		}
 		
+		public function DrawGrid():void
+		{
+			var docModel:Document = _Model as Document;
+			if (!docModel.grid || !docModel.gridSize) {
+				_Grid.visible = false;
+				return;
+			}
+			
+			_Grid.visible = true;
+			_Grid.graphics.clear();
+			_Grid.graphics.lineStyle(1, docModel.gridColor);
+			
+			for (var xPos:Number = docModel.gridSize; xPos < docModel.width; xPos += docModel.gridSize) {
+		    	_Grid.graphics.moveTo(xPos, 0); 
+		    	_Grid.graphics.lineTo(xPos, docModel.height); 
+			}
+
+			for (var yPos:Number = docModel.gridSize; yPos < docModel.height; yPos += docModel.gridSize) {
+		    	_Grid.graphics.moveTo(0, yPos); 
+		    	_Grid.graphics.lineTo(docModel.height, yPos); 
+			}
+		} 
+		
+		protected override function onModelChange( event:PropertyChangeEvent):void
+		{
+			DrawGrid();
+			super.onModelChange(event);
+		}
+
 		protected function PositionOptionsBox():void
 		{
 			if (!_OptionsBox) return;

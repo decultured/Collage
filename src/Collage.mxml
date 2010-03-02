@@ -2,6 +2,7 @@
 <mx:WindowedApplication 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Document.*"
+	xmlns:degrafa="http://www.degrafa.com/2007"
 	layout="absolute"
 	minHeight="400"
 	minWidth="500"
@@ -57,7 +58,7 @@
 			this.nativeWindow.x = (Capabilities.screenResolutionX - this.width)/2;
 			this.nativeWindow.y = (Capabilities.screenResolutionY - this.height)/2;
 			
-			this.nativeWindow.maximize();
+//			this.nativeWindow.maximize();
 		}
 
 		private function StandardOSModifier(item:Object):Array{
@@ -350,6 +351,22 @@
 						<mx:Image id="deleteButton" source="@Embed('../assets/themes/dark/delete.png')" click="_EditDocumentView.deleteSelected()" />
 					</mx:HBox>			
 				</clg:EditDocumentView>
+				<degrafa:Surface>
+					<degrafa:strokes>
+						<degrafa:SolidStroke id="gridStroke" color="#aaa" weight="1" alpha=".2"/>
+					</degrafa:strokes>
+					<degrafa:GeometryGroup>
+						<degrafa:VerticalLineRepeater count="10" stroke="{gridStroke}"
+														x="0" y="0" y1="600"
+														offsetX="0" offsetY="0"
+														moveOffsetX="{0}" moveOffsetY="0"/>
+						<degrafa:HorizontalLineRepeater	count="10" stroke="{gridStroke}"
+														x="0" y="0" x1="800"
+														offsetX="0" offsetY="0"
+														moveOffsetX="0" moveOffsetY="0"/>
+
+					</degrafa:GeometryGroup>
+				</degrafa:Surface>
 			</mx:Box>
         </mx:Canvas>
         <mx:Box id="inspectorWindow" width="250" minWidth="250" height="100%" backgroundColor="#ACACAC" backgroundAlpha="1" horizontalScrollPolicy="off" paddingLeft="4" paddingRight="4" paddingTop="4" paddingBottom="4"  >

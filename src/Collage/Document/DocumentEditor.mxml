@@ -36,6 +36,15 @@
 				var editDocument:Document = _Model as Document;
 				if (editDocument.url)
 					src.text = editDocument.url;
+
+				gridSize.text = editDocument.gridSize.toString();
+				snapToGrid.selected = editDocument.snap;
+				showGrid.selected = editDocument.grid;
+				
+				canvasWidth.text = editDocument.width.toString();
+				canvasHeight.text = editDocument.height.toString();
+				
+				gridColorPicker.selectedColor = editDocument.gridColor;
 			}
 		}
 		
@@ -69,6 +78,17 @@
 			if (_Model) {
 				var editDocument:Document = _Model as Document;
 				editDocument.backgroundColor = backgroundColorPicker.selectedColor;
+				
+				editDocument.gridColor = gridColorPicker.selectedColor;
+				
+				var num:Number = parseInt(gridSize.text);
+				if (num < 0 || isNaN(num)) num = 0;
+				else if (num > 100) num = 100;
+				gridSize.text = num.toString();
+				editDocument.gridSize = num;
+				
+				editDocument.snap = snapToGrid.selected;
+				editDocument.grid = showGrid.selected;
 			}
 		}
 
@@ -78,14 +98,13 @@
 				var editDocument:Document = _Model as Document;
 
 				var num:Number = parseInt(canvasWidth.text);
-				if (num < 100) num = 100;
+				if (num < 100 || isNaN(num)) num = 100;
 				else if (num > 5000) num = 5000;
 				canvasWidth.text = num.toString();
-				num = parseInt(canvasHeight.text);
 				editDocument.width = parseInt(canvasWidth.text);
 
 				num = parseInt(canvasHeight.text);
-				if (num < 100) num = 100;
+				if (num < 100 || isNaN(num)) num = 100;
 				else if (num > 5000) num = 5000;
 				canvasHeight.text = num.toString();
 				editDocument.height = parseInt(canvasHeight.text);
@@ -103,6 +122,14 @@
 		</mx:HBox>
 		<mx:Button id="resizeCanvasButton" label="Apply Size" click="ResizeCanvas()" />
 		<mx:HRule width="100%" />
+		<mx:CheckBox id="snapToGrid" label="Snap to Grid" click="SettingsChanged()"/>
+		<mx:CheckBox id="showGrid" label="Show Grid" click="SettingsChanged()"/>
+		<mx:HBox width="100%" >
+			<mx:Label text="Grid Size:" color="#000000" fontWeight="bold" /><mx:TextInput id="gridSize" text="600" color="0x323232" width="100%" change="SettingsChanged()" />
+		</mx:HBox>
+		<mx:HBox width="100%" >
+			<mx:Label text="Grid Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="gridColorPicker" showTextField="true" selectedColor="0xEEEEEE" change="SettingsChanged()"/>
+		</mx:HBox>
 		<mx:HBox width="100%" >
 			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF" change="SettingsChanged()"/>
 		</mx:HBox>

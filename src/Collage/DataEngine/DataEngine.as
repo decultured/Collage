@@ -134,7 +134,8 @@ package Collage.DataEngine
 				events.dispatchEvent(new Event(COMPLETE));
 				loading = false;
 				loaded = true;
-				Alert.show("Data Load Complete.");
+				// TODO : Move to status bar
+				// Alert.show("Data Load Complete.");
 			}
 		}
 		
@@ -173,7 +174,9 @@ package Collage.DataEngine
 		private static function FileUploadCompleteHandler(event:Event):void
 		{
 			event.target.removeEventListener(Event.COMPLETE, CompleteHandler);
-            Alert.show("Complete! \n: " + "http://dataengine.endlesspaths.com/dataset/upload");
+            
+			// TODO : Status Update for file complete
+			// Alert.show("Complete! \n: " + "http://dataengine.endlesspaths.com/dataset/upload");
 		}
 	}
 }
