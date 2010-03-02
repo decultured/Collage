@@ -72,11 +72,22 @@ package Collage.Document
 		{
 			super.ViewResized();
 			if (_ObjectHandles) {
+				
+				_ObjectHandles.constraints = new Array();
+				
+				var sizeConstraint:SizeConstraint = new SizeConstraint();
+				sizeConstraint.minWidth = 20;
+				sizeConstraint.minHeight = 20;
+				sizeConstraint.maxWidth = this.width;
+				sizeConstraint.maxHeight = this.height;
+				
 				var moveConstraint:MovementConstraint = new MovementConstraint();
 				moveConstraint.minX = 0;
 				moveConstraint.minY = 0;
 				moveConstraint.maxX = this.width;
 				moveConstraint.maxY = this.height;
+				
+				_ObjectHandles.constraints.push(sizeConstraint);							
 				_ObjectHandles.constraints.push(moveConstraint);							
 			}
 		}
@@ -171,7 +182,7 @@ package Collage.Document
 			
 			for (var xPos:Number = docModel.gridSize; xPos < docModel.width; xPos += docModel.gridSize) {
 		    	_Grid.graphics.moveTo(xPos, 0); 
-		    	_Grid.graphics.lineTo(xPos, docModel.height); 
+		    	_Grid.graphics.lineTo(xPos, docModel.width); 
 			}
 
 			for (var yPos:Number = docModel.gridSize; yPos < docModel.height; yPos += docModel.gridSize) {
@@ -228,7 +239,11 @@ package Collage.Document
 		
 		public function BackgroundClick(event:MouseEvent):void
 		{		
-			if(event && (event.target == this || event.target == _BackgroundImage)) {
+			if(event) {
+			 	if (!(event.target is ClipView) || event.target is DocumentView) {
+					ClearSelection();
+				}
+			} else {
 				ClearSelection();
 			}
 		}

@@ -5,7 +5,7 @@ package Collage.Document
 	
 	public class Document extends Clip
 	{
-		[Bindable] public var snap:Boolean = true;
+		[Bindable] public var snap:Boolean = false;
 		[Bindable] public var grid:Boolean = false;
 		[Bindable] public var gridSize:Number = 10;
 		[Bindable] public var gridColor:Number = 0xeeeeee;
