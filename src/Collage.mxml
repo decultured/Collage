@@ -8,7 +8,7 @@
 	height="700"
 	width="1000"
 	menu="{nativeMenu}"
-	showStatusBar="false"
+	showStatusBar="true"
 	borderThickness="1"
 	borderColor="#313131"
 	dropShadowEnabled="true"
@@ -56,6 +56,8 @@
 			
 			this.nativeWindow.x = (Capabilities.screenResolutionX - this.width)/2;
 			this.nativeWindow.y = (Capabilities.screenResolutionY - this.height)/2;
+			
+			this.nativeWindow.maximize();
 		}
 
 		private function StandardOSModifier(item:Object):Array{
