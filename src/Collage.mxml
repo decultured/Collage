@@ -9,9 +9,14 @@
 	height="700"
 	width="1000"
 	menu="{nativeMenu}"
+	title="Collage"
+	titleTextStyleName="appTitle"
+	headerHeight="21"
+	buttonAlignment="auto"
+	cornerRadius="4"
 	showStatusBar="true"
 	borderThickness="1"
-	borderColor="#313131"
+	borderColor="#999999"
 	dropShadowEnabled="true"
 	applicationComplete="Initialize()"
     paste="HandlePaste(event)"
@@ -22,7 +27,10 @@
 		{
 			background-color:"0x777777";
 			background-alpha:"1.0";
-			border-color: "0x999999";
+		}
+		
+		.appTitle {
+			font-size: 14;
 		}
 	</mx:Style>
 	<mx:Script>
