@@ -110,6 +110,8 @@ package Collage.Document
 			if (!super.AddClip(newClip))
 				return false;
 			_ObjectHandles.registerComponent(newClip, newClip.view);
+			ClearSelection();
+			_ObjectHandles.selectionManager.addToSelected(newClip);
 			DrawGrid();
 			return true;
 		}
@@ -117,8 +119,11 @@ package Collage.Document
 		public override function AddClipByType(clipType:String, position:Rectangle = null, dataObject:Object = null):Clip
 		{
 			var newClip:Clip = super.AddClipByType(clipType, position, dataObject);
-			if (newClip)
+			if (newClip) {
 				_ObjectHandles.registerComponent(newClip, newClip.view);
+				ClearSelection();
+				_ObjectHandles.selectionManager.addToSelected(newClip);
+			}
 			DrawGrid();
 			return newClip;
 
@@ -127,8 +132,11 @@ package Collage.Document
 		public override function AddClipFromData(data:Object, position:Rectangle = null):Clip
 		{
 			var newClip:Clip = super.AddClipFromData(data);
-			if (newClip)
+			if (newClip) {
 				_ObjectHandles.registerComponent(newClip, newClip.view);
+				ClearSelection();
+				_ObjectHandles.selectionManager.addToSelected(newClip);
+			}
 			DrawGrid();
 			return newClip;
 		}

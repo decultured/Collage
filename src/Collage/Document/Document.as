@@ -86,8 +86,11 @@ package Collage.Document
 
 		public override function LoadFromObject(dataObject:Object):Boolean
 		{
-			if (!dataObject)
+			var docView:DocumentView = view as DocumentView;
+			if (!dataObject || !docView)
 				return false;
+
+			docView.NewDocument();
 			
 			for (var key:String in dataObject)
 			{
@@ -105,10 +108,7 @@ package Collage.Document
 							Alert.show("Clip Broke");
 							continue;
 						}
-							
-						var docView:DocumentView = view as DocumentView;
-						if (docView)
-							docView.AddClipByType(clipDataObject["type"], null, clipDataObject);
+						docView.AddClipByType(clipDataObject["type"], null, clipDataObject);
 					}
 				}
 			}
