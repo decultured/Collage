@@ -258,6 +258,7 @@
 					nativeApplication.exit();
 					break;
 				case "new":
+					_EditDocumentView.NewDocument();
 					break;
 				case "about":
 					break;
@@ -343,7 +344,7 @@
                 <menuitem label="Quit" command="quit" key="q"/>
             </menuitem>
             <menuitem label="File">
-                <menuitem label="New" command="new" key="n" enabled="false"/>
+                <menuitem label="New" command="new" key="n"/>
                 <menuitem label="Open..." command="open" key="o"/>
                 <menuitem type="separator"/>     
                 <menuitem label="Save..." command="save" key="s"/>

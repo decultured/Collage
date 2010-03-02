@@ -25,14 +25,7 @@ package Collage.Document
 		
 		public function DocumentView()
 		{
-			_BackgroundImage = new Image();
-			_BackgroundImage.setStyle("top", 0);
-			_BackgroundImage.setStyle("left", 0);
-			_BackgroundImage.setStyle("bottom", 0);
-			_BackgroundImage.setStyle("right", 0);
-			_BackgroundImage.setStyle("horizontalAlign", "center");
-			_BackgroundImage.setStyle("verticalAlign", "middle");
-			addChild(_BackgroundImage);
+			AddBackgroundImage();
 			ClipFactory.RegisterClipDefinitions();
 			_Clips = new Object();
 			super();
@@ -41,6 +34,32 @@ package Collage.Document
 		public function ViewResized():void
 		{
 			// TODO : Reposition all objects to fit in new size
+		}
+		
+		public function NewDocument():void
+		{
+			var docModel:Document = _Model as Document;
+			
+			docModel.width = 1024;
+			docModel.height = 768;
+			docModel.url = null;
+			docModel.backgroundColor = 0xFFFFFF;
+			
+			removeAllChildren();
+			_Clips = new Object();
+			AddBackgroundImage();
+		}
+		
+		private function AddBackgroundImage():void
+		{
+			_BackgroundImage = new Image();
+			_BackgroundImage.setStyle("top", 0);
+			_BackgroundImage.setStyle("left", 0);
+			_BackgroundImage.setStyle("bottom", 0);
+			_BackgroundImage.setStyle("right", 0);
+			_BackgroundImage.setStyle("horizontalAlign", "center");
+			_BackgroundImage.setStyle("verticalAlign", "middle");
+			addChild(_BackgroundImage);			
 		}
 		
 		public function AddClip(newClip:Clip):Boolean

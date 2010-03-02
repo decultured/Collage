@@ -46,6 +46,19 @@ package Collage.Document
 			ViewResized();
 		}
 
+		public override function NewDocument():void
+		{
+			var docModel:Document = _Model as Document;
+			
+			var childArray:Array = getChildren();
+			for (var i:uint = 0; i < childArray.length; i++) {
+				if (childArray[i] && childArray[i] is ClipView)
+					_ObjectHandles.unregisterComponent(childArray[i]);
+			}
+			
+			super.NewDocument();
+		}
+
 		public function InitObjectHandles():void
 		{
 			_SelectionManager = new ObjectHandlesSelectionManager();
@@ -321,13 +334,13 @@ package Collage.Document
 					event.stopPropagation();
 					event.stopImmediatePropagation();
 					return;
-			 	} else {//if (event.currentTarget is DocumentView || event.currentTarget == parent) {
+			 	} else {
 					ClearSelection();
 					event.stopPropagation();
 					event.stopImmediatePropagation();
 				}
 			} else {
-//				ClearSelection();
+				ClearSelection();
 			}
 		}
 		
