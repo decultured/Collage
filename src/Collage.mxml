@@ -44,7 +44,7 @@
 		import org.alivepdf.images.*;
 		import org.alivepdf.layout.*;
 		import org.alivepdf.saving.*;
-//		private var _EditDocumentView:EditDocumentView;
+
 		private var _Document:Document;
 
 		private function Initialize():void
@@ -52,9 +52,10 @@
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown); 
 			DataEngine.LoadAllDataSets();
 
-//			_Document = new Document(true);
-//			_EditDocumentView = mainEditCanvas.view as EditDocumentView;
 			_EditDocumentView.InitializeForEdit(inspectorWindow, optionsBox);
+			
+			this.nativeWindow.x = (Capabilities.screenResolutionX - this.width)/2;
+			this.nativeWindow.y = (Capabilities.screenResolutionY - this.height)/2;
 		}
 
 		private function StandardOSModifier(item:Object):Array{
@@ -303,16 +304,16 @@
 				<menuitem label="Paste" command="paste" key="v"/>
             </menuitem>
             <menuitem label="Insert">
-                <menuitem label="Image" 				command="insertImage"/>
-                <menuitem label="Label" 				command="insertLabel"/>
-                <menuitem label="Text Box" 				command="insertTextBox"/>
+                <menuitem label="Image" command="insertImage"/>
+                <menuitem label="Label" command="insertLabel"/>
+                <menuitem label="Text Box" command="insertTextBox"/>
                 <menuitem type="separator" />     
-                <menuitem label="Data Label" 			command="insertDataLabel"/>
-                <menuitem label="Table" 				command="insertTable"/>
-                <menuitem label="Line / Scatter Chart"  command="insertLineChart"/>
-                <menuitem label="Bar Chart" 			command="insertBarChart"/>
-                <menuitem label="Pie Chart"				command="insertPieChart"/>
-                <menuitem label="Guage" 				command="insertGuage"/>
+                <menuitem label="Data Label" command="insertDataLabel"/>
+                <menuitem label="Table" command="insertTable"/>
+                <menuitem label="Line / Scatter Chart" command="insertLineChart"/>
+                <menuitem label="Bar Chart" command="insertBarChart"/>
+                <menuitem label="Pie Chart" command="insertPieChart"/>
+                <menuitem label="Guage" command="insertGuage"/>
             </menuitem>
             <menuitem label="Window">
                 <menuitem label="Fullscreen" type="check" command="fullscreen" toggled="false"/>

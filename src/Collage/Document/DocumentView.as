@@ -124,6 +124,7 @@ package Collage.Document
 			validateNow();
 
 			super.onModelChange(event);
+			_BorderBox.visible = false;
 		}
 
 		private function Complete(event:Event):void
