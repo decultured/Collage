@@ -31,7 +31,7 @@ package Collage.Clip
 			_BorderBox.setStyle("bottom", 0);
 			_BorderBox.setStyle("right", 0);
 			_BorderBox.setStyle("borderThickness", 1);
-			_BorderBox.setStyle("borderColor", 0xffaa00);
+			_BorderBox.setStyle("borderColor", 0x0CCE60);
 			_BorderBox.setStyle("borderStyle", "solid");
 			_BorderBox.setStyle("borderAlpha", 0.3);
 			_BorderBox.visible = false;
