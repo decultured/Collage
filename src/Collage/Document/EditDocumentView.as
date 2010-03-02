@@ -101,13 +101,14 @@ package Collage.Document
 			return true;
 		}
 
-		public override function AddClipByType(clipType:String, position:Rectangle = null):Clip
+		public override function AddClipByType(clipType:String, position:Rectangle = null, dataObject:Object = null):Clip
 		{
-			var newClip:Clip = super.AddClipByType(clipType);
+			var newClip:Clip = super.AddClipByType(clipType, position, dataObject);
 			if (newClip)
 				_ObjectHandles.registerComponent(newClip, newClip.view);
 			DrawGrid();
 			return newClip;
+
 		}
 
 		public override function AddClipFromData(data:Object, position:Rectangle = null):Clip
@@ -117,6 +118,78 @@ package Collage.Document
 				_ObjectHandles.registerComponent(newClip, newClip.view);
 			DrawGrid();
 			return newClip;
+		}
+
+		public function IsObjectSelected():Boolean {
+			if (_CurrentlySelected && _CurrentlySelected.selected)
+				return true;
+			else
+				return false;
+		}
+
+		public function IsObjectAtFront():Boolean {
+			if (_CurrentlySelected && _CurrentlySelected.selected && getChildren().length > 1 ) {
+				var index:int = getChildIndex(_CurrentlySelected.view);
+				var numChildren:uint = getChildren().length;
+				if (index == numChildren - 1)
+					return true;
+			}
+			return false;
+		}
+
+		public function IsObjectAtBack():Boolean {
+			if (_CurrentlySelected && _CurrentlySelected.selected && getChildren().length > 1 ) {
+				var index:int = getChildIndex(_CurrentlySelected.view);
+				if (index == 0)
+					return true;
+			}
+			return false;
+		}
+
+		public function MoveSelectedForward():Boolean {
+			if (_CurrentlySelected && _CurrentlySelected.selected && getChildren().length > 1 ) {
+				var index:int = getChildIndex(_CurrentlySelected.view);
+				var numChildren:uint = getChildren().length;
+				if (index < numChildren - 1) {
+					setChildIndex(_CurrentlySelected.view, index + 1);
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public function MoveSelectedBackward():Boolean {
+			if (_CurrentlySelected && _CurrentlySelected.selected && getChildren().length > 1 ) {
+				var index:int = getChildIndex(_CurrentlySelected.view);
+				if (index > 0) {
+					setChildIndex(_CurrentlySelected.view, index - 1);
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public function MoveSelectedToBack():Boolean {
+			if (_CurrentlySelected && _CurrentlySelected.selected && getChildren().length > 1 ) {
+				var index:int = getChildIndex(_CurrentlySelected.view);
+				if (index != 0) {
+					setChildIndex(_CurrentlySelected.view, 0);
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public function MoveSelectedToFront():Boolean {
+			if (_CurrentlySelected && _CurrentlySelected.selected && getChildren().length > 1 ) {
+				var index:int = getChildIndex(_CurrentlySelected.view);
+				var numChildren:uint = getChildren().length;
+				if (index < numChildren - 1) {
+					setChildIndex(_CurrentlySelected.view, numChildren - 1);
+					return true;
+				}
+			}
+			return false;
 		}
 
 		protected function ObjectSelected(event:SelectionEvent):void {

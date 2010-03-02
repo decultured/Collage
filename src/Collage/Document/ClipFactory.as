@@ -31,26 +31,26 @@ package Collage.Document
 			_ClipTypes["datalabel"] = DataLabelClip;
 		}
 
-		public static function CreateByType(clipType:String):Clip
+		public static function CreateByType(clipType:String, dataObject:Object = null):Clip
 		{
 			if (clipType == "image")
-				return new PictureClip();
+				return new PictureClip(dataObject);
 			else if (clipType == "label")
-				return new LabelClip();
+				return new LabelClip(dataObject);
 			else if (clipType == "textbox")
-				return new TextBoxClip();
+				return new TextBoxClip(dataObject);
 			else if (clipType == "linechart")
-				return new LineChartClip();
+				return new LineChartClip(dataObject);
 			else if (clipType == "piechart")
-				return new PieChartClip();
+				return new PieChartClip(dataObject);
 			else if (clipType == "barchart")
-				return new BarChartClip();
+				return new BarChartClip(dataObject);
 			else if (clipType == "guage")
-				return new GuageClip();
+				return new GuageClip(dataObject);
 			else if (clipType == "table")
-				return new TableClip();
+				return new TableClip(dataObject);
 			else if (clipType == "datalabel")
-				return new DataLabelClip();
+				return new DataLabelClip(dataObject);
 			return null;
 		}
 		

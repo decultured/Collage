@@ -55,9 +55,9 @@ package Collage.Clips.LineChart
 
 		private var _DataQuery:DataQuery = null;
 	
-		public function LineChartClip()
+		public function LineChartClip(dataObject:Object = null)
 		{
-			super();
+			super(dataObject);
 			CreateView();
 			CreateEditor();
 		}

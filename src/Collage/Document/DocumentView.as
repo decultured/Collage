@@ -53,14 +53,17 @@ package Collage.Document
 			return false;
 		}
 
-		public function AddClipByType(clipType:String, position:Rectangle = null):Clip
+		public function AddClipByType(clipType:String, position:Rectangle = null, dataObject:Object = null):Clip
 		{
-			var newClip:Clip = ClipFactory.CreateByType(clipType);
+			var newClip:Clip = ClipFactory.CreateByType(clipType, dataObject);
 			if (!newClip || !AddClip(newClip))
 				return null;
-			PositionClip(newClip, position);
+			if (position)
+				PositionClip(newClip, position);
 			
 			return newClip;
+
+			return null;
 		}
 
 		public function AddClipFromData(data:Object, position:Rectangle = null):Clip
@@ -68,7 +71,8 @@ package Collage.Document
 			var newClip:Clip = ClipFactory.CreateFromData(data);
 			if (!newClip || !AddClip(newClip))
 				return null;
-			PositionClip(newClip, position);
+			if (position)
+				PositionClip(newClip, position);
 			
 			return newClip;
 		}

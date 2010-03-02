@@ -26,12 +26,12 @@ package Collage.Clips.DataLabel
 
 		private var _DataQuery:DataQuery = null;
 
-		public function DataLabelClip()
+		public function DataLabelClip(dataObject:Object = null)
 		{
 			verticalSizable = false;
 			horizontalSizable = false;
 			rotatable = false;
-			super();
+			super(dataObject);
 			CreateView();
 			CreateEditor();
 		}

@@ -21,10 +21,10 @@ package Collage.Clips.Table
 
 		private var _DataQuery:DataQuery = null;
 
-		public function TableClip()
+		public function TableClip(dataObject:Object = null)
 		{
 			rotatable = false;
-			super();
+			super(dataObject);
 			CreateView();
 			CreateEditor();
 		}

@@ -20,10 +20,10 @@ package Collage.Clips.TextBox
 		public function get backgroundColor():Number {return _BackgroundColor;}
 		public function set backgroundColor(bgColor:Number):void {_BackgroundColor = bgColor;}
 
-		public function TextBoxClip()
+		public function TextBoxClip(dataObject:Object = null)
 		{
 			rotatable = false;
-			super();
+			super(dataObject);
 			CreateView();
 			CreateEditor();
 		}

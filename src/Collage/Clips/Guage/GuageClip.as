@@ -16,9 +16,9 @@ package Collage.Clips.Guage
 		[Bindable]public var indicatorColor:Number = 0xFC5976;
 		[Bindable]public var indicatorCrownColor:Number = 0xAAAAAA;
 		
-		public function GuageClip()
+		public function GuageClip(dataObject:Object = null)
 		{
-			super();
+			super(dataObject);
 			CreateView();
 			CreateEditor();
 		}

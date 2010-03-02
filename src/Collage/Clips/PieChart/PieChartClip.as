@@ -15,9 +15,9 @@ package Collage.Clips.PieChart
 		public function get backgroundColor():Number {return _BackgroundColor;}
 		public function set backgroundColor(bgColor:Number):void {_BackgroundColor = bgColor;}
 
-		public function PieChartClip()
+		public function PieChartClip(dataObject:Object = null)
 		{
-			super();
+			super(dataObject);
 			CreateView();
 			CreateEditor();
 		}

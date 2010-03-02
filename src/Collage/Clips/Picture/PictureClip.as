@@ -14,9 +14,9 @@ package Collage.Clips.Picture
 			_URL = url;
 		}
 		
-		public function PictureClip()
+		public function PictureClip(dataObject:Object = null)
 		{
-			super();
+			super(dataObject);
 			CreateView();
 			CreateEditor();
 		}

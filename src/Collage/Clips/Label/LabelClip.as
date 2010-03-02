@@ -29,12 +29,12 @@ package Collage.Clips.Label
 		public function get backgroundColor():Number {return _BackgroundColor;}
 		public function set backgroundColor(bgColor:Number):void {_BackgroundColor = bgColor;}
 
-		public function LabelClip()
+		public function LabelClip(dataObject:Object = null)
 		{
 			verticalSizable = false;
 			horizontalSizable = false;
 			rotatable = false;
-			super();
+			super(dataObject);
 			CreateView();
 			CreateEditor();
 		}

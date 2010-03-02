@@ -15,9 +15,9 @@ package Collage.Clips.BarChart
 		public function get backgroundColor():Number {return _BackgroundColor;}
 		public function set backgroundColor(bgColor:Number):void {_BackgroundColor = bgColor;}
 
-		public function BarChartClip()
+		public function BarChartClip(dataObject:Object = null)
 		{
-			super();
+			super(dataObject);
 			CreateView();
 			CreateEditor();
 		}

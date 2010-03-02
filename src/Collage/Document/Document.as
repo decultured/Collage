@@ -1,5 +1,6 @@
 package Collage.Document
 {
+	import mx.controls.Alert;
 	import Collage.Clip.*;
 	import com.adobe.serialization.json.JSON;
 	
@@ -70,6 +71,7 @@ package Collage.Document
 			var newObject:Object = new Object();
 
 			newObject["document"] = super.SaveToObject();
+			newObject["document"]["type"] = "document";
 			newObject["document"]["url"] = _URL;
 			newObject["document"]["backgroundColor"] = _BackgroundColor;
 			newObject["clips"] = new Array();
@@ -80,6 +82,38 @@ package Collage.Document
 			}
 
 			return newObject;
+		}
+
+		public override function LoadFromObject(dataObject:Object):Boolean
+		{
+			if (!dataObject)
+				return false;
+			
+			for (var key:String in dataObject)
+			{
+				if (key == "document") {
+					super.LoadFromObject(dataObject[key]);
+				} else if (key == "clips") {
+					if (!dataObject[key] is Array)
+						continue;
+					
+					var clipArray:Array = dataObject[key] as Array;
+					for (var i:uint = 0; i < clipArray.length; i++) {
+						var clipDataObject:Object = clipArray[i] as Object;
+
+						if (!clipDataObject["type"]) {
+							Alert.show("Clip Broke");
+							continue;
+						}
+							
+						var docView:DocumentView = view as DocumentView;
+						if (docView)
+							docView.AddClipByType(clipDataObject["type"], null, clipDataObject);
+					}
+				}
+			}
+
+			return true;
 		}
 
 	}

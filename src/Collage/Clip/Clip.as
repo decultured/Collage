@@ -33,8 +33,10 @@ package Collage.Clip
 		public function get editor():ClipEditor {return _Editor;}
 		public function get view():ClipView {return _View;}
 
-		public function Clip():void
+		public function Clip(dataObject:Object = null):void
 		{
+			if (dataObject)
+				LoadFromObject(dataObject);
 		}
 		
 		public function CreateView(newView:ClipView = null):void
@@ -91,6 +93,28 @@ package Collage.Clip
 			newObject["rotation"] = rotation;
 
 			return newObject;
+		}
+
+		public function LoadFromObject(dataObject:Object):Boolean
+		{
+			if (!dataObject)
+				return false;
+
+			for (var key:String in dataObject)
+			{
+				if (key == "x") {
+					x == parseInt(dataObject[key]);
+				} else if (key == "y") {
+					y == parseInt(dataObject[key]);
+				} else if (key == "height") {
+					height == parseInt(dataObject[key]);
+				} else if (key == "width") {
+					width == parseInt(dataObject[key]);
+				} else if (key == "rotation") {
+					rotation == parseFloat(dataObject[key]);
+				} 
+			}
+			return true;
 		}
 	}
 }
