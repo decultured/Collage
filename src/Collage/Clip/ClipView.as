@@ -10,7 +10,7 @@ package Collage.Clip
 	public class ClipView extends Canvas
 	{
 		protected var _Model:Clip;
-		private var _BorderBox:Canvas;
+		protected var _BorderBox:Canvas;
 		
 		public function get model():Clip {return _Model;}
 		public function set model(clip:Clip):void
