@@ -276,7 +276,7 @@ package Collage.Document
 			
 			for (var xPos:Number = docModel.gridSize; xPos < docModel.width; xPos += docModel.gridSize) {
 		    	_Grid.graphics.moveTo(xPos, 0); 
-		    	_Grid.graphics.lineTo(xPos, docModel.width); 
+		    	_Grid.graphics.lineTo(xPos, this.width); 
 			}
 
 			for (var yPos:Number = docModel.gridSize; yPos < docModel.height; yPos += docModel.gridSize) {
