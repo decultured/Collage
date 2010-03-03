@@ -283,6 +283,7 @@ package Collage.Document
 		    	_Grid.graphics.moveTo(0, yPos); 
 		    	_Grid.graphics.lineTo(docModel.height, yPos); 
 			}
+			this.rawChildren.setChildIndex(_Grid, 1);
 		} 
 		
 		protected override function onModelChange( event:PropertyChangeEvent):void

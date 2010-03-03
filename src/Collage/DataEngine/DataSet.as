@@ -38,6 +38,16 @@ package Collage.DataEngine
 			return null;
 		}
 
+		public function GetColumnByLabel(label:String):DataSetColumn
+		{
+			for (var key:String in columns)
+			{
+				if (columns[key] && columns[key].label == label)
+					return columns[key];
+			}
+			return null;
+		}
+
 		public function GetNumColumnsOfType(allowedTypes:Array = null):uint
 		{
 			var columnsFound:uint = 0;

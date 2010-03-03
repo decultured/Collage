@@ -1,20 +1,28 @@
 package Collage.Clips.PieChart
 {
+	import mx.controls.Alert;
 	import Collage.Clip.*;
+	import flash.events.*;
+	import Collage.DataEngine.*;
+	import com.adobe.serialization.json.JSON;
 	
 	public class PieChartClip extends Clip
 	{		
-		private var _BackgroundAlpha:Number = 1.0;
-		private var _BackgroundColor:Number = 0xFFFFFF;
+		[Bindable] public var dataSetID:String = null;
+		[Bindable] public var labelColumn:String = null;
+		[Bindable] public var dataColumn:String = null; 
+		[Bindable] public var dataModifier:String = null; 
+		[Bindable] public var isLineChart:Boolean = true; 
+		
+		public var Data:Array = new Array();
+		public var dataLoaded:Boolean = false;
+		public var rowsRequested:Number = 10;
 
-		[Bindable]
-		public function get backgroundAlpha():Number {return _BackgroundAlpha;}
-		public function set backgroundAlpha(bgAlpha:Number):void {_BackgroundAlpha = bgAlpha;}
-
-		[Bindable]
-		public function get backgroundColor():Number {return _BackgroundColor;}
-		public function set backgroundColor(bgColor:Number):void {_BackgroundColor = bgColor;}
-
+		[Bindable] public var backgroundAlpha:Number = 1.0;
+		[Bindable] public var backgroundColor:Number = 0xFFFFFF;
+		
+		private var _DataQuery:DataQuery = null;
+	
 		public function PieChartClip(dataObject:Object = null)
 		{
 			super(dataObject);
@@ -55,7 +63,56 @@ package Collage.Clips.PieChart
 				height = width / 1.3068;
 			}
 		}
+
+		public function RunQuery():void
+		{
+			if (dataSetID && dataColumn && labelColumn && dataModifier) {
+				_DataQuery = new DataQuery();
+				_DataQuery.dataset = dataSetID;
+				_DataQuery.AddField(labelColumn, null, null, "val");
+				_DataQuery.AddField(dataColumn, "desc");//, dataModifier);
+				_DataQuery.limit = 10;
+				_DataQuery.LoadQueryResults();
+				_DataQuery.addEventListener(DataQuery.COMPLETE, QueryFinished);
+			}
+		}
 		
+		public function ResetData():void
+		{
+			Data = new Array();
+			dataLoaded = false;
+			
+			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+		}
+
+		private function QueryFinished(event:Event):void
+		{
+			if (!_DataQuery || !_DataQuery.result || !_DataQuery.result.rows is Array)
+				return;
+
+			Data = new Array();
+			var rows:Array = _DataQuery.result.rows;
+			
+			for (var rowKey:uint = 0; rowKey < rows.length; rowKey++)
+			{
+				if (!rows[rowKey][dataColumn] is Number) {
+					Alert.show("NAN!!!");
+					break;
+				}
+				
+				var newObject:Object = new Object();
+				newObject["label"] = rows[rowKey][labelColumn];
+				newObject["value"] = rows[rowKey][dataColumn];
+				
+				Data.push(newObject);
+			}
+
+			Data.sortOn("x", Array.NUMERIC);
+			dataLoaded = true;
+			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+			_DataQuery = null;
+		}
+
 		public override function SaveToObject():Object
 		{
 			var newObject:Object = super.SaveToObject();

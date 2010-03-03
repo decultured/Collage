@@ -18,6 +18,7 @@ package Collage.Clips.Table
 
 		public var columns:Array = new Array();
 		public var data:Array = new Array();
+		public var rowsRequested:Number = 10;
 
 		private var _DataQuery:DataQuery = null;
 
@@ -72,7 +73,7 @@ package Collage.Clips.Table
 				columns.push(newColumn);
 			}
 				
-			_DataQuery.limit = 50;
+			_DataQuery.limit = rowsRequested;
 			_DataQuery.LoadQueryResults();
 			_DataQuery.addEventListener(DataQuery.COMPLETE, QueryFinished);
 		}
@@ -90,6 +91,11 @@ package Collage.Clips.Table
 			if (!_DataQuery || !_DataQuery.result || !_DataQuery.result.rows is Array)
 				return;
 
+			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetID);
+			
+			if (!dataset)
+				return;
+
 			data = new Array();
 			var rows:Array = _DataQuery.result.rows;
 			for (var rowKey:uint = 0; rowKey < rows.length; rowKey++)
@@ -98,7 +104,14 @@ package Collage.Clips.Table
 
 				for (var fieldKey:String in rows[rowKey])
 				{
-					newObject[fieldKey] = rows[rowKey][fieldKey];
+					var dataColumn:DataSetColumn = dataset.GetColumnByLabel(fieldKey);
+					if (dataColumn && dataColumn.datatype == "datetime" && rows[rowKey][fieldKey] is Number) {
+						var now:Date = new Date();
+						now.setTime(rows[rowKey][fieldKey]);
+						newObject[fieldKey] = now.toLocaleString();
+					} else {
+						newObject[fieldKey] = rows[rowKey][fieldKey];
+					}					
 				}
 				
 				data.push(newObject);

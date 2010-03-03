@@ -104,6 +104,7 @@
 		{
 			var file:File = File.desktopDirectory.resolvePath("file.json");
 			file.addEventListener(Event.SELECT, SaveFileEvent);
+			_EditDocumentView.ClearSelection();
 			file.browseForSave("Save As");
 		}
 			
@@ -149,6 +150,7 @@
 		{
 			var file:File = File.desktopDirectory.resolvePath("snapshot.png");
 			file.addEventListener(Event.SELECT, SaveImageEvent);
+			_EditDocumentView.ClearSelection();
 			file.browseForSave("Save As");
 		}
 			
@@ -171,6 +173,7 @@
 		{
 			var file:File = File.desktopDirectory.resolvePath("report.pdf");
 			file.addEventListener(Event.SELECT, SavePDFEvent);
+			_EditDocumentView.ClearSelection();
 			file.browseForSave("Save As");
 		}
 			

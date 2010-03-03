@@ -64,6 +64,16 @@
 			dataSetSelections = DataEngine.GetDataSetsComboBox();
 		}
 
+		private function SubmitDataRequest():void
+		{
+			var tableModel:TableClip = _Model as TableClip;
+			tableModel.rowsRequested = parseInt(rowsRequested.text);
+			if (isNaN(tableModel.rowsRequested) || tableModel.rowsRequested < 1) tableModel.rowsRequested = 1;
+			if (tableModel.rowsRequested > 100) tableModel.rowsRequested = 100;
+			rowsRequested.text = tableModel.rowsRequested.toString();
+			tableModel.RunQuery();
+		}
+
 		private function DataSetSelectorChanged():void
 		{
 			if (!_Model)
@@ -83,6 +93,8 @@
 	<flexlib:WindowShade label="Data Connection" styleName="linkButtonWindowShade" width="100%">
 		<mx:Label text="Data Set:" color="#000000" fontWeight="bold" />
 		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="230" change="DataSetSelectorChanged()"/>
+		<mx:TextInput id="rowsRequested" text="10" color="0x323232" width="100%" />
+		<mx:Button id="submitDataButton" color="0x323232" label="Apply" click="SubmitDataRequest()"  />
 	</flexlib:WindowShade>
 	<flexlib:WindowShade label="General Styles" styleName="linkButtonWindowShade" width="100%">
 		<mx:HRule width="100%" />
