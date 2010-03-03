@@ -91,6 +91,8 @@
 				else
 					lineChartModel.ChartStyle = "solid-dot";
 
+				lineChartModel.isLineChart = showLine.selected;
+
 				lineChartModel.lineColor = lineColorPicker.selectedColor;
 				lineChartModel.lineWidth = lineWidth.value;
 				lineChartModel.dotSize = dotSize.value;
@@ -163,6 +165,10 @@
 		private function SubmitDataRequest():void
 		{
 			var lineChartModel:LineChartClip = _Model as LineChartClip;
+			lineChartModel.rowsRequested = parseInt(rowsRequested.text);
+			if (isNaN(lineChartModel.rowsRequested) || lineChartModel.rowsRequested < 1) lineChartModel.rowsRequested = 1;
+			if (lineChartModel.rowsRequested > 1000) lineChartModel.rowsRequested = 1000;
+			rowsRequested.text = lineChartModel.rowsRequested.toString();
 			lineChartModel.RunQuery();
 		}
 		
@@ -204,9 +210,16 @@
 		<mx:ComboBox id="dataSetYColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
 		<mx:Label text="X Axis Value:" color="#000000" fontWeight="bold" />
 		<mx:ComboBox id="dataSetXColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
-		<!-- <mx:Button id="submitDataButton" color="0x323232" label="Apply" click="SubmitDataRequest()"  /> -->
+		<mx:Label text="Rows Requested:" color="#000000" fontWeight="bold" />
+		<mx:TextInput id="rowsRequested" text="10" color="0x323232" width="100%" />
+		<mx:Button id="submitDataButton" color="0x323232" label="Apply" click="SubmitDataRequest()"  />
 	</flexlib:WindowShade>
 	<flexlib:WindowShade opened="false" label="General Styles" styleName="linkButtonWindowShade" width="100%">
+		<mx:HBox width="100%" >
+			<mx:Label text="Show Line :" color="#000000" fontWeight="bold" />
+			<mx:Spacer width="100%" />
+			<mx:CheckBox id="showLine" label="Show" selected="true" change="SettingsChanged()" />
+		</mx:HBox>
 		<mx:HBox width="100%" >
 			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" />
 			<mx:Spacer width="100%" />

@@ -74,6 +74,10 @@ package Collage.Document
 			newObject["document"]["type"] = "document";
 			newObject["document"]["url"] = _URL;
 			newObject["document"]["backgroundColor"] = _BackgroundColor;
+			newObject["document"]["snap"] = snap;
+			newObject["document"]["grid"] = grid;
+			newObject["document"]["gridSize"] = gridSize;
+			newObject["document"]["gridColor"] = gridColor;
 			newObject["clips"] = new Array();
 
 			var view:DocumentView = _View as DocumentView;
@@ -95,6 +99,12 @@ package Collage.Document
 			for (var key:String in dataObject)
 			{
 				if (key == "document") {
+					_URL = dataObject["document"]["url"];
+					_BackgroundColor = dataObject["document"]["backgroundColor"];
+					snap = dataObject["document"]["snap"];
+					grid = dataObject["document"]["grid"];
+					gridSize = dataObject["document"]["gridSize"];
+					gridColor = dataObject["document"]["gridColor"];
 					super.LoadFromObject(dataObject[key]);
 				} else if (key == "clips") {
 					if (!dataObject[key] is Array)

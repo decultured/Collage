@@ -1,5 +1,7 @@
 package Collage.DataEngine
 {
+	import mx.controls.Alert;
+
 	public class DataQueryResult
 	{
 		public var parseTime:Number = 0;
@@ -26,7 +28,7 @@ package Collage.DataEngine
 						// The "type" paramter can be: string, numeric, datetime, boolean, or url
 						if (columns[columnKey]["datatype"] == "numeric") {
 							rows[rowKey][rowFieldKey] = parseFloat(rows[rowKey][rowFieldKey]);
-						} else if (columns[columnKey]["datatype"] == "datetime") {
+						} else if (columns[columnKey]["datatype"] == "datetime" && rows[rowKey][rowFieldKey] is String) {
 							rows[rowKey][rowFieldKey] = Date.parse(rows[rowKey][rowFieldKey]);
 						} else if (columns[columnKey]["datatype"] == "boolean") {
 							if (rows[rowKey][rowFieldKey] == "true")

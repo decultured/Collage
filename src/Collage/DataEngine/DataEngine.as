@@ -151,8 +151,6 @@ package Collage.DataEngine
             file.addEventListener(IOErrorEvent.IO_ERROR, FileUploadIOErrorHandler);
             file.addEventListener(HTTPStatusEvent.HTTP_STATUS, FileUploadHttpStatusHandler);
 			file.upload(request,"datafile");
-
-			Alert.show("File Dropped: " + file.url);
 		}
 		
         private static function FileUploadHttpStatusHandler(event:HTTPStatusEvent):void {
@@ -176,7 +174,7 @@ package Collage.DataEngine
 			event.target.removeEventListener(Event.COMPLETE, CompleteHandler);
             
 			// TODO : Status Update for file complete
-			// Alert.show("Complete! \n: " + "http://dataengine.endlesspaths.com/dataset/upload");
+			Alert.show("File Upload Complete!");
 		}
 	}
 }

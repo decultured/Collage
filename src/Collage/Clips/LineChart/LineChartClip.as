@@ -11,6 +11,8 @@ package Collage.Clips.LineChart
 		[Bindable] public var dataSetID:String = null;
 		[Bindable] public var xAxisDataColumn:String = null;
 		[Bindable] public var yAxisDataColumn:String = null; 
+
+		[Bindable] public var isLineChart:Boolean = true; 
 		
 		public var Data:Array = new Array();
 		
@@ -19,6 +21,7 @@ package Collage.Clips.LineChart
 		public var xAxisMax:Number = 10;
 		public var yAxisMin:Number = 0;
 		public var yAxisMax:Number = 10;
+		public var rowsRequested:Number = 10;
 		
 		public var xAxisGridLineCount:Number = 10;
 		public var xAxisGridLabelCount:Number = 10;
@@ -94,7 +97,7 @@ package Collage.Clips.LineChart
 				_DataQuery.dataset = dataSetID;
 				_DataQuery.AddField(xAxisDataColumn, "desc");
 				_DataQuery.AddField(yAxisDataColumn);
-				_DataQuery.limit = 50;
+				_DataQuery.limit = rowsRequested;
 				_DataQuery.LoadQueryResults();
 				_DataQuery.addEventListener(DataQuery.COMPLETE, QueryFinished);
 			}
@@ -138,36 +141,34 @@ package Collage.Clips.LineChart
 				return;
 			}
 			
+			if (rows[0]) {
+				xAxisMin = rows[0][xAxisDataColumn];
+				xAxisMax = rows[0][xAxisDataColumn];
+				yAxisMin = rows[0][yAxisDataColumn];
+				yAxisMax = rows[0][yAxisDataColumn];
+			}
+
 			for (var rowKey:uint = 0; rowKey < rows.length; rowKey++)
 			{
-				if (rows[rowKey][xAxisDataColumn] && rows[rowKey][yAxisDataColumn]) {
-					if (!rows[rowKey][xAxisDataColumn] is Number || !rows[rowKey][yAxisDataColumn] is Number) {
-						Alert.show("NAN!!!");
-						break;
-					}
-					
-					var newObject:Object = new Object();
-					newObject["x"] = rows[rowKey][xAxisDataColumn];
-					newObject["y"] = rows[rowKey][yAxisDataColumn];
-					
-					if (rowKey == 0) {
-						xAxisMin = rows[rowKey][xAxisDataColumn];
-						xAxisMax = rows[rowKey][xAxisDataColumn];
-						yAxisMin = rows[rowKey][yAxisDataColumn];
-						yAxisMax = rows[rowKey][yAxisDataColumn];
-					} else {                                        
-						if (xAxisMin > rows[rowKey][xAxisDataColumn])
-							xAxisMin = rows[rowKey][xAxisDataColumn];
-						if (xAxisMax < rows[rowKey][xAxisDataColumn])
-							xAxisMax = rows[rowKey][xAxisDataColumn];
-						if (yAxisMin > rows[rowKey][yAxisDataColumn])
-							yAxisMin = rows[rowKey][yAxisDataColumn];
-						if (yAxisMax < rows[rowKey][yAxisDataColumn])
-							yAxisMax = rows[rowKey][yAxisDataColumn];
-					}
-					
-					Data.push(newObject);
+				if (!rows[rowKey][xAxisDataColumn] is Number || !rows[rowKey][yAxisDataColumn] is Number) {
+					Alert.show("NAN!!!");
+					break;
 				}
+				
+				var newObject:Object = new Object();
+				newObject["x"] = rows[rowKey][xAxisDataColumn];
+				newObject["y"] = rows[rowKey][yAxisDataColumn];
+				
+				if (xAxisMin > rows[rowKey][xAxisDataColumn])
+					xAxisMin = rows[rowKey][xAxisDataColumn];
+				if (xAxisMax < rows[rowKey][xAxisDataColumn])
+					xAxisMax = rows[rowKey][xAxisDataColumn];
+				if (yAxisMin > rows[rowKey][yAxisDataColumn])
+					yAxisMin = rows[rowKey][yAxisDataColumn];
+				if (yAxisMax < rows[rowKey][yAxisDataColumn])
+					yAxisMax = rows[rowKey][yAxisDataColumn];
+				
+				Data.push(newObject);
 			}
 			
 			if (xAxisMin >= xAxisMax) {
@@ -184,7 +185,6 @@ package Collage.Clips.LineChart
 				dataLoaded = true;
 			}
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-			
 			_DataQuery = null;
 		}
 		
@@ -202,7 +202,7 @@ package Collage.Clips.LineChart
 			dataObj["x_axis"]["tick-height"] = 0;
 
 			if (xAxisGridLineCount > 0)
-				dataObj["x_axis"]["steps"] = int((xAxisMax - xAxisMin) / xAxisGridLineCount);
+				dataObj["x_axis"]["steps"] = (xAxisMax - xAxisMin) / xAxisGridLineCount;
 
 			dataObj["x_axis"]["labels"] = new Object();
 			dataObj["x_axis"]["labels"]["visible-steps"] = 0;
@@ -243,7 +243,11 @@ package Collage.Clips.LineChart
 			
 			dataObj["elements"] = new Array();
 			dataObj["elements"][0] = new Object();
-			dataObj["elements"][0]["type"] = "scatter_line";
+			dataObj["elements"][0]["animate"] = 0;
+			if (isLineChart)
+				dataObj["elements"][0]["type"] = "scatter_line";
+			else
+				dataObj["elements"][0]["type"] = "scatter";
 			dataObj["elements"][0]["colour"] = "#" + lineColor.toString(16);
 			dataObj["elements"][0]["width"] = lineWidth;
 			dataObj["elements"][0]["dot-style"] = new Object();
