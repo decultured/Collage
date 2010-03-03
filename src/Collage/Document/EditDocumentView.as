@@ -56,6 +56,7 @@ package Collage.Document
 					_ObjectHandles.unregisterComponent(childArray[i]);
 			}
 			
+			DrawGrid();
 			super.NewDocument();
 		}
 
@@ -101,7 +102,40 @@ package Collage.Document
 				moveConstraint.maxY = this.height;
 				
 				_ObjectHandles.constraints.push(sizeConstraint);							
-				_ObjectHandles.constraints.push(moveConstraint);							
+				_ObjectHandles.constraints.push(moveConstraint);	
+				
+				DrawGrid();				
+			}
+		}
+		
+		public function AddObjectHandles(newClip:Clip):void
+		{
+			if (newClip) {
+				var handles:Array = [];
+
+				if (newClip.verticalSizable && newClip.horizontalSizable) {
+					handles.push( new HandleDescription( HandleRoles.RESIZE_UP + HandleRoles.RESIZE_LEFT, new Point(0,0), new Point(0,0)));
+					handles.push( new HandleDescription( HandleRoles.RESIZE_UP + HandleRoles.RESIZE_RIGHT, new Point(100,0), new Point(0,0))); 
+					handles.push( new HandleDescription( HandleRoles.RESIZE_DOWN + HandleRoles.RESIZE_RIGHT, new Point(100,100), new Point(0,0))); 
+					handles.push( new HandleDescription( HandleRoles.RESIZE_DOWN + HandleRoles.RESIZE_LEFT, new Point(0,100), new Point(0,0))); 
+				}
+				if (newClip.verticalSizable) {
+					handles.push( new HandleDescription( HandleRoles.RESIZE_UP, new Point(50,0), new Point(0,0))); 
+					handles.push( new HandleDescription( HandleRoles.RESIZE_DOWN, new Point(50,100), new Point(0,0))); 
+				}
+				if (newClip.horizontalSizable) {
+					handles.push( new HandleDescription( HandleRoles.RESIZE_LEFT, new Point(0,50), new Point(0,0))); 
+					handles.push( new HandleDescription( HandleRoles.RESIZE_RIGHT, new Point(100,50), new Point(0,0))); 
+				}
+				if (newClip.moveFromCenter)
+					handles.push( new HandleDescription( HandleRoles.MOVE, new Point(50,50), new Point(0,0))); 
+				if (newClip.rotatable)
+					handles.push( new HandleDescription( HandleRoles.ROTATE, new Point(100,50), new Point(20,0))); 
+				
+				_ObjectHandles.registerComponent(newClip, newClip.view, handles);
+				ClearSelection();
+				_ObjectHandles.selectionManager.addToSelected(newClip);
+				DrawGrid();
 			}
 		}
 		
@@ -109,22 +143,14 @@ package Collage.Document
 		{
 			if (!super.AddClip(newClip))
 				return false;
-			_ObjectHandles.registerComponent(newClip, newClip.view);
-			ClearSelection();
-			_ObjectHandles.selectionManager.addToSelected(newClip);
-			DrawGrid();
+			AddObjectHandles(newClip);
 			return true;
 		}
 
 		public override function AddClipByType(clipType:String, position:Rectangle = null, dataObject:Object = null):Clip
 		{
 			var newClip:Clip = super.AddClipByType(clipType, position, dataObject);
-			if (newClip) {
-				_ObjectHandles.registerComponent(newClip, newClip.view);
-				ClearSelection();
-				_ObjectHandles.selectionManager.addToSelected(newClip);
-			}
-			DrawGrid();
+			AddObjectHandles(newClip);
 			return newClip;
 
 		}
@@ -132,20 +158,14 @@ package Collage.Document
 		public override function AddClipFromData(data:Object, position:Rectangle = null):Clip
 		{
 			var newClip:Clip = super.AddClipFromData(data);
-			if (newClip) {
-				_ObjectHandles.registerComponent(newClip, newClip.view);
-				ClearSelection();
-				_ObjectHandles.selectionManager.addToSelected(newClip);
-			}
-			DrawGrid();
+			AddObjectHandles(newClip);
 			return newClip;
 		}
 
 		public function IsObjectSelected():Boolean {
 			if (_CurrentlySelected && _CurrentlySelected.selected)
 				return true;
-			else
-				return false;
+			return false;
 		}
 
 		public function IsObjectAtFront():Boolean {
@@ -276,19 +296,20 @@ package Collage.Document
 			
 			for (var xPos:Number = docModel.gridSize; xPos < docModel.width; xPos += docModel.gridSize) {
 		    	_Grid.graphics.moveTo(xPos, 0); 
-		    	_Grid.graphics.lineTo(xPos, this.width); 
+		    	_Grid.graphics.lineTo(xPos, docModel.height); 
 			}
 
 			for (var yPos:Number = docModel.gridSize; yPos < docModel.height; yPos += docModel.gridSize) {
 		    	_Grid.graphics.moveTo(0, yPos); 
-		    	_Grid.graphics.lineTo(docModel.height, yPos); 
+		    	_Grid.graphics.lineTo(docModel.width, yPos); 
 			}
+
 			this.rawChildren.setChildIndex(_Grid, 1);
 		} 
 		
 		protected override function onModelChange( event:PropertyChangeEvent):void
 		{
-			DrawGrid();
+			ViewResized();
 			super.onModelChange(event);
 		}
 

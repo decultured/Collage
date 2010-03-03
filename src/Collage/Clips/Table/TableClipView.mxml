@@ -22,12 +22,14 @@
 		{
 			var tableModel:TableClip = _Model as TableClip;
 						
-			setStyle("backgroundColor", tableModel.backgroundColor);
-			setStyle("backgroundAlpha", tableModel.backgroundAlpha);
-			
-			if (datagrid) {
-				datagrid.columns = tableModel.columns;
-				datagrid.dataProvider = tableModel.data;
+			if (event && event.property != "x" && event.property != "y" && event.property != "width" && event.property != "height")
+			{
+				setStyle("backgroundColor", tableModel.backgroundColor);
+				setStyle("backgroundAlpha", tableModel.backgroundAlpha);
+				if (datagrid) {
+					datagrid.columns = tableModel.columns;
+					datagrid.dataProvider = tableModel.data;
+				}
 			}
 
 			super.onModelChange(event);

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <clg:ClipView xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Clip.*"
-	xmlns:ofc="*"
 	backgroundColor="0x000000"
 	backgroundAlpha="0"
 	horizontalScrollPolicy="off"
@@ -12,12 +11,20 @@
 		<![CDATA[
         import mx.collections.ArrayCollection;
 		import mx.events.PropertyChangeEvent;
+        import mx.collections.ArrayCollection;
 
-		[Bindable]
-		private var dataJSON:String='{ "elements": [ { "type": "bar","alpha":0.8,"colour":"#663366", "values": [ 9.5, 9, 8.5,8, 7.5, 7, 6.5, 6, 5.5,5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1 ] } ], "title": { "text": "Wed May 20 2009" },"bg_colour":"#fcfcfc" }';
+        [Bindable]
+        private var barData:Array = new Array();
+    
+        private function displayLabel(data:Object, field:String, index:Number, percentValue:Number):String {
+			var barChartModel:BarChartClip = _Model as BarChartClip;
+            var temp:String= (" " + percentValue).substr(0,6);
+            return barChartModel.labelColumn + ": " + data.label + "\n" + barChartModel.dataColumn + ": " + data.value + '\n' + temp + "%";
+        }
 
 		protected function Initialize():void
 		{
+			
 		}
 		
 		protected override function onModelChange( event:PropertyChangeEvent):void
@@ -25,11 +32,34 @@
 			var barChartModel:BarChartClip = _Model as BarChartClip;
 			setStyle("backgroundColor", barChartModel.backgroundColor);
 			setStyle("backgroundAlpha", barChartModel.backgroundAlpha);
-			myChart.width = barChartModel.width;
-			myChart.height = barChartModel.height;
+			barData = barChartModel.Data;
+			if (!barData || barData.length < 1) {
+				setStyle("backgroundColor", 0xDDDDDD);
+				setStyle("backgroundAlpha", 0.8);
+				noDataWarningLabel.visible = true
+			}
+			else 
+				noDataWarningLabel.visible = false;
 			super.onModelChange(event);
 		}
 		]]>
     </mx:Script>
-	<ofc:Chart id="myChart" width="400" height="300" loadingString="Loading…" chartData="{dataJSON}"/>
+	<mx:SolidColor id="barfill" color="yellow" alpha=".8"/>
+    <mx:Stroke id="barborder" color="0x000000" weight="2" alpha=".5"/>
+     <mx:ColumnChart id="chart" height="100%" width="100%" paddingRight="5" paddingLeft="5" color="0x323232" showDataTips="true" dataProvider="{barData}" >
+        <mx:series>
+			<mx:ColumnSeries
+				labelPosition="callout"
+				xField="label" 
+				yField="value" 
+                labelFunction="displayLabel" 
+                fill="{barfill}"
+                stroke="{barborder}" >
+				<mx:filters>
+					<mx:Array/>
+				</mx:filters>
+            </mx:ColumnSeries>
+        </mx:series>
+    </mx:ColumnChart>
+	<mx:Label id="noDataWarningLabel" visible="false" text="No Data Loaded..." color="#FF0000" fontWeight="bold" fontSize="18" textAlign="center" left="0" right="0" top="0" bottom="0" />
 </clg:ClipView>

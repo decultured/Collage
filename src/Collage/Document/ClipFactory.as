@@ -11,6 +11,7 @@ package Collage.Document
 	import Collage.Clips.TextBox.*;
 	import Collage.Clips.Table.*;
 	import Collage.Clips.DataLabel.*;
+	import Collage.Clips.WebEmbed.*;
 	
 	public class ClipFactory
 	{
@@ -29,6 +30,7 @@ package Collage.Document
 			_ClipTypes["guage"] = GuageClip;
 			_ClipTypes["table"] = TableClip;
 			_ClipTypes["datalabel"] = DataLabelClip;
+			_ClipTypes["webembed"] = WebEmbedClip;
 		}
 
 		public static function CreateByType(clipType:String, dataObject:Object = null):Clip
@@ -51,6 +53,8 @@ package Collage.Document
 				return new TableClip(dataObject);
 			else if (clipType == "datalabel")
 				return new DataLabelClip(dataObject);
+			else if (clipType == "webembed")
+				return new WebEmbedClip(dataObject);
 			return null;
 		}
 		

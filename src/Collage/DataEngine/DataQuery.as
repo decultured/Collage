@@ -84,7 +84,7 @@ package Collage.DataEngine
             loader.addEventListener(ProgressEvent.PROGRESS, ProgressHandler);
             loader.addEventListener(HTTPStatusEvent.HTTP_STATUS, HttpStatusHandler);
 
-			Alert.show(params['q']);
+//			Alert.show(params['q']);
 
 			loader.load(request);
 		}
@@ -152,7 +152,7 @@ package Collage.DataEngine
 				}
 			}
 
-			Alert.show(event.target.data);
+//			Alert.show(event.target.data);
 
 			result.AdjustRowFieldTypes();
 			dispatchEvent(new Event(COMPLETE));

@@ -10,6 +10,8 @@ package Collage.Clips.Table
 
 	public class TableClip extends Clip
 	{
+		public static var QUERY_FINISHED:String = "Query Finished";
+		
 		[Bindable] public var dataSetID:String = null;
 		[Bindable] public var backgroundAlpha:Number = 1.0;
 		[Bindable] public var backgroundColor:Number = 0xFFFFFF;
@@ -25,6 +27,7 @@ package Collage.Clips.Table
 		public function TableClip(dataObject:Object = null)
 		{
 			rotatable = false;
+			moveFromCenter = true;
 			super(dataObject);
 			CreateView();
 			CreateEditor();
@@ -65,17 +68,21 @@ package Collage.Clips.Table
 			_DataQuery.dataset = dataSetID;
 
 			columns = new Array();
+			var Count:uint = 0;
 			for (var key:String in dataset.columns) {
 				var newColumn:DataGridColumn = new DataGridColumn();
 				newColumn.dataField = dataset.columns[key]["label"];
 				newColumn.headerText = dataset.columns[key]["label"];
+				(Count < 5) ? newColumn.visible = true : newColumn.visible = false;
 				_DataQuery.AddField(dataset.columns[key]["label"]);
 				columns.push(newColumn);
+				Count++;
 			}
 				
 			_DataQuery.limit = rowsRequested;
 			_DataQuery.LoadQueryResults();
 			_DataQuery.addEventListener(DataQuery.COMPLETE, QueryFinished);
+			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 		}
 		
 		public function ResetData():void
@@ -118,6 +125,7 @@ package Collage.Clips.Table
 			}
 			
 			dataLoaded = true;
+			dispatchEvent(new Event(QUERY_FINISHED));
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 			_DataQuery = null;
 		}
@@ -139,6 +147,7 @@ package Collage.Clips.Table
 					newObject["columns"][i] = new Object();
 					newObject["columns"][i]["dataField"] = newColumn.dataField;
 					newObject["columns"][i]["headerText"] = newColumn.headerText;
+					newObject["columns"][i]["visible"] = true;
 				}
 			}
 			newObject["data"] = data;

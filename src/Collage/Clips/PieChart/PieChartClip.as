@@ -52,16 +52,7 @@ package Collage.Clips.PieChart
 
 		public override function Resized():void
 		{
-			if (!height)
-				return;
-				
-			var modelRatio:Number = width / height;
-		
-			if (modelRatio > 1.3068) {
-				width = height * 1.3068;
-			} else if (modelRatio < 1.3068) {
-				height = width / 1.3068;
-			}
+
 		}
 
 		public function RunQuery():void

@@ -79,14 +79,17 @@
 
 		private function ColumnSelectorChanged():void
 		{
-			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
+			if (dataSetSelector.selectedItem)
+				var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
 
 			if (!dataset || !_Model)
 				return;
 			
 			var pieChartModel:PieChartClip = _Model as PieChartClip;
-			var labelColumn:DataSetColumn = dataset.GetColumnByID(labelColumnSelector.selectedItem.data);
-			var dataColumn:DataSetColumn = dataset.GetColumnByID(dataColumnSelector.selectedItem.data);
+			if (labelColumnSelector.selectedItem)
+				var labelColumn:DataSetColumn = dataset.GetColumnByID(labelColumnSelector.selectedItem.data);
+			if (dataColumnSelector.selectedItem)
+				var dataColumn:DataSetColumn = dataset.GetColumnByID(dataColumnSelector.selectedItem.data);
 
 			if (labelColumn) {
 				pieChartModel.labelColumn = labelColumn.label;
@@ -135,6 +138,9 @@
 				dataColumnSelector.enabled = false;
 				labelColumnSelector.enabled = false;
 				modifierSelector.enabled = false;
+				dataColumnSelector.selectedIndex = -1;
+				labelColumnSelector.selectedIndex = -1;
+				modifierSelector.selectedIndex = -1;
 				pieChartModel.ResetData();
 			}
 			
@@ -154,18 +160,18 @@
     </mx:Script>
 	<flexlib:WindowShade label="Data Connection" styleName="linkButtonWindowShade" width="100%">
 		<mx:Label text="Data Set:" color="#000000" fontWeight="bold" />
-		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="230" change="DataSetSelectorChanged()"/>
+		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="230" change="DataSetSelectorChanged()" prompt="Please select a dataset..."/>
 		<mx:Label text="Label (Group) Column:" color="#000000" fontWeight="bold" />
-		<mx:ComboBox id="labelColumnSelector" dataProvider="{dataColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
+		<mx:ComboBox id="labelColumnSelector" dataProvider="{dataColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()" prompt="Please select a column..."/>
 		<mx:Label text="Data Column:" color="#000000" fontWeight="bold" />
-		<mx:ComboBox id="dataColumnSelector" dataProvider="{dataColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
+		<mx:ComboBox id="dataColumnSelector" dataProvider="{dataColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()" prompt="Please select a column..."/>
 		<mx:Label text="Modifier:" color="#000000" fontWeight="bold" />
-		<mx:ComboBox id="modifierSelector" dataProvider="{modifierSelections}" enabled="false" width="230" change="ModifierSelectorChanged()"/>
+		<mx:ComboBox id="modifierSelector" dataProvider="{modifierSelections}" enabled="false" width="230" change="ModifierSelectorChanged()" prompt="Please select a modifier..."/>
 		<mx:Label text="Rows Requested:" color="#000000" fontWeight="bold" />
 		<mx:TextInput id="rowsRequested" text="10" color="0x323232" width="100%" />
 		<mx:Button id="submitDataButton" color="0x323232" label="Apply" click="SubmitDataRequest()"  />
 	</flexlib:WindowShade>
-	<flexlib:WindowShade label="Line Chart Settings" styleName="linkButtonWindowShade" width="100%">
+	<flexlib:WindowShade label="Pie Chart Settings" styleName="linkButtonWindowShade" width="100%">
 		<mx:HRule width="100%" />
 		<mx:HBox width="100%" >
 			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF" change="SettingsChanged()" />

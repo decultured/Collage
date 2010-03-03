@@ -322,8 +322,15 @@
 				case "insertGuage":
 					_EditDocumentView.AddClipByType('guage', new Rectangle(150, 150, 300, 300));
 					break;
+				case "insertWebEmbed":
+					_EditDocumentView.AddClipByType('webembed', new Rectangle(150, 150, 300, 300));
+					break;
 				case "fullscreen":
 					Fullscreen();
+					menuEvent.item.@toggled = !menuEvent.item.@toggled;
+					break;
+				case "hideInspector":
+					// TODO : Hide Inspector
 					menuEvent.item.@toggled = !menuEvent.item.@toggled;
 					break;
 				default:
@@ -380,9 +387,12 @@
                 <menuitem label="Bar Chart" command="insertBarChart"/>
                 <menuitem label="Pie Chart" command="insertPieChart"/>
                 <menuitem label="Guage" command="insertGuage"/>
+                <menuitem type="separator" />     
+                <menuitem label="Web Embed" command="insertWebEmbed"/>
             </menuitem>
-            <menuitem label="Window">
+            <menuitem label="View">
                 <menuitem label="Fullscreen" type="check" command="fullscreen" toggled="false"/>
+                <menuitem label="Hide Inspector" type="check" command="hideInspector" toggled="false"/>
             </menuitem>
         </root>
     </mx:XML>

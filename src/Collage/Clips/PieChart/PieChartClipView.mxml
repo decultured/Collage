@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <clg:ClipView xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Clip.*"
-	xmlns:ofc="*"
 	backgroundColor="0x000000"
 	backgroundAlpha="0"
 	horizontalScrollPolicy="off"
@@ -12,7 +11,6 @@
 		<![CDATA[
         import mx.collections.ArrayCollection;
 		import mx.events.PropertyChangeEvent;
-
         import mx.collections.ArrayCollection;
 
         [Bindable]
@@ -35,6 +33,13 @@
 			setStyle("backgroundColor", pieChartModel.backgroundColor);
 			setStyle("backgroundAlpha", pieChartModel.backgroundAlpha);
 			pieData = pieChartModel.Data;
+			if (!pieData || pieData.length < 1) {
+				setStyle("backgroundColor", 0xDDDDDD);
+				setStyle("backgroundAlpha", 0.8);
+				noDataWarningLabel.visible = true
+			}
+			else 
+				noDataWarningLabel.visible = false;
 			super.onModelChange(event);
 		}
 		]]>
@@ -60,4 +65,5 @@
             </mx:PieSeries>
         </mx:series>
     </mx:PieChart>
+	<mx:Label id="noDataWarningLabel" visible="false" text="No Data Loaded..." color="#FF0000" fontWeight="bold" fontSize="18" textAlign="center" left="0" right="0" top="0" bottom="0" />
 </clg:ClipView>
