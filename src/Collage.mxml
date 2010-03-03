@@ -41,11 +41,13 @@
 		import mx.graphics.ImageSnapshot;
 		import mx.graphics.codec.*;
 		import mx.controls.Alert;
+		import mx.managers.PopUpManager;
+		import mx.core.IFlexDisplayObject;
 		import mx.events.*;
+		import flash.events.*;
 		import flash.desktop.Clipboard;
 	    import flash.desktop.ClipboardFormats;
 	    import flash.desktop.ClipboardTransferMode;
-		import Collage.DataEngine.*;
 		import Collage.DataEngine.*;
 		import org.alivepdf.pdf.*;
 		import org.alivepdf.pdf.PDF;	
@@ -58,15 +60,27 @@
 
 		private function Initialize():void
 		{
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown); 
-			DataEngine.LoadAllDataSets();
-
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown);
+			
+			Session.events.addEventListener(Session.TOKEN_VALID, HandleLoginSuccess);
+			Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleLoginFailure);
+			
+			Session.CheckToken();
+			
 			_EditDocumentView.InitializeForEdit(inspectorWindow, optionsBox);
 			
 			this.nativeWindow.x = (Capabilities.screenResolutionX - this.width)/2;
 			this.nativeWindow.y = (Capabilities.screenResolutionY - this.height)/2;
 			
 //			this.nativeWindow.maximize();
+		}
+		
+		public function HandleLoginSuccess(event:Event):void {
+			DataEngine.LoadAllDataSets();
+		}
+		
+		public function HandleLoginFailure(event:Event):void {
+			PopUpManager.createPopUp(this, Login, true);
 		}
 
 		private function StandardOSModifier(item:Object):Array{
@@ -323,6 +337,9 @@
 					Fullscreen();
 					menuEvent.item.@toggled = !menuEvent.item.@toggled;
 					break;
+				case "logout":
+					Session.Logout();
+					break;
 				default:
 					Alert.show("Unrecognized Menu Command: " + command + "  " + menuEvent.item.@label);
 			}
@@ -341,6 +358,8 @@
         <root>
             <menuitem label="Collage">
                 <menuitem label="About" command="about" enabled="false"/>
+				<menuitem type="separator"/>
+				<menuitem label="Logout" command="logout" />
                 <menuitem label="Quit" command="quit" key="q"/>
             </menuitem>
             <menuitem label="File">
