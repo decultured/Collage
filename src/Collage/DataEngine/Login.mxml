@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+	title="Please login"
+	creationComplete="handleCreationComplete();"
+	close="closeMe();">
+	
+	<mx:Script>
+		<![CDATA[
+			import flash.events.*;
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
+			
+			private function handleCreationComplete():void {
+				// Center the TitleWindow container 
+				// over the control that created it.
+				PopUpManager.centerPopUp(this);
+				
+				Session.events.addEventListener(Session.LOGIN_FAILURE, Login_Failure);
+				Session.events.addEventListener(Session.LOGIN_SUCCESS, Login_Success);
+			}
+			
+			private function closeMe():void {
+				Session.events.removeEventListener(Session.LOGIN_FAILURE, Login_Failure);
+				Session.events.removeEventListener(Session.LOGIN_SUCCESS, Login_Success);
+			}
+			
+			private function processLogin():void {
+				Session.Login(email_address.text, password.text);
+			}
+			
+			private function Login_Success(event:Event):void {
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function Login_Failure(event:Event):void {
+				Alert.show("Could not log you in, please try again.");
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Form>
+		<mx:FormItem label="E-Mail Address">
+			<mx:TextInput id="email_address" width="100%"/>
+		</mx:FormItem>
+		<mx:FormItem label="Password">
+			<mx:TextInput id="password" displayAsPassword="true" width="100%"/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:HBox>
+		<mx:Button click="processLogin();" label="Login" />
+	</mx:HBox>
+</mx:TitleWindow>
