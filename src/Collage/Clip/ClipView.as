@@ -50,10 +50,10 @@ package Collage.Clip
 		{
 			Reposition();
 			
-			if (event && event.property == "selected")
+			if (_BorderBox && event && event.property == "selected")
 			{
 				if (_Model.selected) {
-					if (getChildIndex(_BorderBox) < numChildren - 1)
+					if (owns(_BorderBox) && getChildIndex(_BorderBox) < numChildren - 1)
 						setChildIndex(_BorderBox, numChildren - 1);
 					_BorderBox.visible = true;
 				} else

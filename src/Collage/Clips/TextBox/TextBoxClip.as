@@ -69,6 +69,5 @@ package Collage.Clips.TextBox
 
 			return newObject;
 		}
-		
 	}
 }
