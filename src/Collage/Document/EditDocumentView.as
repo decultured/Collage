@@ -9,6 +9,8 @@ package Collage.Document
 	import mx.core.UIComponent;
 	import com.roguedevelopment.objecthandles.*;
 	import com.roguedevelopment.objecthandles.constraints.*;
+	import com.roguedevelopment.objecthandles.decorators.AlignmentDecorator;
+	import com.roguedevelopment.objecthandles.decorators.DecoratorManager;
 
 	public class EditDocumentView extends DocumentView
 	{
@@ -23,6 +25,7 @@ package Collage.Document
 		public function get optionsBox():UIComponent {return _OptionsBox;}
 
 		private var _Grid:Shape = new Shape(); 
+		protected var _DecoratorManager:DecoratorManager;
 		
 		public function EditDocumentView()
 		{
@@ -56,6 +59,7 @@ package Collage.Document
 					_ObjectHandles.unregisterComponent(childArray[i]);
 			}
 			
+			DrawGrid();
 			super.NewDocument();
 		}
 
@@ -69,6 +73,9 @@ package Collage.Document
 			sizeConstraint.maxWidth = this.width;
 			sizeConstraint.maxHeight = this.height;
 			_ObjectHandles.constraints.push(sizeConstraint);							
+
+//			_DecoratorManager = new DecoratorManager( _ObjectHandles, this );
+//			_DecoratorManager.addDecorator( new AlignmentDecorator() );				
 
 			_SelectionManager.addEventListener(SelectionEvent.ADDED_TO_SELECTION, ObjectSelected);
 			_SelectionManager.addEventListener(SelectionEvent.REMOVED_FROM_SELECTION, ObjectDeselected);
@@ -101,7 +108,40 @@ package Collage.Document
 				moveConstraint.maxY = this.height;
 				
 				_ObjectHandles.constraints.push(sizeConstraint);							
-				_ObjectHandles.constraints.push(moveConstraint);							
+				_ObjectHandles.constraints.push(moveConstraint);	
+				
+				DrawGrid();				
+			}
+		}
+		
+		public function AddObjectHandles(newClip:Clip):void
+		{
+			if (newClip) {
+				var handles:Array = [];
+
+				if (newClip.verticalSizable && newClip.horizontalSizable) {
+					handles.push( new HandleDescription( HandleRoles.RESIZE_UP + HandleRoles.RESIZE_LEFT, new Point(0,0), new Point(0,0)));
+					handles.push( new HandleDescription( HandleRoles.RESIZE_UP + HandleRoles.RESIZE_RIGHT, new Point(100,0), new Point(0,0))); 
+					handles.push( new HandleDescription( HandleRoles.RESIZE_DOWN + HandleRoles.RESIZE_RIGHT, new Point(100,100), new Point(0,0))); 
+					handles.push( new HandleDescription( HandleRoles.RESIZE_DOWN + HandleRoles.RESIZE_LEFT, new Point(0,100), new Point(0,0))); 
+				}
+				if (newClip.verticalSizable) {
+					handles.push( new HandleDescription( HandleRoles.RESIZE_UP, new Point(50,0), new Point(0,0))); 
+					handles.push( new HandleDescription( HandleRoles.RESIZE_DOWN, new Point(50,100), new Point(0,0))); 
+				}
+				if (newClip.horizontalSizable) {
+					handles.push( new HandleDescription( HandleRoles.RESIZE_LEFT, new Point(0,50), new Point(0,0))); 
+					handles.push( new HandleDescription( HandleRoles.RESIZE_RIGHT, new Point(100,50), new Point(0,0))); 
+				}
+				if (newClip.moveFromCenter)
+					handles.push( new HandleDescription( HandleRoles.MOVE, new Point(50,50), new Point(0,0))); 
+				if (newClip.rotatable)
+					handles.push( new HandleDescription( HandleRoles.ROTATE, new Point(100,50), new Point(20,0))); 
+				
+				_ObjectHandles.registerComponent(newClip, newClip.view, handles);
+				ClearSelection();
+				_ObjectHandles.selectionManager.addToSelected(newClip);
+				DrawGrid();
 			}
 		}
 		
@@ -109,22 +149,14 @@ package Collage.Document
 		{
 			if (!super.AddClip(newClip))
 				return false;
-			_ObjectHandles.registerComponent(newClip, newClip.view);
-			ClearSelection();
-			_ObjectHandles.selectionManager.addToSelected(newClip);
-			DrawGrid();
+			AddObjectHandles(newClip);
 			return true;
 		}
 
 		public override function AddClipByType(clipType:String, position:Rectangle = null, dataObject:Object = null):Clip
 		{
 			var newClip:Clip = super.AddClipByType(clipType, position, dataObject);
-			if (newClip) {
-				_ObjectHandles.registerComponent(newClip, newClip.view);
-				ClearSelection();
-				_ObjectHandles.selectionManager.addToSelected(newClip);
-			}
-			DrawGrid();
+			AddObjectHandles(newClip);
 			return newClip;
 
 		}
@@ -132,20 +164,14 @@ package Collage.Document
 		public override function AddClipFromData(data:Object, position:Rectangle = null):Clip
 		{
 			var newClip:Clip = super.AddClipFromData(data);
-			if (newClip) {
-				_ObjectHandles.registerComponent(newClip, newClip.view);
-				ClearSelection();
-				_ObjectHandles.selectionManager.addToSelected(newClip);
-			}
-			DrawGrid();
+			AddObjectHandles(newClip);
 			return newClip;
 		}
 
 		public function IsObjectSelected():Boolean {
 			if (_CurrentlySelected && _CurrentlySelected.selected)
 				return true;
-			else
-				return false;
+			return false;
 		}
 
 		public function IsObjectAtFront():Boolean {
@@ -236,12 +262,13 @@ package Collage.Document
 
 
 		private function ObjectChanged(event:ObjectChangedEvent):void{
+			var num:Number = 0;
+			var docModel:Document = _Model as Document;
 			for each (var clip:Clip in event.relatedObjects) {
 				if (event.type == ObjectChangedEvent.OBJECT_MOVED) {
-					var docModel:Document = _Model as Document;
 					if (docModel.snap && docModel.gridSize)
 					{
-						var num:Number = (clip.x % docModel.gridSize) - (docModel.gridSize * 0.5);
+						num = (clip.x % docModel.gridSize) - (docModel.gridSize * 0.5);
 						if (num)
 							clip.x = clip.x - (clip.x % docModel.gridSize);
 						else
@@ -256,7 +283,26 @@ package Collage.Document
 					
 					clip.Moved();
 				}
-				else if (event.type == ObjectChangedEvent.OBJECT_RESIZED) {clip.Resized();}
+				else if (event.type == ObjectChangedEvent.OBJECT_RESIZED) {
+					if (docModel.snap && docModel.gridSize)
+					{
+						num = (clip.width % docModel.gridSize) - (docModel.gridSize * 0.5);
+						if (num)
+							clip.width = clip.width - (clip.width % docModel.gridSize);
+						else
+							clip.width = clip.width - (clip.width % docModel.gridSize) + docModel.gridSize;
+						
+						num = (clip.height % docModel.gridSize) - (docModel.gridSize * 0.5);
+						if (num)
+							clip.height = clip.height - (clip.height % docModel.gridSize);
+						else
+							clip.height = clip.height - (clip.height % docModel.gridSize) + docModel.gridSize;
+					}
+				
+					clip.Resized();
+					ClearSelection();
+					_ObjectHandles.selectionManager.addToSelected(clip);
+				}
 				else if (event.type == ObjectChangedEvent.OBJECT_ROTATED) {clip.Rotated();}
 				PositionOptionsBox();
 			}
@@ -276,18 +322,20 @@ package Collage.Document
 			
 			for (var xPos:Number = docModel.gridSize; xPos < docModel.width; xPos += docModel.gridSize) {
 		    	_Grid.graphics.moveTo(xPos, 0); 
-		    	_Grid.graphics.lineTo(xPos, this.width); 
+		    	_Grid.graphics.lineTo(xPos, docModel.height); 
 			}
 
 			for (var yPos:Number = docModel.gridSize; yPos < docModel.height; yPos += docModel.gridSize) {
 		    	_Grid.graphics.moveTo(0, yPos); 
-		    	_Grid.graphics.lineTo(docModel.height, yPos); 
+		    	_Grid.graphics.lineTo(docModel.width, yPos); 
 			}
+
+			this.rawChildren.setChildIndex(_Grid, 1);
 		} 
 		
 		protected override function onModelChange( event:PropertyChangeEvent):void
 		{
-			DrawGrid();
+			ViewResized();
 			super.onModelChange(event);
 		}
 

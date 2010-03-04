@@ -32,17 +32,37 @@
 	<![CDATA[
 		import mx.controls.Alert;
 		import Collage.DataEngine.*;
+		import mx.events.*;
 
 		[Bindable] public var dataSetSelections:Array = new Array();
-
+		[Bindable] public var columnSelections:Array = new Array();
 		private function Initialize():void
 		{
 			DataEngineConnect();
 			if (_Model) {
 				var tableModel:TableClip = _Model as TableClip;
+				tableModel.addEventListener(TableClip.QUERY_FINISHED, QueryFinished);
 			}
 		}
-		
+
+		private function QueryFinished(event:Event):void
+		{
+			if (_Model) {
+				var tableModel:TableClip = _Model as TableClip;
+				
+				if (tableModel.columns) {
+					var newStuff:Array = new Array();
+					for (var key:String in tableModel.columns) {
+						var newColumn:ListItemValueObject = new ListItemValueObject();
+						newColumn.label = tableModel.columns[key].dataField;
+						newColumn.isSelected = tableModel.columns[key]["visible"];
+						newStuff.push(newColumn);
+					}
+				}
+				columnSelections = newStuff;
+			}
+		}
+	
 		private function SettingsChanged():void
 		{
 			if (_Model) {
@@ -64,6 +84,16 @@
 			dataSetSelections = DataEngine.GetDataSetsComboBox();
 		}
 
+		private function SubmitDataRequest():void
+		{
+			var tableModel:TableClip = _Model as TableClip;
+			tableModel.rowsRequested = parseInt(rowsRequested.text);
+			if (isNaN(tableModel.rowsRequested) || tableModel.rowsRequested < 1) tableModel.rowsRequested = 1;
+			if (tableModel.rowsRequested > 100) tableModel.rowsRequested = 100;
+			rowsRequested.text = tableModel.rowsRequested.toString();
+			tableModel.RunQuery();
+		}
+
 		private function DataSetSelectorChanged():void
 		{
 			if (!_Model)
@@ -76,13 +106,47 @@
 				tableModel.dataSetID = dataset.id;
 				tableModel.RunQuery();
 			} else {
+				
 			}
 		}
+
+		private function ColumnSelectionChange(event:CollectionEvent):void {
+			if (_Model) {
+				var tableModel:TableClip = _Model as TableClip;
+				for (var key:String in columnSelections) {
+					for (var columnKey:String in tableModel.columns) {
+						if (tableModel.columns[columnKey].dataField == columnSelections[key].label)
+							tableModel.columns[columnKey]["visible"] = columnSelections[key].isSelected;
+					}
+				}
+			}
+		}
+
 	]]>
     </mx:Script>
+	<mx:ArrayCollection id="columnSelectionCollection" source="{columnSelections}" collectionChange="ColumnSelectionChange(event);" />
 	<flexlib:WindowShade label="Data Connection" styleName="linkButtonWindowShade" width="100%">
 		<mx:Label text="Data Set:" color="#000000" fontWeight="bold" />
 		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="230" change="DataSetSelectorChanged()"/>
+		<mx:TextInput id="rowsRequested" text="10" color="0x323232" width="100%" />
+		<mx:Button id="submitDataButton" color="0x323232" label="Apply" click="SubmitDataRequest()"  />
+	</flexlib:WindowShade>
+	<flexlib:WindowShade label="General Styles" styleName="linkButtonWindowShade" width="100%">
+		<mx:List id="list" dataProvider="{columnSelectionCollection}" alternatingItemColors="[#EEEEEE, white]" width="230" rowCount="8">
+	        <mx:itemRenderer>
+	            <mx:Component>
+	                <mx:CheckBox selectedField="isSelected" change="ColumnListChange(event);">
+	                    <mx:Script>
+	                        <![CDATA[
+	                            private function ColumnListChange(evt:Event):void {
+	                                data.isSelected = !data.isSelected;
+	                            }
+	                        ]]>
+	                    </mx:Script>
+	                </mx:CheckBox>
+	            </mx:Component>
+	        </mx:itemRenderer>
+	    </mx:List>
 	</flexlib:WindowShade>
 	<flexlib:WindowShade label="General Styles" styleName="linkButtonWindowShade" width="100%">
 		<mx:HRule width="100%" />

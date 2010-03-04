@@ -4,6 +4,7 @@ package Collage.Document
 	import Collage.Clip.*;
 	import Collage.Clips.Label.*;
 	import Collage.Clips.LineChart.*;
+	import Collage.Clips.ScatterChart.*;
 	import Collage.Clips.PieChart.*;
 	import Collage.Clips.BarChart.*;
 	import Collage.Clips.Guage.*;
@@ -11,6 +12,8 @@ package Collage.Document
 	import Collage.Clips.TextBox.*;
 	import Collage.Clips.Table.*;
 	import Collage.Clips.DataLabel.*;
+	import Collage.Clips.WebEmbed.*;
+	import Collage.Clips.GoogleMaps.*;
 	
 	public class ClipFactory
 	{
@@ -24,11 +27,14 @@ package Collage.Document
 			_ClipTypes["label"] = LabelClip;
 			_ClipTypes["textbox"] = TextBoxClip;
 			_ClipTypes["linechart"] = LineChartClip;
+			_ClipTypes["scatterchart"] = ScatterChartClip;
 			_ClipTypes["piechart"] = PieChartClip;
 			_ClipTypes["barchart"] = BarChartClip;
 			_ClipTypes["guage"] = GuageClip;
 			_ClipTypes["table"] = TableClip;
 			_ClipTypes["datalabel"] = DataLabelClip;
+			_ClipTypes["webembed"] = WebEmbedClip;
+			_ClipTypes["googlemaps"] = GoogleMapsClip;
 		}
 
 		public static function CreateByType(clipType:String, dataObject:Object = null):Clip
@@ -41,6 +47,8 @@ package Collage.Document
 				return new TextBoxClip(dataObject);
 			else if (clipType == "linechart")
 				return new LineChartClip(dataObject);
+			else if (clipType == "scatterchart")
+				return new ScatterChartClip(dataObject);
 			else if (clipType == "piechart")
 				return new PieChartClip(dataObject);
 			else if (clipType == "barchart")
@@ -51,6 +59,10 @@ package Collage.Document
 				return new TableClip(dataObject);
 			else if (clipType == "datalabel")
 				return new DataLabelClip(dataObject);
+			else if (clipType == "webembed")
+				return new WebEmbedClip(dataObject);
+			else if (clipType == "googlemaps")
+				return new GoogleMapsClip(dataObject);
 			return null;
 		}
 		

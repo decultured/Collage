@@ -29,7 +29,7 @@ package Collage.DataEngine
 						if (columns[columnKey]["datatype"] == "numeric") {
 							rows[rowKey][rowFieldKey] = parseFloat(rows[rowKey][rowFieldKey]);
 						} else if (columns[columnKey]["datatype"] == "datetime" && rows[rowKey][rowFieldKey] is String) {
-							rows[rowKey][rowFieldKey] = Date.parse(rows[rowKey][rowFieldKey]);
+							rows[rowKey][rowFieldKey] = Date.parse(rows[rowKey][rowFieldKey]) * 0.001;
 						} else if (columns[columnKey]["datatype"] == "boolean") {
 							if (rows[rowKey][rowFieldKey] == "true")
 								rows[rowKey][rowFieldKey] = true;

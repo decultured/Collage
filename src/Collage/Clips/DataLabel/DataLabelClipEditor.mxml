@@ -88,8 +88,12 @@
 				return;
 			
 			var dataLabelModel:DataLabelClip = _Model as DataLabelClip;
-			var dataColumn:DataSetColumn = dataset.GetColumnByID(dataSetColumnSelector.selectedItem.data);
-			dataLabelModel.dataSetColumnModifier = modifierSelector.selectedItem.data;
+			var dataColumn:DataSetColumn = null;
+			
+			if (dataSetColumnSelector.selectedItem)
+				dataColumn = dataset.GetColumnByID(dataSetColumnSelector.selectedItem.data);
+			if (modifierSelector.selectedItem)
+				dataLabelModel.dataSetColumnModifier = modifierSelector.selectedItem.data;
 
 			if (dataColumn) {
 				dataLabelModel.dataSetColumn = dataColumn.label;
@@ -104,7 +108,8 @@
 				return;
 			
 			var dataLabelModel:DataLabelClip = _Model as DataLabelClip;
-			dataLabelModel.dataSetColumnModifier = modifierSelector.selectedItem.data;
+			if (modifierSelector.selectedItem)
+				dataLabelModel.dataSetColumnModifier = modifierSelector.selectedItem.data;
 			dataLabelModel.RunQuery();
 		}
 		
@@ -137,11 +142,11 @@
     </mx:Script>
 	<flexlib:WindowShade label="Data Connection" styleName="linkButtonWindowShade" width="100%">
 		<mx:Label text="Data Set:" color="#000000" fontWeight="bold" />
-		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="230" change="DataSetSelectorChanged()"/>
+		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="230" change="DataSetSelectorChanged()" prompt="Please select a dataset..."/>
 		<mx:Label text="Y Axis Value:" color="#000000" fontWeight="bold" />
-		<mx:ComboBox id="dataSetColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
+		<mx:ComboBox id="dataSetColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()" prompt="Please select a column..."/>
 		<mx:Label text="Modifier:" color="#000000" fontWeight="bold" />
-		<mx:ComboBox id="modifierSelector" dataProvider="{modifierSelections}" enabled="false" width="230" change="ModifierSelectorChanged()"/>
+		<mx:ComboBox id="modifierSelector" dataProvider="{modifierSelections}" enabled="false" width="230" change="ModifierSelectorChanged()" prompt="Please select a modifier..."/>
 	</flexlib:WindowShade>
 	<flexlib:WindowShade label="General Styles" styleName="linkButtonWindowShade" width="100%">
 		<mx:HBox width="100%" >

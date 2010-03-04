@@ -46,16 +46,16 @@
 		private function UpdateInspector():void
 		{
 			if (_Model) {
-				var lineChartModel:LineChartClip = _Model as LineChartClip;
-				backgroundColorPicker.selectedColor = lineChartModel.backgroundColor;
+				var scatterChartModel:ScatterChartClip = _Model as ScatterChartClip;
+				backgroundColorPicker.selectedColor = scatterChartModel.backgroundColor;
 			}
 		}
 		
 		private function SettingsChanged():void
 		{
 			if (_Model) {
-				var lineChartModel:LineChartClip = _Model as LineChartClip;
-				lineChartModel.backgroundColor = backgroundColorPicker.selectedColor;
+				var scatterChartModel:ScatterChartClip = _Model as ScatterChartClip;
+				scatterChartModel.backgroundColor = backgroundColorPicker.selectedColor;
 			}
 		}
 		
@@ -79,31 +79,31 @@
 			if (!dataset || !_Model)
 				return;
 			
-			var lineChartModel:LineChartClip = _Model as LineChartClip;
+			var scatterChartModel:ScatterChartClip = _Model as ScatterChartClip;
 
 			var xDataColumn:DataSetColumn = dataset.GetColumnByID(dataSetXColumnSelector.selectedItem.data);
 			var yDataColumn:DataSetColumn = dataset.GetColumnByID(dataSetYColumnSelector.selectedItem.data);
 
 			if (yDataColumn) {
-				lineChartModel.yAxisDataColumn = yDataColumn.label;
+				scatterChartModel.yAxisDataColumn = yDataColumn.label;
 			}
 
 			if (xDataColumn) {
-				lineChartModel.xAxisDataColumn = xDataColumn.label;
+				scatterChartModel.xAxisDataColumn = xDataColumn.label;
 			}
 			
-			lineChartModel.RunQuery();
+			scatterChartModel.RunQuery();
 			UpdateInspector();
 		}
 		
 		private function SubmitDataRequest():void
 		{
-			var lineChartModel:LineChartClip = _Model as LineChartClip;
-			lineChartModel.rowsRequested = parseInt(rowsRequested.text);
-			if (isNaN(lineChartModel.rowsRequested) || lineChartModel.rowsRequested < 1) lineChartModel.rowsRequested = 1;
-			if (lineChartModel.rowsRequested > 1000) lineChartModel.rowsRequested = 1000;
-			rowsRequested.text = lineChartModel.rowsRequested.toString();
-			lineChartModel.RunQuery();
+			var scatterChartModel:ScatterChartClip = _Model as ScatterChartClip;
+			scatterChartModel.rowsRequested = parseInt(rowsRequested.text);
+			if (isNaN(scatterChartModel.rowsRequested) || scatterChartModel.rowsRequested < 1) scatterChartModel.rowsRequested = 1;
+			if (scatterChartModel.rowsRequested > 1000) scatterChartModel.rowsRequested = 1000;
+			rowsRequested.text = scatterChartModel.rowsRequested.toString();
+			scatterChartModel.RunQuery();
 		}
 		
 		private function DataSetSelectorChanged():void
@@ -111,23 +111,23 @@
 			if (!_Model)
 				return;
 				
-			var lineChartModel:LineChartClip = _Model as LineChartClip;
+			var scatterChartModel:ScatterChartClip = _Model as ScatterChartClip;
 
-			lineChartModel.yAxisDataColumn = null;
-			lineChartModel.xAxisDataColumn = null;
-			lineChartModel.ResetData();
+			scatterChartModel.yAxisDataColumn = null;
+			scatterChartModel.xAxisDataColumn = null;
+			scatterChartModel.ResetData();
 
 			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
 
 			if (dataset) {
-				lineChartModel.dataSetID = dataset.id;
+				scatterChartModel.dataSetID = dataset.id;
 				dataSetColumnSelections = dataset.GetColumnsComboBox(new Array("numeric", "datetime"));
 				dataSetYColumnSelector.enabled = true;
 				dataSetXColumnSelector.enabled = true;
 			} else {
 				dataSetYColumnSelector.enabled = false;
 				dataSetXColumnSelector.enabled = false;
-				lineChartModel.ResetData();
+				scatterChartModel.ResetData();
 			}
 			
 			UpdateInspector();

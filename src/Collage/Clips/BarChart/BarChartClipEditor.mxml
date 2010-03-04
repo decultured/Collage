@@ -30,13 +30,32 @@
 	</mx:Style>
 	<mx:Script>
 	<![CDATA[
+		import mx.controls.Alert;
+		import Collage.DataEngine.*;
+		import mx.collections.ArrayCollection;
+
+		[Bindable] public var modifierSelections:ArrayCollection = new ArrayCollection(
+		    [ {label:"Min", data:"min"},
+		      {label:"Max", data:"max"},
+		      {label:"Average", data:"avg"},
+		      {label:"Sum", data:"sum"},
+		      {label:"Count", data:"count"},
+		      {label:"Mode", data:"mode"}
+			]);
+
+		[Bindable] public var dataSetSelections:Array = new Array();
+		[Bindable] public var labelColumnSelections:Array = new Array();
+		[Bindable] public var dataColumnSelections:Array = new Array();
+
+
 		private function Initialize():void
 		{
+			DataEngineConnect();
 			if (_Model) {
 				var barChartModel:BarChartClip = _Model as BarChartClip;
 			}
 		}
-		
+
 		private function SettingsChanged():void
 		{
 			if (_Model) {
@@ -45,8 +64,113 @@
 				barChartModel.backgroundAlpha = transparencySlider.value;
 			}
 		}
+		private function DataEngineConnect():void
+		{
+			if (!DataEngine.loaded)
+				DataEngine.events.addEventListener(DataEngine.COMPLETE, DatasLoaded);
+			else DatasLoaded(null);
+		}
+
+		private function DatasLoaded(event:Event):void
+		{
+			DataEngine.events.removeEventListener(DataEngine.COMPLETE, DatasLoaded);
+			dataSetSelections = DataEngine.GetDataSetsComboBox(new Array("numeric", "datetime"), 1, 3);
+		}
+
+		private function ColumnSelectorChanged():void
+		{
+			if (dataSetSelector.selectedItem)
+				var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
+
+			if (!dataset || !_Model)
+				return;
+
+			var barChartModel:BarChartClip = _Model as BarChartClip;
+			if (labelColumnSelector.selectedItem)
+				var labelColumn:DataSetColumn = dataset.GetColumnByID(labelColumnSelector.selectedItem.data);
+			if (dataColumnSelector.selectedItem)
+				var dataColumn:DataSetColumn = dataset.GetColumnByID(dataColumnSelector.selectedItem.data);
+
+			if (labelColumn) {
+				barChartModel.labelColumn = labelColumn.label;
+			}
+
+			if (dataColumn) {
+				barChartModel.dataColumn = dataColumn.label;
+			}
+
+			barChartModel.RunQuery();
+//			UpdateInspector();
+		}
+
+		private function SubmitDataRequest():void
+		{
+			var barChartModel:BarChartClip = _Model as BarChartClip;
+			barChartModel.rowsRequested = parseInt(rowsRequested.text);
+			if (isNaN(barChartModel.rowsRequested) || barChartModel.rowsRequested < 1) barChartModel.rowsRequested = 1;
+			if (barChartModel.rowsRequested > 100) barChartModel.rowsRequested = 100;
+			rowsRequested.text = barChartModel.rowsRequested.toString();
+			barChartModel.RunQuery();
+		}
+
+		private function DataSetSelectorChanged():void
+		{
+			if (!_Model)
+				return;
+
+			var barChartModel:BarChartClip = _Model as BarChartClip;
+
+			barChartModel.dataColumn = null;
+			barChartModel.labelColumn = null;
+			barChartModel.dataModifier = null;
+			barChartModel.ResetData();
+
+			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
+
+			if (dataset) {
+				barChartModel.dataSetID = dataset.id;
+				dataColumnSelections = dataset.GetColumnsComboBox(new Array("numeric", "datetime"));
+				labelColumnSelections = dataset.GetColumnsComboBox();
+				dataColumnSelector.enabled = true;
+				labelColumnSelector.enabled = true;
+				modifierSelector.enabled = true;
+			} else {
+				dataColumnSelector.enabled = false;
+				labelColumnSelector.enabled = false;
+				modifierSelector.enabled = false;
+				dataColumnSelector.selectedIndex = -1;
+				labelColumnSelector.selectedIndex = -1;
+				modifierSelector.selectedIndex = -1;
+				barChartModel.ResetData();
+			}
+
+//			UpdateInspector();
+		}	
+
+		private function ModifierSelectorChanged():void
+		{
+			if (!_Model)
+				return;
+
+			var barChartModel:BarChartClip = _Model as BarChartClip;
+			barChartModel.dataModifier = modifierSelector.selectedItem.data;
+			barChartModel.RunQuery();
+		}
 	]]>
     </mx:Script>
+	<flexlib:WindowShade label="Data Connection" styleName="linkButtonWindowShade" width="100%">
+		<mx:Label text="Data Set:" color="#000000" fontWeight="bold" />
+		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="230" change="DataSetSelectorChanged()" prompt="Please select a dataset..."/>
+		<mx:Label text="Label (Group) Column:" color="#000000" fontWeight="bold" />
+		<mx:ComboBox id="labelColumnSelector" dataProvider="{dataColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()" prompt="Please select a column..."/>
+		<mx:Label text="Data Column:" color="#000000" fontWeight="bold" />
+		<mx:ComboBox id="dataColumnSelector" dataProvider="{dataColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()" prompt="Please select a column..."/>
+		<mx:Label text="Modifier:" color="#000000" fontWeight="bold" />
+		<mx:ComboBox id="modifierSelector" dataProvider="{modifierSelections}" enabled="false" width="230" change="ModifierSelectorChanged()" prompt="Please select a modifier..."/>
+		<mx:Label text="Rows Requested:" color="#000000" fontWeight="bold" />
+		<mx:TextInput id="rowsRequested" text="10" color="0x323232" width="100%" />
+		<mx:Button id="submitDataButton" color="0x323232" label="Apply" click="SubmitDataRequest()"  />
+	</flexlib:WindowShade>
 	<flexlib:WindowShade label="Bar Chart Settings" styleName="linkButtonWindowShade" width="100%">
 		<mx:HRule width="100%" />
 		<mx:HBox width="100%" >

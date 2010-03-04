@@ -88,10 +88,10 @@ package Collage.Clips.DataLabel
 			if (!_DataQuery || !_DataQuery.result || !_DataQuery.result.rows is Array || _DataQuery.result.rows.length < 1)
 				return;
 
-			if (!_DataQuery.result.rows[0][dataSetColumn])
+			if (!_DataQuery.result.rows[0][dataSetColumn] is Number)
 				return;
 			
-			text = _DataQuery.result.rows[0][dataSetColumn].toString();
+			text = _DataQuery.result.rows[0][dataSetColumn];
 			
 			dataLoaded = true;
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));

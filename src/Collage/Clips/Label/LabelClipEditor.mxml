@@ -51,7 +51,7 @@
 		}
 	]]>
     </mx:Script>
-	<flexlib:WindowShade opened="false" label="Label Settings" styleName="linkButtonWindowShade" width="100%">
+	<flexlib:WindowShade label="Label Settings" styleName="linkButtonWindowShade" width="100%">
 		<mx:HRule width="100%" />
 		<mx:Label text="Text:" color="#000000" fontWeight="bold" />
 		<mx:TextInput id="src" text="Hello World!" color="0x323232" width="100%" change="SettingsChanged()" />

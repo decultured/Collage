@@ -20,21 +20,10 @@
 
 		protected override function onModelChange(event:PropertyChangeEvent):void
 		{
-			var tableModel:TableClip = _Model as TableClip;
-						
-			if (event && event.property != "x" && event.property != "y" && event.property != "width" && event.property != "height")
-			{
-				setStyle("backgroundColor", tableModel.backgroundColor);
-				setStyle("backgroundAlpha", tableModel.backgroundAlpha);
-				if (datagrid) {
-					datagrid.columns = tableModel.columns;
-					datagrid.dataProvider = tableModel.data;
-				}
-			}
-
+			var skeletonModel:SkeletonClip = _Model as SkeletonClip;
+			
 			super.onModelChange(event);
 		}
 	]]>
     </mx:Script>
-	<mx:DataGrid id="datagrid" color="0x323232" width="100%" height="100%" />
 </clg:ClipView>

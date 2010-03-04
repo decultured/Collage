@@ -1,17 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <clg:ClipEditor xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Clip.*"
+	xmlns:flexlib="flexlib.containers.*"
 	backgroundColor="0x000000"
 	backgroundAlpha="0"
 	horizontalScrollPolicy="off"
 	verticalScrollPolicy="off"
 	creationComplete="Initialize()" 
 	width="100%" >
-	
+	<mx:Style>
+	    .linkButtonWindowShade {
+	      	headerClass:ClassReference('mx.controls.LinkButton');
+	      	header-style-name: linkButtonStyle;
+	     	drop-shadow-enabled:false;
+	      	corner-radius:3;
+	      	border-style:solid;
+	    	background-color:#ddd;
+			padding-left:5;
+			padding-right:5;
+			padding-top:5;
+			padding-bottom:5;
+	    }         
+	    
+	    .linkButtonStyle {
+	    	corner-radius:3;
+	    	fill-alphas:1,1;
+	    	padding-left:10;
+	    }
+	</mx:Style>
 	<mx:Script>
 	<![CDATA[
+		import mx.controls.Alert;
+		import Collage.DataEngine.*;
+		import mx.collections.ArrayCollection;
+
+		// min, max, average/avg, sum, count, mode
+		[Bindable]
+		public var modifierSelections:ArrayCollection = new ArrayCollection(
+		    [ {label:"Min", data:"min"},
+		      {label:"Max", data:"max"},
+		      {label:"Average", data:"avg"},
+		      {label:"Sum", data:"sum"},
+		      {label:"Count", data:"count"},
+		      {label:"Mode", data:"mode"}
+			]);
+
+		[Bindable] public var dataSetSelections:Array = new Array();
+		[Bindable] public var dataSetColumnSelections:Array = new Array();
+
 		private function Initialize():void
 		{
+			DataEngineConnect();
 			if (_Model) {
 				var guageModel:GuageClip = _Model as GuageClip;
 				guageValue.minimum = guageModel.minimum;
@@ -38,9 +77,88 @@
 				guageModel.indicatorCrownColor = crownColorPicker.selectedColor;
 			}
 		}
+
+		private function DataEngineConnect():void
+		{
+			if (!DataEngine.loaded)
+				DataEngine.events.addEventListener(DataEngine.COMPLETE, DatasLoaded);
+			else DatasLoaded(null);
+		}
+
+		private function DatasLoaded(event:Event):void
+		{
+			DataEngine.events.removeEventListener(DataEngine.COMPLETE, DatasLoaded);
+			dataSetSelections = DataEngine.GetDataSetsComboBox(new Array("numeric", "datetime"), 2, 3);
+		}
+
+		private function ColumnSelectorChanged():void
+		{
+			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
+
+			if (!dataset || !_Model)
+				return;
+
+			var guageModel:GuageClip = _Model as GuageClip;
+			var dataColumn:DataSetColumn = null;
+
+			if (dataSetColumnSelector.selectedItem)
+				dataColumn = dataset.GetColumnByID(dataSetColumnSelector.selectedItem.data);
+			if (modifierSelector.selectedItem)
+				guageModel.dataSetColumnModifier = modifierSelector.selectedItem.data;
+
+			if (dataColumn) {
+				guageModel.dataSetColumn = dataColumn.label;
+			}
+
+			guageModel.RunQuery();
+		}
+
+		private function ModifierSelectorChanged():void
+		{
+			if (!_Model)
+				return;
+
+			var guageModel:GuageClip = _Model as GuageClip;
+			if (modifierSelector.selectedItem)
+				guageModel.dataSetColumnModifier = modifierSelector.selectedItem.data;
+			guageModel.RunQuery();
+		}
+
+		private function DataSetSelectorChanged():void
+		{
+			if (!_Model)
+				return;
+
+			var guageModel:GuageClip = _Model as GuageClip;
+
+			guageModel.dataSetColumn = null;
+			guageModel.ResetData();
+
+			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
+
+			if (dataset) {
+				guageModel.dataSetID = dataSetSelector.selectedItem.data;
+				dataSetColumnSelections = dataset.GetColumnsComboBox();
+				dataSetColumnSelector.enabled = true;
+				modifierSelector.enabled = true;
+			} else {
+				guageModel.dataSetID = null;
+				dataSetColumnSelector.enabled = false;
+				modifierSelector.enabled = false;
+				guageModel.ResetData();
+			}
+		}
 	]]>
     </mx:Script>
-	<mx:Panel title="Guage Chart Settings" backgroundColor="0xC1C1C1" width="100%" dropShadowEnabled="false" >
+	<flexlib:WindowShade label="Data Connection" styleName="linkButtonWindowShade" width="100%">
+		<mx:Label text="Data Set:" color="#000000" fontWeight="bold" />
+		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="230" change="DataSetSelectorChanged()" prompt="Please select a dataset..."/>
+		<mx:Label text="Y Axis Value:" color="#000000" fontWeight="bold" />
+		<mx:ComboBox id="dataSetColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()" prompt="Please select a column..."/>
+		<mx:Label text="Modifier:" color="#000000" fontWeight="bold" />
+		<mx:ComboBox id="modifierSelector" dataProvider="{modifierSelections}" enabled="false" width="230" change="ModifierSelectorChanged()" prompt="Please select a modifier..."/>
+	</flexlib:WindowShade>
+	<flexlib:WindowShade label="Guage Chart Settings" styleName="linkButtonWindowShade" width="100%">
 	<mx:Form>
 		<mx:FormItem label="Value">
 			<mx:HSlider id="guageValue" width="105" change="SettingsChanged()" />
@@ -68,6 +186,6 @@
 		<mx:FormItem label="Min/Max Angle">
 			<mx:HSlider id="minMaxAngle" thumbCount="2" allowThumbOverlap="false" width="105" minimum="0" maximum="360" values="{[45,315]}" change="SettingsChanged()" />
 		</mx:FormItem>
-	</mx:Form>
-</mx:Panel>
+		</mx:Form>
+	</flexlib:WindowShade>
 </clg:ClipEditor>

@@ -3,11 +3,11 @@ package Collage.DataEngine
 	public class DataQueryField
 	{
 		public var sort:String = null;
-		public var modifier:String;
-		public var group:Boolean = false;
-		public var name:String;
+		public var modifier:String = null;
+		public var group:String = null;
+		public var name:String = null;
 		
-		public function DataQueryField(name:String, sort:String = null,  modifier:String = null, group:Boolean = false):void
+		public function DataQueryField(name:String, sort:String = null,  modifier:String = null, group:String = null):void
 		{
 			this.name = name;
 			this.sort = sort;

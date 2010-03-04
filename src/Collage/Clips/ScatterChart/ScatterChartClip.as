@@ -1,4 +1,4 @@
-package Collage.Clips.BarChart
+package Collage.Clips.ScatterChart
 {
 	import mx.controls.Alert;
 	import Collage.Clip.*;
@@ -6,24 +6,22 @@ package Collage.Clips.BarChart
 	import Collage.DataEngine.*;
 	import com.adobe.serialization.json.JSON;
 	
-	public class BarChartClip extends Clip
+	public class ScatterChartClip extends Clip
 	{		
 		[Bindable] public var dataSetID:String = null;
-		[Bindable] public var labelColumn:String = null;
-		[Bindable] public var dataColumn:String = null; 
-		[Bindable] public var dataModifier:String = null; 
-		[Bindable] public var isLineChart:Boolean = true; 
-		
+		[Bindable] public var xAxisDataColumn:String = null;
+		[Bindable] public var yAxisDataColumn:String = null; 
+
 		public var Data:Array = new Array();
+		
 		public var dataLoaded:Boolean = false;
 		public var rowsRequested:Number = 10;
-
-		[Bindable] public var backgroundAlpha:Number = 1.0;
-		[Bindable] public var backgroundColor:Number = 0xFFFFFF;
 		
+		[Bindable] public var backgroundColor:Number = 0xFFFFEE;
+                              
 		private var _DataQuery:DataQuery = null;
 	
-		public function BarChartClip(dataObject:Object = null)
+		public function ScatterChartClip(dataObject:Object = null)
 		{
 			super(dataObject);
 			CreateView();
@@ -35,7 +33,7 @@ package Collage.Clips.BarChart
 			if (newView)
 				_View = newView;
 			else {
-				_View = new BarChartClipView();
+				_View = new ScatterChartClipView();
 				_View.model = this;
 			}
 		}
@@ -45,24 +43,24 @@ package Collage.Clips.BarChart
 			if (newEditor)
 				_Editor = newEditor;
 			else {
-				_Editor = new BarChartClipEditor();
+				_Editor = new ScatterChartClipEditor();
 				_Editor.model = this;
 			}
 		}
-
+		
 		public override function Resized():void
 		{
+			
 		}
 		
-
 		public function RunQuery():void
 		{
-			if (dataSetID && dataColumn && labelColumn && dataModifier) {
+			if (dataSetID && yAxisDataColumn && xAxisDataColumn) {
 				_DataQuery = new DataQuery();
 				_DataQuery.dataset = dataSetID;
-				_DataQuery.AddField(labelColumn, null, null, "val");
-				_DataQuery.AddField(dataColumn, "desc");//, dataModifier);
-				_DataQuery.limit = 10;
+				_DataQuery.AddField(xAxisDataColumn, "desc");
+				_DataQuery.AddField(yAxisDataColumn);
+				_DataQuery.limit = rowsRequested;
 				_DataQuery.LoadQueryResults();
 				_DataQuery.addEventListener(DataQuery.COMPLETE, QueryFinished);
 			}
@@ -78,41 +76,58 @@ package Collage.Clips.BarChart
 
 		private function QueryFinished(event:Event):void
 		{
-			if (!_DataQuery || !_DataQuery.result || !_DataQuery.result.rows is Array)
+			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetID);
+			if (!dataset || !_DataQuery || !_DataQuery.result || !_DataQuery.result.rows is Array)
 				return;
 
 			Data = new Array();
 			var rows:Array = _DataQuery.result.rows;
 			
+			//Alert.show("Rows: " + rows.length);
+			if (rows.length < 3) {
+				Alert.show("Not enough data for chart!");
+				return;
+			}
+			
+			if (!rows[0])
+				return;
+				
 			for (var rowKey:uint = 0; rowKey < rows.length; rowKey++)
 			{
-				if (!rows[rowKey][dataColumn] is Number) {
+				if (!rows[rowKey][xAxisDataColumn] is Number || !rows[rowKey][yAxisDataColumn] is Number) {
 					Alert.show("NAN!!!");
 					break;
 				}
 				
 				var newObject:Object = new Object();
-				newObject["label"] = rows[rowKey][labelColumn];
-				newObject["value"] = rows[rowKey][dataColumn];
+				
+				newObject["x"] = rows[rowKey][xAxisDataColumn];
+				newObject["y"] = rows[rowKey][yAxisDataColumn];
 				
 				Data.push(newObject);
 			}
-
+			
 			Data.sortOn("x", Array.NUMERIC);
 			dataLoaded = true;
+
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 			_DataQuery = null;
 		}
-
+		
 		public override function SaveToObject():Object
 		{
 			var newObject:Object = super.SaveToObject();
 
-			newObject["type"] = "barchart";
-			newObject["backgroundAlpha"] = backgroundAlpha;
+			newObject["type"] = "scatterchart";
+			newObject["dataSetID"] = dataSetID;
+			newObject["xAxisDataColumn"] = xAxisDataColumn;
+			newObject["yAxisDataColumn"] = yAxisDataColumn;
+			newObject["Data"] = Data;
+			newObject["dataLoaded"] = dataLoaded;
 			newObject["backgroundColor"] = backgroundColor;
 
 			return newObject;
 		}
+
 	}
 }

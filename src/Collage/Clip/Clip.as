@@ -18,7 +18,8 @@ package Collage.Clip
 		
 		public var verticalSizable:Boolean = true;
 		public var horizontalSizable:Boolean = true;
-		public var rotatable:Boolean = true;
+		public var moveFromCenter:Boolean = false;
+		public var rotatable:Boolean = false;
 		
 		protected var _Editor:ClipEditor;
 		protected var _View:ClipView;

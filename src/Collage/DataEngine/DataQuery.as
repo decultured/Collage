@@ -29,7 +29,7 @@ package Collage.DataEngine
 			fields = new Array();
 		}
 		
-		public function AddField(name:String, sort:String = null,  modifier:String = null, group:Boolean = false):void
+		public function AddField(name:String, sort:String = null,  modifier:String = null, group:String = null):void
 		{
 			var newDataQueryField:DataQueryField = new DataQueryField(name, sort,  modifier, group);
 			fields.push(newDataQueryField);
@@ -49,8 +49,10 @@ package Collage.DataEngine
 
 				if (field.sort)
 					fieldQuery["sort"] = field.sort;
-				fieldQuery["modifier"] = field.modifier;
-				fieldQuery["group"] = field.group;
+				if (field.modifier)
+					fieldQuery["modifier"] = field.modifier;
+				if (field.group)
+					fieldQuery["group"] = field.group;
 				fieldQuery["name"] = field.name;
 				
 				query["fields"].push(fieldQuery);
@@ -83,7 +85,7 @@ package Collage.DataEngine
             loader.addEventListener(ProgressEvent.PROGRESS, ProgressHandler);
             loader.addEventListener(HTTPStatusEvent.HTTP_STATUS, HttpStatusHandler);
 
-			//Alert.show(params['q']);
+//			Alert.show(params['q']);
 
 			loader.load(request);
 		}
@@ -151,7 +153,7 @@ package Collage.DataEngine
 				}
 			}
 
-			//Alert.show(event.target.data);
+//			Alert.show(event.target.data);
 
 			result.AdjustRowFieldTypes();
 			dispatchEvent(new Event(COMPLETE));
