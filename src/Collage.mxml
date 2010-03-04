@@ -19,7 +19,7 @@
 	borderColor="#999999"
 	dropShadowEnabled="true"
 	applicationComplete="Initialize()"
-    paste="HandlePaste(event)"
+    paste="HandlePaste(event);"
 	nativeDragEnter="onDragIn(event)" 
 	nativeDragDrop="onDrop(event)" >
 	<mx:Style> 
@@ -35,6 +35,7 @@
 	</mx:Style>
 	<mx:Script>
 	<![CDATA[
+		import mx.containers.dividedBoxClasses.BoxDivider;
 		import com.adobe.serialization.json.JSON;
 		import Collage.Document.*;
 		import Collage.Clips.Picture.*;
@@ -93,8 +94,11 @@
 		
 		public function HandlePaste(event:Event):void
 		{
+			Alert.show("Pasted Image");
 			if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.BITMAP_FORMAT)) {
 				_EditDocumentView.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData);
+			} else if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.HTML_FORMAT)) {
+				_EditDocumentView.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.HTML_FORMAT) as String);
 			} else if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT)) {
 				_EditDocumentView.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String);
 			}
@@ -246,19 +250,17 @@
 			var command:String = menuEvent.item.@command;
 			switch(command){
 				case "cut":
-					this.nativeApplication.cut();
+					NativeApplication.nativeApplication.cut();
 					break;
 				case "copy":
-					this.nativeApplication.copy();
+					NativeApplication.nativeApplication.copy();
 					break;
 				case "paste":
-					this.nativeApplication.paste();
-					break;
-				case "paste":
-					this.nativeApplication.paste();
+					HandlePaste(null);
+					NativeApplication.nativeApplication.paste();
 					break;
 				case "quit":
-					nativeApplication.exit();
+					NativeApplication.nativeApplication.exit();
 					break;
 				case "new":
 					_EditDocumentView.NewDocument();
@@ -313,6 +315,9 @@
 				case "insertLineChart":
 					_EditDocumentView.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));
 					break;
+				case "insertScatterChart":
+					_EditDocumentView.AddClipByType('scatterchart', new Rectangle(150, 150, 300, 300));
+					break;
 				case "insertBarChart":
 					_EditDocumentView.AddClipByType('barchart', new Rectangle(150, 150, 300, 300));
 					break;
@@ -325,13 +330,35 @@
 				case "insertWebEmbed":
 					_EditDocumentView.AddClipByType('webembed', new Rectangle(150, 150, 300, 300));
 					break;
+				case "insertGoogleMaps":
+					_EditDocumentView.AddClipByType('googlemaps', new Rectangle(150, 150, 300, 300));
+					break;
 				case "fullscreen":
 					Fullscreen();
 					menuEvent.item.@toggled = !menuEvent.item.@toggled;
 					break;
 				case "hideInspector":
-					// TODO : Hide Inspector
-					menuEvent.item.@toggled = !menuEvent.item.@toggled;
+					inspectorWindow.visible = !inspectorWindow.visible;
+
+					if (!inspectorWindow.visible) {
+						menuEvent.item.@label = "Show Inspector";
+						winDividedBox.moveDivider(0,100000);
+						inspectorWindow.minWidth= 0;
+						inspectorWindow.width = 0;
+						editCanvas.setStyle("width","100%");
+						winDividedBox.getDividerAt(0).width = 0;
+						winDividedBox.getDividerAt(0).visible = false;
+					} else {
+						menuEvent.item.@label = "Hide Inspector";
+						winDividedBox.moveDivider(0,-250);
+						inspectorWindow.minWidth= 250;
+						inspectorWindow.width = 250;
+						editCanvas.setStyle("width","100%");
+						winDividedBox.getDividerAt(0).width = 10;
+						winDividedBox.getDividerAt(0).visible = true;
+					}
+					
+
 					break;
 				default:
 					Alert.show("Unrecognized Menu Command: " + command + "  " + menuEvent.item.@label);
@@ -383,16 +410,18 @@
                 <menuitem type="separator" />     
                 <menuitem label="Data Label" command="insertDataLabel"/>
                 <menuitem label="Table" command="insertTable"/>
-                <menuitem label="Line / Scatter Chart" command="insertLineChart"/>
+                <menuitem label="Line" command="insertLineChart"/>
+                <menuitem label="Scatter Chart" command="insertScatterChart"/>
                 <menuitem label="Bar Chart" command="insertBarChart"/>
                 <menuitem label="Pie Chart" command="insertPieChart"/>
                 <menuitem label="Guage" command="insertGuage"/>
                 <menuitem type="separator" />     
                 <menuitem label="Web Embed" command="insertWebEmbed"/>
+                <menuitem label="Google Maps" command="insertGoogleMaps"/>
             </menuitem>
             <menuitem label="View">
                 <menuitem label="Fullscreen" type="check" command="fullscreen" toggled="false"/>
-                <menuitem label="Hide Inspector" type="check" command="hideInspector" toggled="false"/>
+                <menuitem label="Hide Inspector" command="hideInspector"/>
             </menuitem>
         </root>
     </mx:XML>
@@ -409,8 +438,8 @@
 		<mx:Image id="addTableBtn" source="@Embed('../assets/themes/dark/datagrid.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('table', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addDataLabelBtn" source="@Embed('../assets/themes/dark/datalabel.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('datalabel', new Rectangle(150, 150, 300, 300));" />
 	</mx:VBox>
-    <mx:HDividedBox top="0" left="32" right="0" bottom="0" dropShadowEnabled="false" horizontalScrollPolicy="off" verticalScrollPolicy="off" dividerAffordance="4">
-        <mx:Canvas label="Canvas 1" width="100%" height="100%" color="0x323232" backgroundColor="#ACACAC" backgroundAlpha="1" click="_EditDocumentView.BackgroundClick(event);">
+    <mx:HDividedBox id="winDividedBox" top="0" left="32" right="0" bottom="0" dropShadowEnabled="false" horizontalScrollPolicy="off" verticalScrollPolicy="off" dividerAffordance="4">
+        <mx:Canvas id="editCanvas" label="Canvas 1" width="100%" height="100%" color="0x323232" backgroundColor="#ACACAC" backgroundAlpha="1" click="_EditDocumentView.BackgroundClick(event);">
 			<mx:Box top="0" left="0" right="0" bottom="0" paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20"  horizontalAlign="center" verticalAlign="middle" backgroundAlpha="0" backgroundColor="0xffffff">
 				<clg:EditDocumentView id="_EditDocumentView" 
 					width="800" height="600" 

@@ -1,4 +1,4 @@
-package Collage.Clips.LineChart
+package Collage.Clips.ScatterChart
 {
 	import mx.controls.Alert;
 	import Collage.Clip.*;
@@ -6,7 +6,7 @@ package Collage.Clips.LineChart
 	import Collage.DataEngine.*;
 	import com.adobe.serialization.json.JSON;
 	
-	public class LineChartClip extends Clip
+	public class ScatterChartClip extends Clip
 	{		
 		[Bindable] public var dataSetID:String = null;
 		[Bindable] public var xAxisDataColumn:String = null;
@@ -21,7 +21,7 @@ package Collage.Clips.LineChart
                               
 		private var _DataQuery:DataQuery = null;
 	
-		public function LineChartClip(dataObject:Object = null)
+		public function ScatterChartClip(dataObject:Object = null)
 		{
 			super(dataObject);
 			CreateView();
@@ -33,7 +33,7 @@ package Collage.Clips.LineChart
 			if (newView)
 				_View = newView;
 			else {
-				_View = new LineChartClipView();
+				_View = new ScatterChartClipView();
 				_View.model = this;
 			}
 		}
@@ -43,7 +43,7 @@ package Collage.Clips.LineChart
 			if (newEditor)
 				_Editor = newEditor;
 			else {
-				_Editor = new LineChartClipEditor();
+				_Editor = new ScatterChartClipEditor();
 				_Editor.model = this;
 			}
 		}
@@ -92,11 +92,6 @@ package Collage.Clips.LineChart
 			if (!rows[0])
 				return;
 				
-			var xAxisMin:Number = rows[0][xAxisDataColumn];
-			var xAxisMax:Number = rows[0][xAxisDataColumn];
-			var yAxisMin:Number = rows[0][yAxisDataColumn];
-			var yAxisMax:Number = rows[0][yAxisDataColumn];
-
 			for (var rowKey:uint = 0; rowKey < rows.length; rowKey++)
 			{
 				if (!rows[rowKey][xAxisDataColumn] is Number || !rows[rowKey][yAxisDataColumn] is Number) {
@@ -109,27 +104,8 @@ package Collage.Clips.LineChart
 				newObject["x"] = rows[rowKey][xAxisDataColumn];
 				newObject["y"] = rows[rowKey][yAxisDataColumn];
 				
-				if (xAxisMin > rows[rowKey][xAxisDataColumn])
-					xAxisMin = rows[rowKey][xAxisDataColumn];
-				if (xAxisMax < rows[rowKey][xAxisDataColumn])
-					xAxisMax = rows[rowKey][xAxisDataColumn];
-				if (yAxisMin > rows[rowKey][yAxisDataColumn])
-					yAxisMin = rows[rowKey][yAxisDataColumn];
-				if (yAxisMax < rows[rowKey][yAxisDataColumn])
-					yAxisMax = rows[rowKey][yAxisDataColumn];
-				
 				Data.push(newObject);
 			}
-			
-			if (xAxisMin >= xAxisMax) {
-				Alert.show("No variance on X Axis, please choose other data");
-				ResetData();
-				return;
-			} if (yAxisMin >= yAxisMax) {
-				Alert.show("No variance on Y Axis, please choose other data");
-				ResetData();
-				return;
-			} 
 			
 			Data.sortOn("x", Array.NUMERIC);
 			dataLoaded = true;
@@ -142,7 +118,7 @@ package Collage.Clips.LineChart
 		{
 			var newObject:Object = super.SaveToObject();
 
-			newObject["type"] = "linechart";
+			newObject["type"] = "scatterchart";
 			newObject["dataSetID"] = dataSetID;
 			newObject["xAxisDataColumn"] = xAxisDataColumn;
 			newObject["yAxisDataColumn"] = yAxisDataColumn;

@@ -9,6 +9,8 @@ package Collage.Document
 	import mx.core.UIComponent;
 	import com.roguedevelopment.objecthandles.*;
 	import com.roguedevelopment.objecthandles.constraints.*;
+	import com.roguedevelopment.objecthandles.decorators.AlignmentDecorator;
+	import com.roguedevelopment.objecthandles.decorators.DecoratorManager;
 
 	public class EditDocumentView extends DocumentView
 	{
@@ -23,6 +25,7 @@ package Collage.Document
 		public function get optionsBox():UIComponent {return _OptionsBox;}
 
 		private var _Grid:Shape = new Shape(); 
+		protected var _DecoratorManager:DecoratorManager;
 		
 		public function EditDocumentView()
 		{
@@ -70,6 +73,9 @@ package Collage.Document
 			sizeConstraint.maxWidth = this.width;
 			sizeConstraint.maxHeight = this.height;
 			_ObjectHandles.constraints.push(sizeConstraint);							
+
+//			_DecoratorManager = new DecoratorManager( _ObjectHandles, this );
+//			_DecoratorManager.addDecorator( new AlignmentDecorator() );				
 
 			_SelectionManager.addEventListener(SelectionEvent.ADDED_TO_SELECTION, ObjectSelected);
 			_SelectionManager.addEventListener(SelectionEvent.REMOVED_FROM_SELECTION, ObjectDeselected);
@@ -256,12 +262,13 @@ package Collage.Document
 
 
 		private function ObjectChanged(event:ObjectChangedEvent):void{
+			var num:Number = 0;
+			var docModel:Document = _Model as Document;
 			for each (var clip:Clip in event.relatedObjects) {
 				if (event.type == ObjectChangedEvent.OBJECT_MOVED) {
-					var docModel:Document = _Model as Document;
 					if (docModel.snap && docModel.gridSize)
 					{
-						var num:Number = (clip.x % docModel.gridSize) - (docModel.gridSize * 0.5);
+						num = (clip.x % docModel.gridSize) - (docModel.gridSize * 0.5);
 						if (num)
 							clip.x = clip.x - (clip.x % docModel.gridSize);
 						else
@@ -276,7 +283,26 @@ package Collage.Document
 					
 					clip.Moved();
 				}
-				else if (event.type == ObjectChangedEvent.OBJECT_RESIZED) {clip.Resized();}
+				else if (event.type == ObjectChangedEvent.OBJECT_RESIZED) {
+					if (docModel.snap && docModel.gridSize)
+					{
+						num = (clip.width % docModel.gridSize) - (docModel.gridSize * 0.5);
+						if (num)
+							clip.width = clip.width - (clip.width % docModel.gridSize);
+						else
+							clip.width = clip.width - (clip.width % docModel.gridSize) + docModel.gridSize;
+						
+						num = (clip.height % docModel.gridSize) - (docModel.gridSize * 0.5);
+						if (num)
+							clip.height = clip.height - (clip.height % docModel.gridSize);
+						else
+							clip.height = clip.height - (clip.height % docModel.gridSize) + docModel.gridSize;
+					}
+				
+					clip.Resized();
+					ClearSelection();
+					_ObjectHandles.selectionManager.addToSelected(clip);
+				}
 				else if (event.type == ObjectChangedEvent.OBJECT_ROTATED) {clip.Rotated();}
 				PositionOptionsBox();
 			}
