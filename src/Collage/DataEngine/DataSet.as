@@ -107,10 +107,10 @@ package Collage.DataEngine
 			if (!id || id.length < 5)
 				return;
 			
-			var request:URLRequest = new URLRequest("http://dataengine.endlesspaths.com/api/v1/dataset/" + id + "/metadata");
+			var request:URLRequest = new URLRequest(DataEngine.getUrl("/api/v1/dataset/" + id + "/metadata"));
 			var loader:URLLoader = new URLLoader();
 			var params:URLVariables = new URLVariables();
-			//params.WHATEVER = WHATEVER YOU WANT IT TO BE;
+			params.auth_token = Session.AuthToken;
 			request.data = params;
 			request.method = URLRequestMethod.GET;
 			loader.addEventListener(Event.COMPLETE, CompleteHandler);

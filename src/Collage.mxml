@@ -42,11 +42,13 @@
 		import mx.graphics.ImageSnapshot;
 		import mx.graphics.codec.*;
 		import mx.controls.Alert;
+		import mx.managers.PopUpManager;
+		import mx.core.IFlexDisplayObject;
 		import mx.events.*;
+		import flash.events.*;
 		import flash.desktop.Clipboard;
 	    import flash.desktop.ClipboardFormats;
 	    import flash.desktop.ClipboardTransferMode;
-		import Collage.DataEngine.*;
 		import Collage.DataEngine.*;
 		import org.alivepdf.pdf.*;
 		import org.alivepdf.pdf.PDF;	
@@ -59,15 +61,34 @@
 
 		private function Initialize():void
 		{
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown); 
-			DataEngine.LoadAllDataSets();
-
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown);
+			
+			Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
+			//Session.events.addEventListener(Session.LOGIN_FAILURE, HandleLoginFailure);
+			Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleTokenExpired);
+			
+			Session.CheckToken();
+			
 			_EditDocumentView.InitializeForEdit(inspectorWindow, optionsBox);
 			
 			this.nativeWindow.x = (Capabilities.screenResolutionX - this.width)/2;
 			this.nativeWindow.y = (Capabilities.screenResolutionY - this.height)/2;
 			
 //			this.nativeWindow.maximize();
+		}
+		
+		public function HandleLoginSuccess(event:Event):void {
+			DataEngine.LoadAllDataSets();
+		}
+		
+		/*
+		public function HandleLoginFailure(event:Event):void {
+			PopUpManager.createPopUp(this, Login, true);
+		}
+		*/
+		
+		public function HandleTokenExpired(event:Event):void {
+			PopUpManager.createPopUp(this, Login, true);
 		}
 
 		private function StandardOSModifier(item:Object):Array{
@@ -229,7 +250,7 @@
 				if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "gif") {
 					var newClip:PictureClip = _EditDocumentView.AddClipByType("image") as PictureClip;
 					newClip.url = file.url;
-				} if (ext == "csv") {
+				} if (ext == "csv" || ext == "tsv") {
 					DataEngine.UploadCSV(file);
 				}
 				else {
@@ -337,6 +358,12 @@
 					Fullscreen();
 					menuEvent.item.@toggled = !menuEvent.item.@toggled;
 					break;
+				case "refreshDatasets":
+					DataEngine.LoadAllDataSets();
+					break;
+				case "logout":
+					Session.Logout();
+					break;
 				case "hideInspector":
 					inspectorWindow.visible = !inspectorWindow.visible;
 
@@ -358,7 +385,6 @@
 						winDividedBox.getDividerAt(0).visible = true;
 					}
 					
-
 					break;
 				default:
 					Alert.show("Unrecognized Menu Command: " + command + "  " + menuEvent.item.@label);
@@ -378,6 +404,8 @@
         <root>
             <menuitem label="Collage">
                 <menuitem label="About" command="about" enabled="false"/>
+				<menuitem type="separator"/>
+				<menuitem label="Logout" command="logout" />
                 <menuitem label="Quit" command="quit" key="q"/>
             </menuitem>
             <menuitem label="File">
@@ -397,6 +425,8 @@
 				<menuitem label="Cut" enabled="false" command="cut" key="x"/>
 				<menuitem label="Copy" enabled="false" command="copy" key="c"/>
 				<menuitem label="Paste" command="paste" key="v"/>
+                <menuitem type="separator"/>
+				<menuitem label="Refresh datasets" command="refreshDatasets" key="r"/>
                 <menuitem type="separator"/>
 				<menuitem label="Move Selected Forward" command="moveForward"/>
 				<menuitem label="Move Selected Backward" command="moveBackward"/>

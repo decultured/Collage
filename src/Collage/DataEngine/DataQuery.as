@@ -69,12 +69,13 @@ package Collage.DataEngine
 			if (!fields || fields.length < 1 || !dataset || dataset.length < 5 || !limit)
 				return;
 
-			var request:URLRequest = new URLRequest("http://dataengine.endlesspaths.com/api/v1/dataset/" + dataset + "/query?rand=" + (Math.random() * 100000).toString());
+			var request:URLRequest = new URLRequest(DataEngine.getUrl("/api/v1/dataset/" + dataset + "/query?rand=" + (Math.random() * 100000).toString()));
 			var loader:URLLoader = new URLLoader();
 			request.method = URLRequestMethod.POST;
 			var header:URLRequestHeader = new URLRequestHeader("X-Requested-With", "XMLHttpRequest");
             request.requestHeaders.push(header);
 			var params:URLVariables = new URLVariables();
+			params.auth_token = Session.AuthToken;
 			params['q'] = BuildQueryString();
 			request.data = params;
 			loader.addEventListener(Event.COMPLETE, CompleteHandler);
@@ -105,13 +106,13 @@ package Collage.DataEngine
 		private function IOErrorHandler(event:IOErrorEvent):void
 		{
             event.target.removeEventListener(IOErrorEvent.IO_ERROR, IOErrorHandler);
-			Alert.show("ioErrorHandler: \n" + "http://dataengine.endlesspaths.com/api/v1/dataset/" + dataset + "/query \n" + queryString);
+			Alert.show("ioErrorHandler: \n" + DataEngine.getUrl("/api/v1/dataset/" + dataset + "/query") + " \n" + queryString);
 		}
 		
         private function SecurityErrorHandler(event:SecurityErrorEvent):void
 		{
             event.target.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, SecurityErrorHandler);
-            Alert.show("securityErrorHandler: " + "http://dataengine.endlesspaths.com/api/v1/dataset/" + dataset + "/query \n" + queryString);
+            Alert.show("securityErrorHandler: " + DataEngine.getUrl("/api/v1/dataset/" + dataset + "/query") + " \n" + queryString);
         }
 
 		private function CompleteHandler(event:Event):void

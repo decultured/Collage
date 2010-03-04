@@ -8,6 +8,8 @@ package Collage.DataEngine
 	
 	public class DataEngine extends EventDispatcher
 	{
+		/*public static var baseUrl:String = "http://dataengine.local/";*/
+		public static var baseUrl:String = "http://dataengine.endlesspaths.com/";
 		public static var COMPLETE:String = "complete";
 		
 		public static var datasets:Object = new Object();
@@ -21,6 +23,14 @@ package Collage.DataEngine
 		public function DataEngine():void
 		{
 			
+		}
+		
+		public static function getUrl(urlStr:String):String {
+			if(urlStr.charAt(0) == '/') {
+				urlStr = urlStr.substr(1, urlStr.length);
+			}
+			
+			return baseUrl + urlStr;
 		}
 		
 		public static function GetDataSetByID(id:String):DataSet
@@ -74,10 +84,10 @@ package Collage.DataEngine
 			
 			loading = true;
 			
-			var request:URLRequest = new URLRequest("http://dataengine.endlesspaths.com/api/v1/dataset/list");
+			var request:URLRequest = new URLRequest(DataEngine.getUrl("/api/v1/dataset/list"));
 			var loader:URLLoader = new URLLoader();
 			var params:URLVariables = new URLVariables();
-			//params.WHATEVER = WHATEVER YOU WANT IT TO BE;
+			params.auth_token = Session.AuthToken;
 			request.data = params;
 			request.method = URLRequestMethod.GET;
 			loader.addEventListener(Event.COMPLETE, CompleteHandler);
@@ -140,11 +150,15 @@ package Collage.DataEngine
 		}
 		
 		public static function UploadCSV(file:File):void {
-			var request:URLRequest = new URLRequest("http://dataengine.endlesspaths.com/api/v1/dataset/upload");
+			var request:URLRequest = new URLRequest(DataEngine.getUrl("/api/v1/dataset/upload"));
 			var loader:URLLoader = new URLLoader();
 			var header:URLRequestHeader = new URLRequestHeader("X-Requested-With", "XMLHttpRequest");
 			request.method = URLRequestMethod.POST;
             request.requestHeaders.push(header);
+			
+			var params:URLVariables = new URLVariables();
+			params.auth_token = Session.AuthToken;
+			request.data = params;
 
 			file.addEventListener(Event.COMPLETE, FileUploadCompleteHandler);
             file.addEventListener(SecurityErrorEvent.SECURITY_ERROR, FileUploadSecurityErrorHandler);
@@ -160,19 +174,19 @@ package Collage.DataEngine
 		private static function FileUploadIOErrorHandler(event:IOErrorEvent):void
 		{
             event.target.removeEventListener(IOErrorEvent.IO_ERROR, IOErrorHandler);
-			Alert.show("ioErrorHandler: \n" + "http://dataengine.endlesspaths.com/api/v1/dataset/upload\n" + event + " " + event.target.data);
+			Alert.show("ioErrorHandler: \n" + DataEngine.getUrl("/api/v1/dataset/upload")+ "\n" + event + " " + event.target.data);
 		}
 
         private static function FileUploadSecurityErrorHandler(event:SecurityErrorEvent):void
 		{
             event.target.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, SecurityErrorHandler);
-            Alert.show("securityErrorHandler: \n" + "http://dataengine.endlesspaths.com/api/v1/dataset/upload");
+            Alert.show("securityErrorHandler: \n" + DataEngine.getUrl("/api/v1/dataset/upload"));
         }
 
 		private static function FileUploadCompleteHandler(event:Event):void
 		{
 			event.target.removeEventListener(Event.COMPLETE, CompleteHandler);
-            
+            DataEngine.LoadAllDataSets();
 			// TODO : Status Update for file complete
 			Alert.show("File Upload Complete!");
 		}
