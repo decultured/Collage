@@ -34,18 +34,20 @@ package Collage.DataEngine
 			
 		}
 		
+		/* TODO: Fix this, i know its bad. */
 		public static function getItem(strKey:String):String {
-			var bytes:ByteArray = EncryptedLocalStore.getItem(strKey);
+			try {
+				var bytes:ByteArray = EncryptedLocalStore.getItem(strKey);
+				
+				return bytes.readUTFBytes(bytes.length);
+			} catch(e:Error) { }
 			
-			return bytes.readUTFBytes(bytes.length);
+			return null;
 		}
 		
 		public static function setItem(strKey:String, val:String):void {
 			var bytes:ByteArray = new ByteArray();
-			
-			if(typeof(val) == 'String') {
-				bytes.writeUTFBytes(val);
-			}
+			bytes.writeUTFBytes(val);
 			
 			EncryptedLocalStore.setItem(strKey, bytes);
 		}

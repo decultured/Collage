@@ -250,7 +250,7 @@
 				if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "gif") {
 					var newClip:PictureClip = _EditDocumentView.AddClipByType("image") as PictureClip;
 					newClip.url = file.url;
-				} if (ext == "csv") {
+				} if (ext == "csv" || ext == "tsv") {
 					DataEngine.UploadCSV(file);
 				}
 				else {

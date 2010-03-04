@@ -66,14 +66,13 @@
 		}
 		private function DataEngineConnect():void
 		{
-			if (!DataEngine.loaded)
-				DataEngine.events.addEventListener(DataEngine.COMPLETE, DatasLoaded);
-			else DatasLoaded(null);
+			DataEngine.events.addEventListener(DataEngine.COMPLETE, DatasLoaded);
+			DatasLoaded(null);
 		}
 		
 		private function DatasLoaded(event:Event):void
 		{
-			DataEngine.events.removeEventListener(DataEngine.COMPLETE, DatasLoaded);
+			/*DataEngine.events.removeEventListener(DataEngine.COMPLETE, DatasLoaded);*/
 			dataSetSelections = DataEngine.GetDataSetsComboBox(new Array("numeric", "datetime"), 1, 3);
 		}
 
