@@ -41,7 +41,7 @@
 
 	<mx:Form>
 		<mx:FormItem label="E-Mail Address">
-			<mx:TextInput id="email_address" width="100%"/>
+			<mx:TextInput id="email_address" width="100%" text="{Session.getItem('stored_email')}"/>
 		</mx:FormItem>
 		<mx:FormItem label="Password">
 			<mx:TextInput id="password" displayAsPassword="true" width="100%"/>

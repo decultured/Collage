@@ -62,8 +62,9 @@
 		{
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown);
 			
-			Session.events.addEventListener(Session.TOKEN_VALID, HandleLoginSuccess);
-			Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleLoginFailure);
+			Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
+			//Session.events.addEventListener(Session.LOGIN_FAILURE, HandleLoginFailure);
+			Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleTokenExpired);
 			
 			Session.CheckToken();
 			
@@ -79,7 +80,13 @@
 			DataEngine.LoadAllDataSets();
 		}
 		
+		/*
 		public function HandleLoginFailure(event:Event):void {
+			PopUpManager.createPopUp(this, Login, true);
+		}
+		*/
+		
+		public function HandleTokenExpired(event:Event):void {
 			PopUpManager.createPopUp(this, Login, true);
 		}
 
@@ -337,6 +344,9 @@
 					Fullscreen();
 					menuEvent.item.@toggled = !menuEvent.item.@toggled;
 					break;
+				case "refreshDatasets":
+					DataEngine.LoadAllDataSets();
+					break;
 				case "logout":
 					Session.Logout();
 					break;
@@ -379,6 +389,8 @@
 				<menuitem label="Cut" enabled="false" command="cut" key="x"/>
 				<menuitem label="Copy" enabled="false" command="copy" key="c"/>
 				<menuitem label="Paste" command="paste" key="v"/>
+                <menuitem type="separator"/>
+				<menuitem label="Refresh datasets" command="refreshDatasets" key="r"/>
                 <menuitem type="separator"/>
 				<menuitem label="Move Selected Forward" command="moveForward"/>
 				<menuitem label="Move Selected Backward" command="moveBackward"/>

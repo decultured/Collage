@@ -100,7 +100,7 @@ package Collage.DataEngine
 			var request:URLRequest = new URLRequest(DataEngine.getUrl("/api/v1/dataset/" + id + "/metadata"));
 			var loader:URLLoader = new URLLoader();
 			var params:URLVariables = new URLVariables();
-			//params.WHATEVER = WHATEVER YOU WANT IT TO BE;
+			params.auth_token = Session.AuthToken;
 			request.data = params;
 			request.method = URLRequestMethod.GET;
 			loader.addEventListener(Event.COMPLETE, CompleteHandler);

@@ -34,14 +34,32 @@ package Collage.DataEngine
 			
 		}
 		
+		public static function getItem(strKey:String):String {
+			var bytes:ByteArray = EncryptedLocalStore.getItem(strKey);
+			
+			return bytes.readUTFBytes(bytes.length);
+		}
+		
+		public static function setItem(strKey:String, val:String):void {
+			var bytes:ByteArray = new ByteArray();
+			
+			if(typeof(val) == 'String') {
+				bytes.writeUTFBytes(val);
+			}
+			
+			EncryptedLocalStore.setItem(strKey, bytes);
+		}
+		
+		public static function removeItem(strKey:String):void {
+			EncryptedLocalStore.removeItem(strKey);
+		}
+		
 		public static function CheckToken():void {
-			var token:ByteArray = EncryptedLocalStore.getItem('apiAuthToken');
-			if(token == null) {
+			authToken = Session.getItem('apiAuthToken');
+			if(authToken == null) {
 				events.dispatchEvent(new Event(TOKEN_EXPIRED));
 				return;
 			}
-			// convert to a string
-			authToken = token.readUTFBytes(token.length);
 			
 			var request:URLRequest = new URLRequest(DataEngine.getUrl("/api/v1/auth/check-token"));
 			var loader:URLLoader = new URLLoader();
@@ -65,7 +83,7 @@ package Collage.DataEngine
 			var results:Object = JSON.decode(event.target.data);
 			
 			if(results.hasOwnProperty('valid')) {
-				events.dispatchEvent(new Event(TOKEN_VALID));
+				events.dispatchEvent(new Event(LOGIN_SUCCESS));
 			} else {
 				EncryptedLocalStore.removeItem('apiAuthToken');
 				events.dispatchEvent(new Event(TOKEN_EXPIRED));
@@ -88,6 +106,8 @@ package Collage.DataEngine
 			params.email_address = email_address;
 			params.password = MD5.hash(password);
 			
+			Session.setItem('stored_email', email_address);
+			
 			request.data = params;
             request.requestHeaders.push(new URLRequestHeader("X-Requested-With", "XMLHttpRequest"));
 			request.method = URLRequestMethod.POST;
@@ -108,9 +128,7 @@ package Collage.DataEngine
 			}
 			
 			if(authToken != null) {
-				var bytes:ByteArray = new ByteArray();
-				bytes.writeUTFBytes(authToken);
-				EncryptedLocalStore.setItem('apiAuthToken', bytes);
+				Session.setItem('apiAuthToken', authToken);
 				events.dispatchEvent(new Event(LOGIN_SUCCESS));
 			}
 		}
@@ -126,7 +144,7 @@ package Collage.DataEngine
 		}
 		
 		public static function Logout():void {
-			EncryptedLocalStore.removeItem('apiAuthToken');
+			Session.removeItem('apiAuthToken');
 			events.dispatchEvent(new Event(TOKEN_EXPIRED));
 		}
 	}
