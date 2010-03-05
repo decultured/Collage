@@ -165,30 +165,30 @@ package Collage.Clips.Table
 			{
 				if (key == "dataSetID") {
 					dataSetID = dataObject[key];
-				} else if (key == "data" && dataObject[key] is Array) {
-					data = dataObject[key];
 				} else if (key == "dataLoaded") {
-					dataLoaded = dataObject[key] as Boolean;
+					dataLoaded = dataObject[key];
 				} else if (key == "rowsRequested") {
 					rowsRequested = parseInt(dataObject[key]);
 				} else if (key == "backgroundColor") {
 					backgroundColor = parseInt(dataObject[key]);
 				} else if (key == "backgroundAlpha") {
 					backgroundAlpha = parseInt(dataObject[key]);
-				} else if (key == "columns" && dataObject[key] is Array) {
-					var colArray:Array = dataObject[key];
+				} else if (key == "data" && dataObject[key] is Array) {
+					data = dataObject[key];
+				} 
+				else if (key == "columns" && dataObject[key] is Array) {
 					columns = new Array();
+					var colArray:Array = dataObject[key];
 					for (var i:uint = 0; i < colArray.length; i++) {
-						if (!colArray["dataField"] is String || !colArray["headerText"] is String || !colArray["visible"] is Boolean)
-							continue;
 						var newColumn:DataGridColumn = new DataGridColumn();
-						newColumn.dataField = colArray["dataField"];
-						newColumn.headerText = colArray["headerText"];
-						newColumn.visible = colArray["visible"];
+						newColumn.dataField = colArray[i]["dataField"];
+						newColumn.headerText = colArray[i]["headerText"];
+						newColumn.visible = colArray[i]["visible"];
 						columns.push(newColumn);
 					}
 				}
 			}
+			dispatchEvent(new Event(QUERY_FINISHED));
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 			return true;
 		}

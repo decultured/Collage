@@ -21,17 +21,16 @@
 		protected override function onModelChange(event:PropertyChangeEvent):void
 		{
 			var tableModel:TableClip = _Model as TableClip;
-						
+
 			if (event && event.property != "x" && event.property != "y" && event.property != "width" && event.property != "height")
 			{
 				setStyle("backgroundColor", tableModel.backgroundColor);
 				setStyle("backgroundAlpha", tableModel.backgroundAlpha);
-				if (datagrid) {
+				if (datagrid && tableModel.columns && tableModel.data && tableModel.columns.length && tableModel.data.length) {
 					datagrid.columns = tableModel.columns;
 					datagrid.dataProvider = tableModel.data;
 				}
 			}
-
 			super.onModelChange(event);
 		}
 	]]>
