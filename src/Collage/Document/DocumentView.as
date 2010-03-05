@@ -45,6 +45,9 @@ package Collage.Document
 			docModel.url = null;
 			docModel.backgroundColor = 0xFFFFFF;
 			
+			_BackgroundImage.source = null;
+			_BitmapData = null;
+			
 			var childArray:Array = getChildren();
 			for (var i:uint = 0; i < childArray.length; i++) {
 				if (childArray[i] && childArray[i] is ClipView)
