@@ -115,10 +115,22 @@ package Collage.Document
 							Alert.show("Clip Broke");
 							continue;
 						}
-						var newClip:Clip = docView.AddClipByType(clipDataObject["type"]);
-						
-						if (newClip)
-							newClip.LoadFromObject(clipDataObject);
+						try {
+							var newClip:Clip = docView.AddClipByType(clipDataObject["type"]);
+							
+							if (clipDataObject["type"] != "table") {
+								for(var obj_k:String in clipDataObject) {
+									try {
+										if(newClip.hasOwnProperty(obj_k))
+											newClip[obj_k] = clipDataObject[obj_k];
+									} catch(e:Error) {}
+								}
+							} else {
+								newClip.LoadFromObject(clipDataObject);
+							}
+						} catch(e:Error) {
+							Alert.show(e.message);
+						}
 					}
 				}
 			}
