@@ -29,9 +29,9 @@ package Collage.DataEngine
 			fields = new Array();
 		}
 		
-		public function AddField(name:String, sort:String = null,  modifier:String = null, group:String = null):void
+		public function AddField(name:String, sort:String = null,  modifier:String = null, group:String = null, alias:String = null):void
 		{
-			var newDataQueryField:DataQueryField = new DataQueryField(name, sort,  modifier, group);
+			var newDataQueryField:DataQueryField = new DataQueryField(name, sort,  modifier, group, alias);
 			fields.push(newDataQueryField);
 		}
 		
@@ -53,6 +53,8 @@ package Collage.DataEngine
 					fieldQuery["modifier"] = field.modifier;
 				if (field.group)
 					fieldQuery["group"] = field.group;
+				if (field.alias)
+					fieldQuery["alias"] = field.alias;
 				fieldQuery["name"] = field.name;
 				
 				query["fields"].push(fieldQuery);

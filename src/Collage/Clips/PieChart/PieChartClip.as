@@ -108,7 +108,7 @@ package Collage.Clips.PieChart
 		{
 			var newObject:Object = super.SaveToObject();
 
-			newObject["type"] = "barchart";
+			newObject["type"] = "piechart";
 			newObject["dataSetID"] = dataSetID;
 			newObject["labelColumn"] = labelColumn;
 			newObject["dataColumn"] = dataColumn;

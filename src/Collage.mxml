@@ -62,12 +62,10 @@
 		private function Initialize():void
 		{
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown);
-			
-			//Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
-			//Session.events.addEventListener(Session.LOGIN_FAILURE, HandleLoginFailure);
-			//Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleTokenExpired);
-			
-			//Session.CheckToken();
+
+			Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
+			Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleTokenExpired);
+			Session.CheckToken();
 			
 			_EditDocumentView.InitializeForEdit(inspectorWindow, optionsBox);
 			
@@ -150,18 +148,28 @@
 		
 		public function OpenFile(file:File = null):void
 		{
-			if (!file)
-				file = File.desktopDirectory;
+			if (file) {
+				OpenFileObject(file);
+				return;
+			}
+			file = File.desktopDirectory;
 			file.addEventListener(Event.SELECT, OpenFileEvent);
 			file.browseForOpen("Open");
 		}
 			
 		protected function OpenFileEvent(event:Event):void
 		{
-			var newFile:File = event.target as File;
+			OpenFileObject(event.target as File);
+		}
+		
+		public function OpenFileObject(file:File):void
+		{
+			if (!file)
+				return;
+				
 			var stream:FileStream = new FileStream();
 			try{
-			    stream.open(newFile, FileMode.READ);
+			    stream.open(file, FileMode.READ);
 			    var fileData:Object = JSON.decode(stream.readUTFBytes(stream.bytesAvailable));
 			    _EditDocumentView.model.LoadFromObject(fileData);
 			} catch(e:Error){

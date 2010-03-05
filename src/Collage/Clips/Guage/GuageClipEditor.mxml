@@ -37,11 +37,7 @@
 		// min, max, average/avg, sum, count, mode
 		[Bindable]
 		public var modifierSelections:ArrayCollection = new ArrayCollection(
-		    [ {label:"Min", data:"min"},
-		      {label:"Max", data:"max"},
-		      {label:"Average", data:"avg"},
-		      {label:"Sum", data:"sum"},
-		      {label:"Count", data:"count"},
+		    [ {label:"Average", data:"avg"},
 		      {label:"Mode", data:"mode"}
 			]);
 

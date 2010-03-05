@@ -71,7 +71,7 @@ package Collage.Clips.DataLabel
 				
 			_DataQuery = new DataQuery();
 			_DataQuery.dataset = dataSetID;
-			_DataQuery.AddField(dataSetColumn);//, null, dataSetColumnModifier);
+			_DataQuery.AddField(dataSetColumn, null, dataSetColumnModifier);
 			_DataQuery.limit = 1;
 			_DataQuery.LoadQueryResults();
 			_DataQuery.addEventListener(DataQuery.COMPLETE, QueryFinished);

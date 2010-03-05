@@ -60,7 +60,7 @@ package Collage.Clips.BarChart
 				_DataQuery = new DataQuery();
 				_DataQuery.dataset = dataSetID;
 				_DataQuery.AddField(labelColumn, null, null, "val");
-				_DataQuery.AddField(dataColumn, "desc");//, dataModifier);
+				_DataQuery.AddField(dataColumn, "desc", dataModifier);
 				_DataQuery.limit = 10;
 				_DataQuery.LoadQueryResults();
 				_DataQuery.addEventListener(DataQuery.COMPLETE, QueryFinished);

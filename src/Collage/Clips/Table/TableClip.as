@@ -148,7 +148,7 @@ package Collage.Clips.Table
 					newObject["columns"][i] = new Object();
 					newObject["columns"][i]["dataField"] = newColumn.dataField;
 					newObject["columns"][i]["headerText"] = newColumn.headerText;
-					newObject["columns"][i]["visible"] = true;
+					newObject["columns"][i]["visible"] = newColumn.visible;
 				}
 			}
 			newObject["data"] = data;
@@ -175,16 +175,19 @@ package Collage.Clips.Table
 					backgroundColor = parseInt(dataObject[key]);
 				} else if (key == "backgroundAlpha") {
 					backgroundAlpha = parseInt(dataObject[key]);
-/*				} else if (key == "columns" && dataObject[key] is Array) {
+				} else if (key == "columns" && dataObject[key] is Array) {
 					var colArray:Array = dataObject[key];
+					columns = new Array();
 					for (var i:uint = 0; i < colArray.length; i++) {
-						var newColumn:DataGridColumn = columns[i] as DataGridColumn;
-						newObject["columns"][i] = new Object();
-						newObject["columns"][i]["dataField"] = newColumn.dataField;
-						newObject["columns"][i]["headerText"] = newColumn.headerText;
-						newObject["columns"][i]["visible"] = true;
+						if (!colArray["dataField"] is String || !colArray["headerText"] is String || !colArray["visible"] is Boolean)
+							continue;
+						var newColumn:DataGridColumn = new DataGridColumn();
+						newColumn.dataField = colArray["dataField"];
+						newColumn.headerText = colArray["headerText"];
+						newColumn.visible = colArray["visible"];
+						columns.push(newColumn);
 					}
-*/				}
+				}
 			}
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 			return true;

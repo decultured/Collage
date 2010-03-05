@@ -364,12 +364,12 @@ package Collage.Document
 		public function deleteSelected():void
 		{
 			if (_CurrentlySelected && _CurrentlySelected.view) {
+				if (_Clips && _CurrentlySelected.uid)
+					_Clips[_CurrentlySelected.uid] = null;
 				var view:ClipView = _CurrentlySelected.view;
 				_ObjectHandles.unregisterComponent(view);
 				removeChild(view);
 			}
-			
-			// TODO : Remove from internal list
 		}
 		
 		public function lockSelected():void

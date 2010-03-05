@@ -44,9 +44,12 @@
 		}
 		]]>
     </mx:Script>
-	<mx:SolidColor id="barfill" color="yellow" alpha=".8"/>
-    <mx:Stroke id="barborder" color="0x000000" weight="2" alpha=".5"/>
+	<mx:SolidColor id="barfill" color="green" alpha="1"/>
+    <mx:Stroke id="barborder" color="0x009900" weight="1" alpha="1"/>
      <mx:ColumnChart id="chart" height="100%" width="100%" paddingRight="5" paddingLeft="5" color="0x323232" showDataTips="true" dataProvider="{barData}" >
+		<mx:seriesFilters>
+			<mx:Array/>
+		</mx:seriesFilters>
         <mx:series>
 			<mx:ColumnSeries
 				labelPosition="callout"

@@ -66,6 +66,8 @@ package Collage.Clips.Guage
 			_DataQuery = new DataQuery();
 			_DataQuery.dataset = dataSetID;
 			_DataQuery.AddField(dataSetColumn, null, dataSetColumnModifier);
+			_DataQuery.AddField(dataSetColumn, null, "max", null, "Max");
+			_DataQuery.AddField(dataSetColumn, null, "min", null, "Min");
 			_DataQuery.limit = 1;
 			_DataQuery.LoadQueryResults();
 			_DataQuery.addEventListener(DataQuery.COMPLETE, QueryFinished);
@@ -82,10 +84,13 @@ package Collage.Clips.Guage
 			if (!_DataQuery || !_DataQuery.result || !_DataQuery.result.rows is Array || _DataQuery.result.rows.length < 1)
 				return;
 
-			if (!_DataQuery.result.rows[0][dataSetColumn] is Number)
-				return;
 			
-			value = _DataQuery.result.rows[0][dataSetColumn];
+			if (_DataQuery.result.rows[0][dataSetColumn] is Number)
+				value = _DataQuery.result.rows[0][dataSetColumn];
+			if (_DataQuery.result.rows[0]["Min"] is Number)
+				minimum = _DataQuery.result.rows[0]["Min"];
+			if (_DataQuery.result.rows[0]["Max"] is Number)
+				maximum = _DataQuery.result.rows[0]["Max"];
 			
 			dataLoaded = true;
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));

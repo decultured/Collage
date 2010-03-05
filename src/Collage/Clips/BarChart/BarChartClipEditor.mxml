@@ -131,7 +131,7 @@
 			if (dataset) {
 				barChartModel.dataSetID = dataset.id;
 				dataColumnSelections = dataset.GetColumnsComboBox(new Array("numeric", "datetime"));
-				labelColumnSelections = dataset.GetColumnsComboBox();
+				labelColumnSelections = dataset.GetColumnsComboBox(new Array("numeric", "datetime"));
 				dataColumnSelector.enabled = true;
 				labelColumnSelector.enabled = true;
 				modifierSelector.enabled = true;
@@ -163,7 +163,7 @@
 		<mx:Label text="Data Set:" color="#000000" fontWeight="bold" />
 		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="230" change="DataSetSelectorChanged()" prompt="Please select a dataset..."/>
 		<mx:Label text="Label (Group) Column:" color="#000000" fontWeight="bold" />
-		<mx:ComboBox id="labelColumnSelector" dataProvider="{dataColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()" prompt="Please select a column..."/>
+		<mx:ComboBox id="labelColumnSelector" dataProvider="{labelColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()" prompt="Please select a column..."/>
 		<mx:Label text="Data Column:" color="#000000" fontWeight="bold" />
 		<mx:ComboBox id="dataColumnSelector" dataProvider="{dataColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()" prompt="Please select a column..."/>
 		<mx:Label text="Modifier:" color="#000000" fontWeight="bold" />

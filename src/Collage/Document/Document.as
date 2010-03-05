@@ -80,7 +80,8 @@ package Collage.Document
 
 			var view:DocumentView = _View as DocumentView;
 			for (var clipKey:String in view.clips) {
-				newObject["clips"].push(view.clips[clipKey].SaveToObject());
+				if (view.clips[clipKey])
+					newObject["clips"].push(view.clips[clipKey].SaveToObject());
 			}
 
 			return newObject;
@@ -116,13 +117,8 @@ package Collage.Document
 						}
 						var newClip:Clip = docView.AddClipByType(clipDataObject["type"]);
 						
-						try {
 						if (newClip)
 							newClip.LoadFromObject(clipDataObject);
-							
-						} catch (error:Error) {
-							Alert.show(error.message);
-						}
 					}
 				}
 			}
