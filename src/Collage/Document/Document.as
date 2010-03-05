@@ -109,20 +109,29 @@ package Collage.Document
 					
 					var clipArray:Array = dataObject[key] as Array;
 					for (var i:uint = 0; i < clipArray.length; i++) {
-						try {
 						var clipDataObject:Object = clipArray[i] as Object;
 
 						if (!clipDataObject["type"]) {
 							Alert.show("Clip Broke");
 							continue;
 						}
-						var newClip:Clip = docView.AddClipByType(clipDataObject["type"]);
-						
-						if (newClip)
-							newClip.LoadFromObject(clipDataObject);
-						} catch (error:Error) {
-							Alert.show(error.message + " " + clipDataObject["type"]);
-						} 
+
+						try {
+							var newClip:Clip = docView.AddClipByType(clipDataObject["type"]);
+							
+							if (clipDataObject["type"] != "table") {
+								for(var obj_k:String in clipDataObject) {
+									try {
+										if(newClip.hasOwnProperty(obj_k))
+											newClip[obj_k] = clipDataObject[obj_k];
+									} catch(e:Error) {}
+								}
+							} else {
+								newClip.LoadFromObject(clipDataObject);
+							}
+						} catch(e:Error) {
+							Alert.show(e.message);
+						}
 					}
 				}
 			}
