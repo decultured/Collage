@@ -109,6 +109,7 @@ package Collage.Document
 					
 					var clipArray:Array = dataObject[key] as Array;
 					for (var i:uint = 0; i < clipArray.length; i++) {
+						try {
 						var clipDataObject:Object = clipArray[i] as Object;
 
 						if (!clipDataObject["type"]) {
@@ -119,6 +120,9 @@ package Collage.Document
 						
 						if (newClip)
 							newClip.LoadFromObject(clipDataObject);
+						} catch (error:Error) {
+							Alert.show(error.message + " " + clipDataObject["type"]);
+						} 
 					}
 				}
 			}

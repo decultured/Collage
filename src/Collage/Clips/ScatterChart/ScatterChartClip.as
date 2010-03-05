@@ -119,7 +119,7 @@ package Collage.Clips.ScatterChart
 		{
 			var newObject:Object = super.SaveToObject();
 
-			newObject["type"] = "linechart";
+			newObject["type"] = "scatterchart";
 			newObject["dataSetID"] = dataSetID;
 			newObject["xAxisDataColumn"] = xAxisDataColumn;
 			newObject["yAxisDataColumn"] = yAxisDataColumn;

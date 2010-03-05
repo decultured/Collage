@@ -166,14 +166,14 @@
 		{
 			if (!file)
 				return;
-				
+			
 			var stream:FileStream = new FileStream();
 			try{
 			    stream.open(file, FileMode.READ);
 			    var fileData:Object = JSON.decode(stream.readUTFBytes(stream.bytesAvailable));
 			    _EditDocumentView.model.LoadFromObject(fileData);
 			} catch(e:Error){
-				trace(e.message);
+				Alert.show(e.message);
 			}
 		}
 		
