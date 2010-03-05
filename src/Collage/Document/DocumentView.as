@@ -45,7 +45,11 @@ package Collage.Document
 			docModel.url = null;
 			docModel.backgroundColor = 0xFFFFFF;
 			
-			removeAllChildren();
+			var childArray:Array = getChildren();
+			for (var i:uint = 0; i < childArray.length; i++) {
+				if (childArray[i] && childArray[i] is ClipView)
+					removeChild(childArray[i]);
+			}
 			_Clips = new Object();
 			AddBackgroundImage();
 		}
@@ -81,8 +85,6 @@ package Collage.Document
 				PositionClip(newClip, position);
 			
 			return newClip;
-
-			return null;
 		}
 
 		public function AddClipFromData(data:Object, position:Rectangle = null):Clip

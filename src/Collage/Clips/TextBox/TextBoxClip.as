@@ -69,5 +69,25 @@ package Collage.Clips.TextBox
 
 			return newObject;
 		}
+
+		public override function LoadFromObject(dataObject:Object):Boolean
+		{
+			if (!dataObject)
+				return false;
+			super.LoadFromObject(dataObject);
+			for (var key:String in dataObject)
+			{
+				if (key == "text") {
+					text = dataObject[key];
+				} else if (key == "backgroundColor") {
+					backgroundColor = parseInt(dataObject[key]);
+				} else if (key == "backgroundAlpha") {
+					backgroundAlpha = parseInt(dataObject[key]);
+				}
+			}
+			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+			return true;
+		}
+		
 	}
 }

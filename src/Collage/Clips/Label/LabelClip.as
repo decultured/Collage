@@ -81,5 +81,32 @@ package Collage.Clips.Label
 			return newObject;
 		}
 
+		public override function LoadFromObject(dataObject:Object):Boolean
+		{
+			if (!dataObject)
+				return false;
+
+			super.LoadFromObject(dataObject);
+			for (var key:String in dataObject)
+			{
+				if (key == "text") {
+					text = dataObject[key];
+				} else if (key == "color") {
+					color = parseInt(dataObject[key]);
+				} else if (key == "backgroundAlpha") {
+					backgroundAlpha = parseFloat(dataObject[key]);
+				} else if (key == "backgroundColor") {
+					backgroundColor = parseInt(dataObject[key]);
+				} else if (key == "textWidth") {
+					textWidth = parseInt(dataObject[key]);
+				} else if (key == "textHeight") {
+					textHeight = parseInt(dataObject[key]);
+				} else if (key == "fontSize") {
+					fontSize = parseFloat(dataObject[key]);
+				}
+			}
+			return true;
+		}
+
 	}
 }

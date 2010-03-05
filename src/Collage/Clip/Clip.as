@@ -104,15 +104,15 @@ package Collage.Clip
 			for (var key:String in dataObject)
 			{
 				if (key == "x") {
-					x == parseInt(dataObject[key]);
+					x = parseInt(dataObject[key]);
 				} else if (key == "y") {
-					y == parseInt(dataObject[key]);
+					y = parseInt(dataObject[key]);
 				} else if (key == "height") {
-					height == parseInt(dataObject[key]);
+					height = parseInt(dataObject[key]);
 				} else if (key == "width") {
-					width == parseInt(dataObject[key]);
+					width = parseInt(dataObject[key]);
 				} else if (key == "rotation") {
-					rotation == parseFloat(dataObject[key]);
+					rotation = parseFloat(dataObject[key]);
 				} 
 			}
 			return true;

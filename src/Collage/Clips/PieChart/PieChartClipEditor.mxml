@@ -52,7 +52,9 @@
 		{
 			DataEngineConnect();
 			if (_Model) {
-				var pieChartModel:PieChartClip = _Model as PieChartClip;
+				var pieChartModel:PieChartClip = _Model as PieChartClip
+				backgroundColorPicker.selectedColor = pieChartModel.backgroundColor;
+				transparencySlider.value = pieChartModel.backgroundAlpha;
 			}
 		}
 		

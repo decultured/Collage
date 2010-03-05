@@ -28,16 +28,15 @@
 			if (event && event.property != "x" && event.property != "y")
 			{
 				setStyle("backgroundColor", lineChartModel.backgroundColor);
-//				setStyle("backgroundAlpha", lineChartModel.backgroundAlpha);
+				setStyle("backgroundAlpha", lineChartModel.backgroundAlpha);
 				lineChartData = lineChartModel.Data;
 				if (!lineChartData || lineChartData.length < 1) {
 					setStyle("backgroundColor", 0xDDDDDD);
-//					setStyle("backgroundAlpha", 0.8);
+					setStyle("backgroundAlpha", 0.8);
 					noDataWarningLabel.visible = true
 				}
 				else 
 					noDataWarningLabel.visible = false;
-				super.onModelChange(event);
 			}
 			super.onModelChange(event);
 		}

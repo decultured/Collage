@@ -139,6 +139,7 @@ package Collage.Clips.Table
 			newObject["backgroundAlpha"] = backgroundAlpha;
 			newObject["backgroundColor"] = backgroundColor;
 			newObject["dataLoaded"] = dataLoaded;
+			newObject["rowsRequested"] = rowsRequested;
 
 			if (columns) {
 				newObject["columns"] = new Array();
@@ -155,5 +156,38 @@ package Collage.Clips.Table
 			return newObject;
 		}
 		
+		public override function LoadFromObject(dataObject:Object):Boolean
+		{
+			if (!dataObject)
+				return false;
+			super.LoadFromObject(dataObject);
+			for (var key:String in dataObject)
+			{
+				if (key == "dataSetID") {
+					dataSetID = dataObject[key];
+				} else if (key == "data" && dataObject[key] is Array) {
+					data = dataObject[key];
+				} else if (key == "dataLoaded") {
+					dataLoaded = dataObject[key] as Boolean;
+				} else if (key == "rowsRequested") {
+					rowsRequested = parseInt(dataObject[key]);
+				} else if (key == "backgroundColor") {
+					backgroundColor = parseInt(dataObject[key]);
+				} else if (key == "backgroundAlpha") {
+					backgroundAlpha = parseInt(dataObject[key]);
+/*				} else if (key == "columns" && dataObject[key] is Array) {
+					var colArray:Array = dataObject[key];
+					for (var i:uint = 0; i < colArray.length; i++) {
+						var newColumn:DataGridColumn = columns[i] as DataGridColumn;
+						newObject["columns"][i] = new Object();
+						newObject["columns"][i]["dataField"] = newColumn.dataField;
+						newObject["columns"][i]["headerText"] = newColumn.headerText;
+						newObject["columns"][i]["visible"] = true;
+					}
+*/				}
+			}
+			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+			return true;
+		}
 	}
 }

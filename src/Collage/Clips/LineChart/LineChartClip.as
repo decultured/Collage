@@ -18,6 +18,7 @@ package Collage.Clips.LineChart
 		public var rowsRequested:Number = 10;
 		
 		[Bindable] public var backgroundColor:Number = 0xFFFFEE;
+		[Bindable] public var backgroundAlpha:Number = 1.0;
                               
 		private var _DataQuery:DataQuery = null;
 	
@@ -148,10 +149,40 @@ package Collage.Clips.LineChart
 			newObject["yAxisDataColumn"] = yAxisDataColumn;
 			newObject["Data"] = Data;
 			newObject["dataLoaded"] = dataLoaded;
+			newObject["rowsRequested"] = rowsRequested;
 			newObject["backgroundColor"] = backgroundColor;
+			newObject["backgroundAlpha"] = backgroundAlpha;
 
 			return newObject;
 		}
 
+		public override function LoadFromObject(dataObject:Object):Boolean
+		{
+			if (!dataObject)
+				return false;
+			super.LoadFromObject(dataObject);
+			for (var key:String in dataObject)
+			{
+				if (key == "dataSetID") {
+					dataSetID = dataObject[key];
+				} else if (key == "xAxisDataColumn") {
+					xAxisDataColumn = dataObject[key];
+				} else if (key == "yAxisDataColumn") {
+					yAxisDataColumn = dataObject[key];
+				} else if (key == "Data" && dataObject[key] is Array) {
+					Data = dataObject[key];
+				} else if (key == "dataLoaded") {
+					dataLoaded = dataObject[key] as Boolean;
+				} else if (key == "rowsRequested") {
+					rowsRequested = parseInt(dataObject[key]);
+				} else if (key == "backgroundColor") {
+					backgroundColor = parseInt(dataObject[key]);
+				} else if (key == "backgroundAlpha") {
+					backgroundAlpha = parseInt(dataObject[key]);
+				}	
+			}
+			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+			return true;
+		}
 	}
 }

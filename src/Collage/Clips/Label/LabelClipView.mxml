@@ -27,9 +27,9 @@
 				displayLabel.text = labelModel.text;
 				displayLabel.setStyle("color", labelModel.color);
 				displayLabel.setStyle("fontSize", labelModel.fontSize);
+				displayLabel.validateNow();
 				labelModel.textWidth = displayLabel.textWidth + 20;
 				labelModel.textHeight = displayLabel.textHeight;
-				displayLabel.validateNow();
 				labelModel.Resized();
 			}
 			

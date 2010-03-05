@@ -12,7 +12,6 @@ package Collage.Clips.BarChart
 		[Bindable] public var labelColumn:String = null;
 		[Bindable] public var dataColumn:String = null; 
 		[Bindable] public var dataModifier:String = null; 
-		[Bindable] public var isLineChart:Boolean = true; 
 		
 		public var Data:Array = new Array();
 		public var dataLoaded:Boolean = false;
@@ -109,10 +108,48 @@ package Collage.Clips.BarChart
 			var newObject:Object = super.SaveToObject();
 
 			newObject["type"] = "barchart";
-			newObject["backgroundAlpha"] = backgroundAlpha;
+			newObject["dataSetID"] = dataSetID;
+			newObject["labelColumn"] = labelColumn;
+			newObject["dataColumn"] = dataColumn;
+			newObject["dataModifier"] = dataModifier;
+			newObject["Data"] = Data;
+			newObject["rowsRequested"] = rowsRequested;
+			newObject["dataLoaded"] = dataLoaded;
 			newObject["backgroundColor"] = backgroundColor;
+			newObject["backgroundAlpha"] = backgroundAlpha;
 
 			return newObject;
+		}
+
+		public override function LoadFromObject(dataObject:Object):Boolean
+		{
+			if (!dataObject)
+				return false;
+			super.LoadFromObject(dataObject);
+			for (var key:String in dataObject)
+			{
+				if (key == "dataSetID") {
+					dataSetID = dataObject[key];
+				} else if (key == "labelColumn") {
+					labelColumn = dataObject[key];
+				} else if (key == "dataColumn") {
+					dataColumn = dataObject[key];
+				} else if (key == "dataModifier") {
+					dataModifier = dataObject[key];
+				} else if (key == "Data" && dataObject[key] is Array) {
+					Data = dataObject[key];
+				} else if (key == "dataLoaded") {
+					dataLoaded = dataObject[key];
+				} else if (key == "rowsRequested") {
+					rowsRequested = parseInt(dataObject[key]);
+				} else if (key == "backgroundColor") {
+					backgroundColor = parseInt(dataObject[key]);
+				} else if (key == "backgroundAlpha") {
+					backgroundAlpha = parseInt(dataObject[key]);
+				}	
+			}
+			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+			return true;
 		}
 	}
 }

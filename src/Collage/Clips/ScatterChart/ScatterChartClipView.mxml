@@ -28,11 +28,11 @@
 			if (event && event.property != "x" && event.property != "y")
 			{
 				setStyle("backgroundColor", scatterChartModel.backgroundColor);
-//				setStyle("backgroundAlpha", scatterChartModel.backgroundAlpha);
+				setStyle("backgroundAlpha", scatterChartModel.backgroundAlpha);
 				scatterChartData = scatterChartModel.Data;
 				if (!scatterChartData || scatterChartData.length < 1) {
 					setStyle("backgroundColor", 0xDDDDDD);
-//					setStyle("backgroundAlpha", 0.8);
+					setStyle("backgroundAlpha", 0.8);
 					noDataWarningLabel.visible = true
 				}
 				else 

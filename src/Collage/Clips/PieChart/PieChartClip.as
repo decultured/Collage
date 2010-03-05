@@ -108,11 +108,49 @@ package Collage.Clips.PieChart
 		{
 			var newObject:Object = super.SaveToObject();
 
-			newObject["type"] = "piechart";
-			newObject["backgroundAlpha"] = backgroundAlpha;
+			newObject["type"] = "barchart";
+			newObject["dataSetID"] = dataSetID;
+			newObject["labelColumn"] = labelColumn;
+			newObject["dataColumn"] = dataColumn;
+			newObject["dataModifier"] = dataModifier;
+			newObject["Data"] = Data;
+			newObject["dataLoaded"] = dataLoaded;
+			newObject["rowsRequested"] = rowsRequested;
 			newObject["backgroundColor"] = backgroundColor;
+			newObject["backgroundAlpha"] = backgroundAlpha;
 
 			return newObject;
+		}
+
+		public override function LoadFromObject(dataObject:Object):Boolean
+		{
+			if (!dataObject)
+				return false;
+			super.LoadFromObject(dataObject);
+			for (var key:String in dataObject)
+			{
+				if (key == "dataSetID") {
+					dataSetID = dataObject[key];
+				} else if (key == "labelColumn") {
+					labelColumn = dataObject[key];
+				} else if (key == "dataColumn") {
+					dataColumn = dataObject[key];
+				} else if (key == "dataModifier") {
+					dataModifier = dataObject[key];
+				} else if (key == "Data" && dataObject[key] is Array) {
+					Data = dataObject[key];
+				} else if (key == "dataLoaded") {
+					dataLoaded = dataObject[key] as Boolean;
+				} else if (key == "rowsRequested") {
+					rowsRequested = dataObject.parseInt([key]);
+				} else if (key == "backgroundColor") {
+					backgroundColor = parseInt(dataObject[key]);
+				} else if (key == "backgroundAlpha") {
+					backgroundAlpha = parseInt(dataObject[key]);
+				}	
+			}
+			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+			return true;
 		}
 	}
 }

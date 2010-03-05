@@ -63,11 +63,11 @@
 		{
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown);
 			
-			Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
+			//Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
 			//Session.events.addEventListener(Session.LOGIN_FAILURE, HandleLoginFailure);
-			Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleTokenExpired);
+			//Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleTokenExpired);
 			
-			Session.CheckToken();
+			//Session.CheckToken();
 			
 			_EditDocumentView.InitializeForEdit(inspectorWindow, optionsBox);
 			
@@ -115,7 +115,6 @@
 		
 		public function HandlePaste(event:Event):void
 		{
-			Alert.show("Pasted Image");
 			if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.BITMAP_FORMAT)) {
 				_EditDocumentView.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData);
 			} else if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.HTML_FORMAT)) {
@@ -127,7 +126,7 @@
 		
 		public function SaveFile():void
 		{
-			var file:File = File.desktopDirectory.resolvePath("file.json");
+			var file:File = File.desktopDirectory.resolvePath("file.clg");
 			file.addEventListener(Event.SELECT, SaveFileEvent);
 			_EditDocumentView.ClearSelection();
 			file.browseForSave("Save As");
@@ -149,17 +148,16 @@
 			}
 		}
 		
-		public function OpenFile():void
+		public function OpenFile(file:File = null):void
 		{
-			var file:File = File.desktopDirectory;
+			if (!file)
+				file = File.desktopDirectory;
 			file.addEventListener(Event.SELECT, OpenFileEvent);
 			file.browseForOpen("Open");
 		}
 			
 		protected function OpenFileEvent(event:Event):void
 		{
-			var jsonFile:String = JSON.encode(_EditDocumentView.model.SaveToObject());
-			
 			var newFile:File = event.target as File;
 			var stream:FileStream = new FileStream();
 			try{
@@ -250,7 +248,9 @@
 				if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "gif") {
 					var newClip:PictureClip = _EditDocumentView.AddClipByType("image") as PictureClip;
 					newClip.url = file.url;
-				} if (ext == "csv" || ext == "tsv") {
+				} else if (ext == "clg") {
+					OpenFile(file);
+				} else if (ext == "csv" || ext == "tsv") {
 					DataEngine.UploadCSV(file);
 				}
 				else {

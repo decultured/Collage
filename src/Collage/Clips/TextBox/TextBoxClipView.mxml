@@ -26,7 +26,6 @@
 			if(event && displayTextBox && event.property == "text") {
 				if (_Model) {
 					displayTextBox.htmlText = textBoxClip.text;
-					_Model.height = displayTextBox.textHeight;
 				}
 			}
 			setStyle("backgroundColor", textBoxClip.backgroundColor);

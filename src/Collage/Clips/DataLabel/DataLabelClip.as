@@ -116,5 +116,40 @@ package Collage.Clips.DataLabel
 
 			return newObject;
 		}
+
+		public override function LoadFromObject(dataObject:Object):Boolean
+		{
+			if (!dataObject)
+				return false;
+			super.LoadFromObject(dataObject);
+			for (var key:String in dataObject)
+			{
+				if (key == "dataSetID") {
+					dataSetID = dataObject[key];
+				} else if (key == "dataSetColumn") {
+					dataSetColumn = dataObject[key];
+				} else if (key == "dataSetColumnModifier") {
+					dataSetColumnModifier = dataObject[key];
+				} else if (key == "text") {
+					text = dataObject[key];
+				} else if (key == "dataLoaded") {
+					dataLoaded = dataObject[key] as Boolean;
+				} else if (key == "color") {
+					color = parseInt(dataObject[key]);
+				} else if (key == "backgroundColor") {
+					backgroundColor = parseInt(dataObject[key]);
+				} else if (key == "backgroundAlpha") {
+					backgroundAlpha = parseInt(dataObject[key]);
+				} else if (key == "textWidth") {
+					textWidth = parseInt(dataObject[key]);
+				} else if (key == "textHeight") {
+					textHeight = parseInt(dataObject[key]);
+				} else if (key == "fontSize") {
+					fontSize = parseFloat(dataObject[key]);
+				}
+			}
+			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+			return true;
+		}
 	}
 }

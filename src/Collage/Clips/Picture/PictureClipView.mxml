@@ -37,8 +37,6 @@
                     bitmap.smoothing = true;
                 }
 				displayImage.source = bitmap;
-				model.width = bitmap.width;
-				model.height = bitmap.height;
 				super.onModelChange(null);
 			} 
 		}
@@ -66,9 +64,6 @@
 				if (bitmap.height && bitmap.width) {
 					pictureModel.aspectRatio = bitmap.width / bitmap.height;
 				}
-				
-				model.width = bitmap.width;
-				model.height = bitmap.height;
             }
 			super.onModelChange(null);
 		}

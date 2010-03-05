@@ -48,6 +48,7 @@
 			if (_Model) {
 				var scatterChartModel:ScatterChartClip = _Model as ScatterChartClip;
 				backgroundColorPicker.selectedColor = scatterChartModel.backgroundColor;
+				transparencySlider.value = scatterChartModel.backgroundAlpha;
 			}
 		}
 		
@@ -56,6 +57,7 @@
 			if (_Model) {
 				var scatterChartModel:ScatterChartClip = _Model as ScatterChartClip;
 				scatterChartModel.backgroundColor = backgroundColorPicker.selectedColor;
+				scatterChartModel.backgroundAlpha = transparencySlider.value;
 			}
 		}
 		
@@ -151,5 +153,8 @@
 			<mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF" change="SettingsChanged()" />
 			<mx:Spacer width="30" />
 		</mx:HBox>
+		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
+		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="1"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
 	</flexlib:WindowShade>
 </clg:ClipEditor>

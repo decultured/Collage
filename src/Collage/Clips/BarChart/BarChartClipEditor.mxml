@@ -53,6 +53,8 @@
 			DataEngineConnect();
 			if (_Model) {
 				var barChartModel:BarChartClip = _Model as BarChartClip;
+				backgroundColorPicker.selectedColor = barChartModel.backgroundColor;
+				transparencySlider.value = barChartModel.backgroundAlpha;
 			}
 		}
 

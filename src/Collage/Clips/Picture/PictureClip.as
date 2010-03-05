@@ -70,5 +70,20 @@ package Collage.Clips.Picture
 
 			return newObject;
 		}
+		
+		public override function LoadFromObject(dataObject:Object):Boolean
+		{
+			if (!dataObject)
+				return false;
+			super.LoadFromObject(dataObject);
+			for (var key:String in dataObject)
+			{
+				if (key == "url") {
+					url = dataObject[key];
+				}
+			}
+			return true;
+		}
+
 	}
 }

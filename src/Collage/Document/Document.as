@@ -114,11 +114,18 @@ package Collage.Document
 							Alert.show("Clip Broke");
 							continue;
 						}
-						docView.AddClipByType(clipDataObject["type"], null, clipDataObject);
+						var newClip:Clip = docView.AddClipByType(clipDataObject["type"]);
+						
+						try {
+						if (newClip)
+							newClip.LoadFromObject(clipDataObject);
+							
+						} catch (error:Error) {
+							Alert.show(error.message);
+						}
 					}
 				}
 			}
-
 			return true;
 		}
 
