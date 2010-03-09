@@ -142,7 +142,7 @@ package Collage.Clips.PieChart
 				} else if (key == "dataLoaded") {
 					dataLoaded = dataObject[key] as Boolean;
 				} else if (key == "rowsRequested") {
-					rowsRequested = dataObject.parseInt([key]);
+					rowsRequested = parseInt(dataObject[key]);
 				} else if (key == "backgroundColor") {
 					backgroundColor = parseInt(dataObject[key]);
 				} else if (key == "backgroundAlpha") {

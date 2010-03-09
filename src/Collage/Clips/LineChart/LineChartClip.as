@@ -178,7 +178,7 @@ package Collage.Clips.LineChart
 				} else if (key == "backgroundColor") {
 					backgroundColor = parseInt(dataObject[key]);
 				} else if (key == "backgroundAlpha") {
-					backgroundAlpha = parseInt(dataObject[key]);
+					backgroundAlpha = parseFloat(dataObject[key]);
 				}	
 			}
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));

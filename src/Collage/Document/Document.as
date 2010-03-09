@@ -115,6 +115,7 @@ package Collage.Document
 							Alert.show("Clip Broke");
 							continue;
 						}
+
 						try {
 							var newClip:Clip = docView.AddClipByType(clipDataObject["type"]);
 							
