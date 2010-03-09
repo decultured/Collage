@@ -1,15 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?> 
-<application xmlns="http://ns.adobe.com/air/application/1.5"> 
-    <id>com.endlesspaths.Collage</id> 
-    <version>0.1</version> 
-    <filename>Collage</filename> 
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://ns.adobe.com/air/application/1.5">
+	<id>com.endlesspaths.Collage</id>
+	<version>0.1</version>
+	<filename>Collage</filename>
 	<allowBrowserInvocation>true</allowBrowserInvocation>
-    <initialWindow> 
-        <content>Collage.swf</content> 
-        <visible>true</visible> 
-        <systemChrome>none</systemChrome> 
-        <transparent>true</transparent> 
-        <width>1000</width> 
-        <height>700</height> 
-    </initialWindow>
+	<initialWindow>
+		<content>Collage.swf</content>
+		<visible>true</visible>
+		<systemChrome>none</systemChrome>
+		<transparent>true</transparent>
+		<width>1000</width>
+		<height>700</height>
+	</initialWindow>
+	<icon>
+		<image128x128>icon-128.png</image128x128>
+	</icon>
+	<fileTypes>
+		<fileType>
+			<name>com.endlesspaths.Collage.Dashboard</name>
+			<extension>clg</extension>
+			<description>Collage Dashboard file</description>
+			<contentType>application/x-collage</contentType>
+			<icon>
+				<image128x128>file-128.png</image128x128>
+			</icon>
+		</fileType>
+	</fileTypes>
 </application>
