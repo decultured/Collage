@@ -52,9 +52,10 @@ package Collage.Clip
 
 		public function CreateEditor(newEditor:ClipEditor = null):void
 		{
-			if (newEditor)
+			if (newEditor) {
 				_Editor = newEditor;
-			else {
+				_Editor.model = this;
+			} else {
 				_Editor = new ClipEditor();
 				_Editor.model = this;
 			}
