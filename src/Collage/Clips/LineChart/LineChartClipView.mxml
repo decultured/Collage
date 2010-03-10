@@ -2,50 +2,13 @@
 <clg:ClipView xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Clip.*"
 	xmlns:ofc="*"
-	backgroundColor="0x000000"
-	backgroundAlpha="0"
+	backgroundColor="{model.backgroundColor}"
+	backgroundAlpha="{model.backgroundAlpha}"
 	horizontalScrollPolicy="off"
-	verticalScrollPolicy="off"
-	creationComplete="Initialize()" >
-	
-	<mx:Script>
-		<![CDATA[
-        import mx.collections.ArrayCollection;
-		import mx.events.PropertyChangeEvent;
-		import mx.controls.Alert;
-
-        [Bindable]
-        private var lineChartData:Array = new Array();
-
-		protected function Initialize():void
-		{
-			
-		}
-		
-		protected override function onModelChange( event:PropertyChangeEvent):void
-		{
-			var lineChartModel:LineChartClip = _Model as LineChartClip;
-			if (event && event.property != "x" && event.property != "y")
-			{
-				setStyle("backgroundColor", lineChartModel.backgroundColor);
-				setStyle("backgroundAlpha", lineChartModel.backgroundAlpha);
-				lineChartData = lineChartModel.Data;
-				if (!lineChartData || lineChartData.length < 1) {
-					setStyle("backgroundColor", 0xDDDDDD);
-					setStyle("backgroundAlpha", 0.8);
-					noDataWarningLabel.visible = true
-				}
-				else 
-					noDataWarningLabel.visible = false;
-			}
-			super.onModelChange(event);
-		}
-		
-		]]>
-    </mx:Script>
+	verticalScrollPolicy="off" >
     <mx:Stroke id="linestroke" color="0xff0000" weight="2" alpha=".5"/>
 	<mx:LineChart id="linechart" height="100%" width="100%" paddingLeft="5" paddingRight="5"
-		showDataTips="true" dataProvider="{lineChartData}">
+		showDataTips="true" dataProvider="{model.Data}">
 		<mx:verticalAxis>
 			<mx:LinearAxis id="vaxis" baseAtZero="false"/>
 		</mx:verticalAxis>			
@@ -65,5 +28,4 @@
 			</mx:LineSeries>
 		</mx:series>
 	</mx:LineChart>
-	<mx:Label id="noDataWarningLabel" visible="false" text="No Data Loaded..." color="#FF0000" fontWeight="bold" fontSize="18" textAlign="center" left="0" right="0" top="0" bottom="0" />
 </clg:ClipView>

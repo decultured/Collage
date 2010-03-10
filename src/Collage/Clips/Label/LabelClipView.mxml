@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <clg:ClipView xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Clip.*"
-	backgroundColor="0x000000"
-	backgroundAlpha="0"
 	horizontalScrollPolicy="off"
 	verticalScrollPolicy="off"
-	creationComplete="Initialize()" >
-	
+	creationComplete="Initialize()"
+	backgroundColor="{model.backgroundColor}"
+	backgroundAlpha="{model.backgroundAlpha}" >
 	<mx:Script>
 	<![CDATA[
 		import mx.controls.Alert;
@@ -20,24 +19,16 @@
 
 		protected override function onModelChange(event:PropertyChangeEvent):void
 		{
-			var labelModel:LabelClip = _Model as LabelClip;
-			
 			if (displayLabel) {
-				displayLabel.validateNow();
-				displayLabel.text = labelModel.text;
-				displayLabel.setStyle("color", labelModel.color);
-				displayLabel.setStyle("fontSize", labelModel.fontSize);
+				var labelModel:LabelClip = _Model as LabelClip;
 				displayLabel.validateNow();
 				labelModel.textWidth = displayLabel.textWidth + 20;
 				labelModel.textHeight = displayLabel.textHeight;
 				labelModel.Resized();
 			}
-			
-			setStyle("backgroundColor", labelModel.backgroundColor);
-			setStyle("backgroundAlpha", labelModel.backgroundAlpha);
 			super.onModelChange(event);
 		}
 	]]>
     </mx:Script>
-	<mx:Label id="displayLabel" text="This Label displays plain text." fontSize="18" textAlign="center" left="0" right="0" top="0" bottom="0" />
+	<mx:Label id="displayLabel" text="{model.text}" fontSize="{model.fontSize}" color="{model.color}" textAlign="center" left="0" right="0" top="0" bottom="0" />
 </clg:ClipView>

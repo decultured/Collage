@@ -21,7 +21,6 @@
 		protected override function onModelChange(event:PropertyChangeEvent):void
 		{
 			var skeletonModel:SkeletonClip = _Model as SkeletonClip;
-			
 			super.onModelChange(event);
 		}
 	]]>

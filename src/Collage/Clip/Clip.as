@@ -42,9 +42,10 @@ package Collage.Clip
 		
 		public function CreateView(newView:ClipView = null):void
 		{
-			if (newView)
+			if (newView) {
 				_View = newView;
-			else {
+				_View.model = this;
+			} else {
 				_View = new ClipView();
 				_View.model = this;
 			}

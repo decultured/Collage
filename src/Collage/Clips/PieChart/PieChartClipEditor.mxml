@@ -2,32 +2,7 @@
 <clg:ClipEditor xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Clip.*"
 	xmlns:flexlib="flexlib.containers.*"
-	backgroundColor="0x000000"
-	backgroundAlpha="0"
-	horizontalScrollPolicy="off"
-	verticalScrollPolicy="off"
-	creationComplete="Initialize()" 
-	width="100%" >
-	<mx:Style>
-	    .linkButtonWindowShade {
-	      	headerClass:ClassReference('mx.controls.LinkButton');
-	      	header-style-name: linkButtonStyle;
-	     	drop-shadow-enabled:false;
-	      	corner-radius:3;
-	      	border-style:solid;
-	    	background-color:#ddd;
-			padding-left:5;
-			padding-right:5;
-			padding-top:5;
-			padding-bottom:5;
-	    }         
-	    
-	    .linkButtonStyle {
-	    	corner-radius:3;
-	    	fill-alphas:1,1;
-	    	padding-left:10;
-	    }
-	</mx:Style>
+	creationComplete="Initialize()" >
 	<mx:Script>
 	<![CDATA[
 		import mx.controls.Alert;
@@ -80,28 +55,22 @@
 
 		private function ColumnSelectorChanged():void
 		{
-			if (dataSetSelector.selectedItem)
-				var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
+			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
 
 			if (!dataset || !_Model)
 				return;
 			
 			var pieChartModel:PieChartClip = _Model as PieChartClip;
-			if (labelColumnSelector.selectedItem)
-				var labelColumn:DataSetColumn = dataset.GetColumnByID(labelColumnSelector.selectedItem.data);
-			if (dataColumnSelector.selectedItem)
-				var dataColumn:DataSetColumn = dataset.GetColumnByID(dataColumnSelector.selectedItem.data);
 
-			if (labelColumn) {
+			var labelColumn:DataSetColumn = dataset.GetColumnByID(labelColumnSelector.selectedItem.data);
+			var dataColumn:DataSetColumn = dataset.GetColumnByID(dataColumnSelector.selectedItem.data);
+
+			if (labelColumn)
 				pieChartModel.labelColumn = labelColumn.label;
-			}
-
-			if (dataColumn) {
+			if (dataColumn)
 				pieChartModel.dataColumn = dataColumn.label;
-			}
 			
 			pieChartModel.RunQuery();
-//			UpdateInspector();
 		}
 		
 		private function SubmitDataRequest():void
@@ -144,8 +113,6 @@
 				modifierSelector.selectedIndex = -1;
 				pieChartModel.ResetData();
 			}
-			
-//			UpdateInspector();
 		}	
 
 		private function ModifierSelectorChanged():void
@@ -175,10 +142,11 @@
 	<flexlib:WindowShade label="Pie Chart Settings" styleName="linkButtonWindowShade" width="100%">
 		<mx:HRule width="100%" />
 		<mx:HBox width="100%" >
-			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF" change="SettingsChanged()" />
+			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" />
+			<mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="{model.backgroundColor}" change="SettingsChanged()" />
 		</mx:HBox>
 		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
-		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="1"
+		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="{model.backgroundAlpha}"
             allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
 	</flexlib:WindowShade>
 </clg:ClipEditor>

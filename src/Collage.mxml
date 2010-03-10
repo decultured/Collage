@@ -22,17 +22,7 @@
     paste="HandlePaste(event);"
 	nativeDragEnter="onDragIn(event)" 
 	nativeDragDrop="onDrop(event)" >
-	<mx:Style> 
-		WindowedApplication
-		{
-			background-color:"0x777777";
-			background-alpha:"1.0";
-		}
-		
-		.appTitle {
-			font-size: 14;
-		}
-	</mx:Style>
+	<mx:Style source="collageBasic.css"/>
 	<mx:Script>
 	<![CDATA[
 		import mx.containers.dividedBoxClasses.BoxDivider;
@@ -63,9 +53,9 @@
 		{
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown);
 
-			Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
+			/*Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
 			Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleTokenExpired);
-			Session.CheckToken();
+			Session.CheckToken();*/
 			
 			_EditDocumentView.InitializeForEdit(inspectorWindow, optionsBox);
 			
@@ -377,20 +367,12 @@
 
 					if (!inspectorWindow.visible) {
 						menuEvent.item.@label = "Show Inspector";
-						winDividedBox.moveDivider(0,100000);
-						inspectorWindow.minWidth= 0;
 						inspectorWindow.width = 0;
 						editCanvas.setStyle("width","100%");
-						winDividedBox.getDividerAt(0).width = 0;
-						winDividedBox.getDividerAt(0).visible = false;
 					} else {
 						menuEvent.item.@label = "Hide Inspector";
-						winDividedBox.moveDivider(0,-250);
-						inspectorWindow.minWidth= 250;
 						inspectorWindow.width = 250;
 						editCanvas.setStyle("width","100%");
-						winDividedBox.getDividerAt(0).width = 10;
-						winDividedBox.getDividerAt(0).visible = true;
 					}
 					
 					break;
@@ -459,7 +441,7 @@
             </menuitem>
             <menuitem label="View">
                 <menuitem label="Fullscreen" type="check" command="fullscreen" toggled="false"/>
-                <menuitem label="Hide Inspector" command="hideInspector"/>
+                <menuitem label="Hide Inspector" command="hideInspector" key="i"/>
             </menuitem>
         </root>
     </mx:XML>
@@ -476,7 +458,7 @@
 		<mx:Image id="addTableBtn" source="@Embed('../assets/themes/dark/datagrid.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('table', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addDataLabelBtn" source="@Embed('../assets/themes/dark/datalabel.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('datalabel', new Rectangle(150, 150, 300, 300));" />
 	</mx:VBox>
-    <mx:HDividedBox id="winDividedBox" top="0" left="32" right="0" bottom="0" dropShadowEnabled="false" horizontalScrollPolicy="off" verticalScrollPolicy="off" dividerAffordance="4">
+    <mx:HBox top="0" left="32" right="0" bottom="0" dropShadowEnabled="false" horizontalScrollPolicy="off" verticalScrollPolicy="off" horizontalGap="0" >
         <mx:Canvas id="editCanvas" label="Canvas 1" width="100%" height="100%" color="0x323232" backgroundColor="#ACACAC" backgroundAlpha="1" click="_EditDocumentView.BackgroundClick(event);">
 			<mx:Box top="0" left="0" right="0" bottom="0" paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20"  horizontalAlign="center" verticalAlign="middle" backgroundAlpha="0" backgroundColor="0xffffff">
 				<clg:EditDocumentView id="_EditDocumentView" 
@@ -509,7 +491,7 @@
 				</degrafa:Surface>
 			</mx:Box>
         </mx:Canvas>
-        <mx:Box id="inspectorWindow" width="250" minWidth="250" height="100%" backgroundColor="#ACACAC" backgroundAlpha="1" horizontalScrollPolicy="off" paddingLeft="4" paddingRight="4" paddingTop="4" paddingBottom="4"  >
+        <mx:Box id="inspectorWindow" width="250" height="100%" backgroundColor="#ACACAC" backgroundAlpha="1" horizontalScrollPolicy="off" paddingLeft="4" paddingRight="4" paddingTop="4" paddingBottom="4"  >
         </mx:Box>
-    </mx:HDividedBox>
+    </mx:HBox>
 </mx:WindowedApplication>

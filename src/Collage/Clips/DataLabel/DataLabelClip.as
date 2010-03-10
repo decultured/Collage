@@ -32,30 +32,10 @@ package Collage.Clips.DataLabel
 			horizontalSizable = false;
 			rotatable = false;
 			super(dataObject);
-			CreateView();
-			CreateEditor();
+			CreateView(new DataLabelClipView());
+			CreateEditor(new DataLabelClipEditor());
 		}
 
-		public override function CreateView(newView:ClipView = null):void
-		{
-			if (newView)
-				_View = newView;
-			else {
-				_View = new DataLabelClipView();
-				_View.model = this;
-			}
-		}
-
-		public override function CreateEditor(newEditor:ClipEditor = null):void
-		{
-			if (newEditor)
-				_Editor = newEditor;
-			else {
-				_Editor = new DataLabelClipEditor();
-				_Editor.model = this;
-			}
-		}
-		
 		public override function Resized():void
 		{
 			width = textWidth;

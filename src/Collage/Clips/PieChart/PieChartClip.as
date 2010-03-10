@@ -14,7 +14,7 @@ package Collage.Clips.PieChart
 		[Bindable] public var dataModifier:String = null; 
 		[Bindable] public var isLineChart:Boolean = true; 
 		
-		public var Data:Array = new Array();
+		[Bindable] public var Data:Array = new Array();
 		public var dataLoaded:Boolean = false;
 		public var rowsRequested:Number = 10;
 
@@ -26,33 +26,8 @@ package Collage.Clips.PieChart
 		public function PieChartClip(dataObject:Object = null)
 		{
 			super(dataObject);
-			CreateView();
-			CreateEditor();
-		}
-
-		public override function CreateView(newView:ClipView = null):void
-		{
-			if (newView)
-				_View = newView;
-			else {
-				_View = new PieChartClipView();
-				_View.model = this;
-			}
-		}
-
-		public override function CreateEditor(newEditor:ClipEditor = null):void
-		{
-			if (newEditor)
-				_Editor = newEditor;
-			else {
-				_Editor = new PieChartClipEditor();
-				_Editor.model = this;
-			}
-		}
-
-		public override function Resized():void
-		{
-
+			CreateView(new PieChartClipView());
+			CreateEditor(new PieChartClipEditor());
 		}
 
 		public function RunQuery():void

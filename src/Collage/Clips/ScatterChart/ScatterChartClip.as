@@ -12,7 +12,7 @@ package Collage.Clips.ScatterChart
 		[Bindable] public var xAxisDataColumn:String = null;
 		[Bindable] public var yAxisDataColumn:String = null; 
 
-		public var Data:Array = new Array();
+		[Bindable] public var Data:Array = new Array();
 		
 		public var dataLoaded:Boolean = false;
 		public var rowsRequested:Number = 10;
@@ -25,35 +25,10 @@ package Collage.Clips.ScatterChart
 		public function ScatterChartClip(dataObject:Object = null)
 		{
 			super(dataObject);
-			CreateView();
-			CreateEditor();
+			CreateView(new ScatterChartClipView());
+			CreateEditor(new ScatterChartClipEditor());
 		}
 
-		public override function CreateView(newView:ClipView = null):void
-		{
-			if (newView)
-				_View = newView;
-			else {
-				_View = new ScatterChartClipView();
-				_View.model = this;
-			}
-		}
-
-		public override function CreateEditor(newEditor:ClipEditor = null):void
-		{
-			if (newEditor)
-				_Editor = newEditor;
-			else {
-				_Editor = new ScatterChartClipEditor();
-				_Editor.model = this;
-			}
-		}
-		
-		public override function Resized():void
-		{
-			
-		}
-		
 		public function RunQuery():void
 		{
 			if (dataSetID && yAxisDataColumn && xAxisDataColumn) {

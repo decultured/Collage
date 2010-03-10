@@ -6,10 +6,11 @@ package Collage.Clip
 
 	public class ClipEditor extends Box
 	{
-		protected var _Model:Clip;
+		protected var _Model:Object;
 		
-		public function get model():Clip {return _Model;}
-		public function set model(clip:Clip):void {_Model = clip;}
+		[Bindable]
+		public function get model():Object {return _Model;}
+		public function set model(clip:Object):void {_Model = clip;}
 		
 		public function ClipEditor()
 		{

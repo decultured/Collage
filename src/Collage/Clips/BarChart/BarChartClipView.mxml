@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <clg:ClipView xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Clip.*"
-	backgroundColor="0x000000"
-	backgroundAlpha="0"
+	backgroundColor="{model.backgroundColor}"
+	backgroundAlpha="{model.backgroundAlpha}"
 	horizontalScrollPolicy="off"
-	verticalScrollPolicy="off"
-	creationComplete="Initialize()" >
+	verticalScrollPolicy="off" >
 	
 	<mx:Script>
 		<![CDATA[
@@ -13,40 +12,17 @@
 		import mx.events.PropertyChangeEvent;
         import mx.collections.ArrayCollection;
 
-        [Bindable]
-        private var barData:Array = new Array();
-    
         private function displayLabel(data:Object, field:String, index:Number, percentValue:Number):String {
 			var barChartModel:BarChartClip = _Model as BarChartClip;
             var temp:String= (" " + percentValue).substr(0,6);
             return barChartModel.labelColumn + ": " + data.label + "\n" + barChartModel.dataColumn + ": " + data.value + '\n' + temp + "%";
         }
 
-		protected function Initialize():void
-		{
-			
-		}
-		
-		protected override function onModelChange( event:PropertyChangeEvent):void
-		{
-			var barChartModel:BarChartClip = _Model as BarChartClip;
-			setStyle("backgroundColor", barChartModel.backgroundColor);
-			setStyle("backgroundAlpha", barChartModel.backgroundAlpha);
-			barData = barChartModel.Data;
-			if (!barData || barData.length < 1) {
-				setStyle("backgroundColor", 0xDDDDDD);
-				setStyle("backgroundAlpha", 0.8);
-				noDataWarningLabel.visible = true
-			}
-			else 
-				noDataWarningLabel.visible = false;
-			super.onModelChange(event);
-		}
 		]]>
     </mx:Script>
 	<mx:SolidColor id="barfill" color="green" alpha="1"/>
     <mx:Stroke id="barborder" color="0x009900" weight="1" alpha="1"/>
-     <mx:ColumnChart id="chart" height="100%" width="100%" paddingRight="5" paddingLeft="5" color="0x323232" showDataTips="true" dataProvider="{barData}" >
+     <mx:ColumnChart id="chart" height="100%" width="100%" paddingRight="5" paddingLeft="5" color="0x323232" showDataTips="true" dataProvider="{model.Data}" >
 		<mx:seriesFilters>
 			<mx:Array/>
 		</mx:seriesFilters>
@@ -64,5 +40,4 @@
             </mx:ColumnSeries>
         </mx:series>
     </mx:ColumnChart>
-	<mx:Label id="noDataWarningLabel" visible="false" text="No Data Loaded..." color="#FF0000" fontWeight="bold" fontSize="18" textAlign="center" left="0" right="0" top="0" bottom="0" />
 </clg:ClipView>

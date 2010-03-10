@@ -2,32 +2,7 @@
 <clg:ClipEditor xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Clip.*"
 	xmlns:flexlib="flexlib.containers.*"
-	backgroundColor="0x000000"
-	backgroundAlpha="0"
-	horizontalScrollPolicy="off"
-	verticalScrollPolicy="off"
-	creationComplete="Initialize()" 
-	width="100%">
-	<mx:Style>
-	    .linkButtonWindowShade {
-	      	headerClass:ClassReference('mx.controls.LinkButton');
-	      	header-style-name: linkButtonStyle;
-	     	drop-shadow-enabled:false;
-	      	corner-radius:3;
-	      	border-style:solid;
-	    	background-color:#ddd;
-			padding-left:5;
-			padding-right:5;
-			padding-top:5;
-			padding-bottom:5;
-	    }         
-	    
-	    .linkButtonStyle {
-	    	corner-radius:3;
-	    	fill-alphas:1,1;
-	    	padding-left:10;
-	    }
-	</mx:Style>
+	creationComplete="Initialize()" >
 	<mx:Script>
 	<![CDATA[
 		import mx.controls.Alert;
@@ -40,16 +15,6 @@
 		private function Initialize():void
 		{
 			DataEngineConnect();
-			UpdateInspector();
-		}
-		
-		private function UpdateInspector():void
-		{
-			if (_Model) {
-				var scatterChartModel:ScatterChartClip = _Model as ScatterChartClip;
-				backgroundColorPicker.selectedColor = scatterChartModel.backgroundColor;
-				transparencySlider.value = scatterChartModel.backgroundAlpha;
-			}
 		}
 		
 		private function SettingsChanged():void
@@ -94,7 +59,6 @@
 			}
 			
 			scatterChartModel.RunQuery();
-			UpdateInspector();
 		}
 		
 		private function SubmitDataRequest():void
@@ -130,8 +94,6 @@
 				dataSetXColumnSelector.enabled = false;
 				scatterChartModel.ResetData();
 			}
-			
-			UpdateInspector();
 		}
 	]]>
     </mx:Script>
@@ -150,11 +112,11 @@
 		<mx:HBox width="100%" >
 			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" />
 			<mx:Spacer width="100%" />
-			<mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF" change="SettingsChanged()" />
+			<mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="{model.backgroundColor}" change="SettingsChanged()" />
 			<mx:Spacer width="30" />
 		</mx:HBox>
 		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
-		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="1"
+		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="{model.backgroundAlpha}"
             allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
 	</flexlib:WindowShade>
 </clg:ClipEditor>

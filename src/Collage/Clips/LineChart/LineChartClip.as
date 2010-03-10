@@ -12,7 +12,7 @@ package Collage.Clips.LineChart
 		[Bindable] public var xAxisDataColumn:String = null;
 		[Bindable] public var yAxisDataColumn:String = null; 
 
-		public var Data:Array = new Array();
+		[Bindable] public var Data:Array = new Array();
 		
 		public var dataLoaded:Boolean = false;
 		public var rowsRequested:Number = 10;
@@ -25,28 +25,8 @@ package Collage.Clips.LineChart
 		public function LineChartClip(dataObject:Object = null)
 		{
 			super(dataObject);
-			CreateView();
-			CreateEditor();
-		}
-
-		public override function CreateView(newView:ClipView = null):void
-		{
-			if (newView)
-				_View = newView;
-			else {
-				_View = new LineChartClipView();
-				_View.model = this;
-			}
-		}
-
-		public override function CreateEditor(newEditor:ClipEditor = null):void
-		{
-			if (newEditor)
-				_Editor = newEditor;
-			else {
-				_Editor = new LineChartClipEditor();
-				_Editor.model = this;
-			}
+			CreateView(new LineChartClipView());
+			CreateEditor(new LineChartClipEditor());
 		}
 		
 		public override function Resized():void

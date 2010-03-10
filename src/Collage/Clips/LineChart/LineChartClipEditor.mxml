@@ -2,32 +2,7 @@
 <clg:ClipEditor xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Clip.*"
 	xmlns:flexlib="flexlib.containers.*"
-	backgroundColor="0x000000"
-	backgroundAlpha="0"
-	horizontalScrollPolicy="off"
-	verticalScrollPolicy="off"
-	creationComplete="Initialize()" 
-	width="100%">
-	<mx:Style>
-	    .linkButtonWindowShade {
-	      	headerClass:ClassReference('mx.controls.LinkButton');
-	      	header-style-name: linkButtonStyle;
-	     	drop-shadow-enabled:false;
-	      	corner-radius:3;
-	      	border-style:solid;
-	    	background-color:#ddd;
-			padding-left:5;
-			padding-right:5;
-			padding-top:5;
-			padding-bottom:5;
-	    }         
-	    
-	    .linkButtonStyle {
-	    	corner-radius:3;
-	    	fill-alphas:1,1;
-	    	padding-left:10;
-	    }
-	</mx:Style>
+	creationComplete="Initialize()" >
 	<mx:Script>
 	<![CDATA[
 		import mx.controls.Alert;
@@ -40,16 +15,6 @@
 		private function Initialize():void
 		{
 			DataEngineConnect();
-			UpdateInspector();
-		}
-		
-		private function UpdateInspector():void
-		{
-			if (_Model) {
-				var lineChartModel:LineChartClip = _Model as LineChartClip;
-				backgroundColorPicker.selectedColor = lineChartModel.backgroundColor;
-				transparencySlider.value = lineChartModel.backgroundAlpha;
-			}
 		}
 		
 		private function SettingsChanged():void
@@ -85,16 +50,12 @@
 			var xDataColumn:DataSetColumn = dataset.GetColumnByID(dataSetXColumnSelector.selectedItem.data);
 			var yDataColumn:DataSetColumn = dataset.GetColumnByID(dataSetYColumnSelector.selectedItem.data);
 
-			if (yDataColumn) {
+			if (yDataColumn)
 				lineChartModel.yAxisDataColumn = yDataColumn.label;
-			}
-
-			if (xDataColumn) {
+			if (xDataColumn)
 				lineChartModel.xAxisDataColumn = xDataColumn.label;
-			}
 			
 			lineChartModel.RunQuery();
-			UpdateInspector();
 		}
 		
 		private function SubmitDataRequest():void
@@ -130,8 +91,6 @@
 				dataSetXColumnSelector.enabled = false;
 				lineChartModel.ResetData();
 			}
-			
-			UpdateInspector();
 		}
 	]]>
     </mx:Script>
@@ -143,18 +102,18 @@
 		<mx:Label text="X Axis Value:" color="#000000" fontWeight="bold" />
 		<mx:ComboBox id="dataSetXColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
 		<mx:Label text="Rows Requested:" color="#000000" fontWeight="bold" />
-		<mx:TextInput id="rowsRequested" text="10" color="0x323232" width="100%" />
+		<mx:TextInput id="rowsRequested" text="{model.rowsRequested}" color="0x323232" width="100%" />
 		<mx:Button id="submitDataButton" color="0x323232" label="Apply" click="SubmitDataRequest()"  />
 	</flexlib:WindowShade>
 	<flexlib:WindowShade opened="false" label="General Styles" styleName="linkButtonWindowShade" width="100%">
 		<mx:HBox width="100%" >
 			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" />
 			<mx:Spacer width="100%" />
-			<mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF" change="SettingsChanged()" />
+			<mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="{model.backgroundColor}" change="SettingsChanged()" />
 			<mx:Spacer width="30" />
 		</mx:HBox>
 		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
-		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="1"
+		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="{model.backgroundAlpha}"
             allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
 	</flexlib:WindowShade>
 </clg:ClipEditor>

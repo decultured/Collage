@@ -1,38 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <clg:ClipView xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:clg="Collage.Clip.*"
-	backgroundColor="0x000000"
-	backgroundAlpha="0"
+	backgroundColor="{model.backgroundColor}"
+	backgroundAlpha="{model.backgroundAlpha}"
 	horizontalScrollPolicy="off"
-	verticalScrollPolicy="off"
-	creationComplete="Initialize()" >
-	
-	<mx:Script>
-	<![CDATA[
-		import mx.controls.Alert;
-		import mx.events.PropertyChangeEvent;
-		
-		public function Initialize():void
-		{
-			if (_Model) {
-				var textBoxClip:TextBoxClip = _Model as TextBoxClip;
-				displayTextBox.htmlText = textBoxClip.text;
-			}
-		}
-		
-		protected override function onModelChange( event:PropertyChangeEvent):void
-		{
-			var textBoxClip:TextBoxClip = _Model as TextBoxClip;
-			if(event && displayTextBox && event.property == "text") {
-				if (_Model) {
-					displayTextBox.htmlText = textBoxClip.text;
-				}
-			}
-			setStyle("backgroundColor", textBoxClip.backgroundColor);
-			setStyle("backgroundAlpha", textBoxClip.backgroundAlpha);
-			super.onModelChange(event);
-		}
-	]]>
-    </mx:Script>
-	<mx:TextArea id="displayTextBox" editable="false" selectable="false" verticalScrollPolicy="auto" htmlText="Default text?" left="0" right="0" top="0" bottom="0" backgroundAlpha="0" backgroundColor="0x000000" borderStyle="none" />
+	verticalScrollPolicy="off" >
+	<mx:TextArea id="displayTextBox" editable="false" selectable="false" verticalScrollPolicy="auto" htmlText="{model.text}" left="0" right="0" top="0" bottom="0" backgroundAlpha="0" backgroundColor="0x000000" borderStyle="none" />
 </clg:ClipView>

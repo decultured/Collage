@@ -32,28 +32,8 @@ package Collage.Clips.Guage
 		public function GuageClip(dataObject:Object = null)
 		{
 			super(dataObject);
-			CreateView();
-			CreateEditor();
-		}
-
-		public override function CreateView(newView:ClipView = null):void
-		{
-			if (newView)
-				_View = newView;
-			else {
-				_View = new GuageClipView();
-				_View.model = this;
-			}
-		}
-
-		public override function CreateEditor(newEditor:ClipEditor = null):void
-		{
-			if (newEditor)
-				_Editor = newEditor;
-			else {
-				_Editor = new GuageClipEditor();
-				_Editor.model = this;
-			}
+			CreateView(new GuageClipView());
+			CreateEditor(new GuageClipEditor());
 		}
 		
 		public function RunQuery():void

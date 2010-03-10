@@ -8,28 +8,8 @@ package Collage.Clips.GoogleMaps
 		{
 			moveFromCenter = true;
 			super(dataObject);
-			CreateView();
-			CreateEditor();
-		}
-
-		public override function CreateView(newView:ClipView = null):void
-		{
-			if (newView)
-				_View = newView;
-			else {
-				_View = new GoogleMapsClipView();
-				_View.model = this;
-			}
-		}
-
-		public override function CreateEditor(newEditor:ClipEditor = null):void
-		{
-			if (newEditor)
-				_Editor = newEditor;
-			else {
-				_Editor = new GoogleMapsClipEditor();
-				_Editor.model = this;
-			}
+			CreateView(new GoogleMapsClipView());
+			CreateEditor(new GoogleMapsClipEditor());
 		}
 		
 		public override function Resized():void
@@ -39,9 +19,7 @@ package Collage.Clips.GoogleMaps
 		public override function SaveToObject():Object
 		{
 			var newObject:Object = super.SaveToObject();
-
 			newObject["type"] = "skeleton";
-
 			return newObject;
 		}
 

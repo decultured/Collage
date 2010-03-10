@@ -25,34 +25,9 @@ package Collage.Clips.BarChart
 		public function BarChartClip(dataObject:Object = null)
 		{
 			super(dataObject);
-			CreateView();
-			CreateEditor();
+			CreateView(new BarChartClipView());
+			CreateEditor(new BarChartClipEditor());
 		}
-
-		public override function CreateView(newView:ClipView = null):void
-		{
-			if (newView)
-				_View = newView;
-			else {
-				_View = new BarChartClipView();
-				_View.model = this;
-			}
-		}
-
-		public override function CreateEditor(newEditor:ClipEditor = null):void
-		{
-			if (newEditor)
-				_Editor = newEditor;
-			else {
-				_Editor = new BarChartClipEditor();
-				_Editor.model = this;
-			}
-		}
-
-		public override function Resized():void
-		{
-		}
-		
 
 		public function RunQuery():void
 		{
