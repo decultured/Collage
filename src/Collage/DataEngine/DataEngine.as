@@ -8,8 +8,8 @@ package Collage.DataEngine
 	
 	public class DataEngine extends EventDispatcher
 	{
-		/*public static var baseUrl:String = "http://dataengine.local/";*/
-		public static var baseUrl:String = "http://dataengine.endlesspaths.com/";
+		public static var baseUrl:String = "http://dataengine.local/";
+		/*public static var baseUrl:String = "http://dataengine.endlesspaths.com/";*/
 		
 		public static var COMPLETE:String = "complete";
 		

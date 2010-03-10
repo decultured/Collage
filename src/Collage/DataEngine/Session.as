@@ -142,8 +142,7 @@ package Collage.DataEngine
 			event.target.removeEventListener(IOErrorEvent.IO_ERROR, Login_ErrorHandler);
 			event.target.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, Login_ErrorHandler);
 			
-			Alert.show("LoginError: " + event);
-			
+			events.dispatchEvent(new Event(TOKEN_EXPIRED));
 			events.dispatchEvent(new Event(LOGIN_FAILURE));
 		}
 		

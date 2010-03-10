@@ -3,7 +3,6 @@
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
 	title="Please login"
 	creationComplete="handleCreationComplete();"
-<<<<<<< HEAD
 	close="closeMe();">
 	
 	<mx:Script>
