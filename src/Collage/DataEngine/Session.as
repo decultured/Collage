@@ -87,7 +87,7 @@ package Collage.DataEngine
 			if(results.hasOwnProperty('valid')) {
 				events.dispatchEvent(new Event(LOGIN_SUCCESS));
 			} else {
-				EncryptedLocalStore.removeItem('apiAuthToken');
+				Session.removeItem('apiAuthToken');
 				events.dispatchEvent(new Event(TOKEN_EXPIRED));
 			}
 		}
@@ -132,6 +132,8 @@ package Collage.DataEngine
 			if(authToken != null) {
 				Session.setItem('apiAuthToken', authToken);
 				events.dispatchEvent(new Event(LOGIN_SUCCESS));
+			} else {
+				events.dispatchEvent(new Event(LOGIN_FAILURE));
 			}
 		}
 		

@@ -7,8 +7,8 @@
 	<initialWindow>
 		<content>Collage.swf</content>
 		<visible>true</visible>
-		<systemChrome>none</systemChrome>
-		<transparent>true</transparent>
+		<systemChrome>standard</systemChrome>
+		<transparent>false</transparent>
 		<width>1000</width>
 		<height>700</height>
 	</initialWindow>
@@ -27,3 +27,4 @@
 		</fileType>
 	</fileTypes>
 </application>
+

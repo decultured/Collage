@@ -10,8 +10,6 @@
 	width="1000"
 	menu="{nativeMenu}"
 	title="Collage"
-	titleTextStyleName="appTitle"
-	headerHeight="21"
 	buttonAlignment="auto"
 	cornerRadius="4"
 	showStatusBar="true"
@@ -23,6 +21,7 @@
 	nativeDragEnter="onDragIn(event)" 
 	nativeDragDrop="onDrop(event)" >
 	<mx:Style source="collageBasic.css"/>
+	<mx:Style source="yflexskin.css"/>
 	<mx:Script>
 	<![CDATA[
 		import mx.containers.dividedBoxClasses.BoxDivider;
@@ -388,7 +387,7 @@
 		itemClick="{menuItemClicked(event)}"
 		menuShow="{menuShow(event)}"
 		keyEquivalentField="@key" keyEquivalentModifiersFunction="StandardOSModifier"
-		mnemonicIndexField="@mnemonicIndex"			
+		mnemonicIndexField="@mnemonicIndex"	
 		/>
     <mx:XML format="e4x" id="collageMenuData">
         <root>

@@ -3,8 +3,7 @@
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
 	title="Please login"
 	creationComplete="handleCreationComplete();"
-	close="closeMe();">
-	
+	close="closeMe();" showCloseButton="false" horizontalAlign="center" verticalAlign="middle">
 	<mx:Script>
 		<![CDATA[
 			import flash.events.*;
@@ -15,6 +14,8 @@
 				// Center the TitleWindow container 
 				// over the control that created it.
 				PopUpManager.centerPopUp(this);
+				
+				authMsg.text = "";
 				
 				Session.events.addEventListener(Session.LOGIN_FAILURE, Login_Failure);
 				Session.events.addEventListener(Session.LOGIN_SUCCESS, Login_Success);
@@ -34,20 +35,20 @@
 			}
 			
 			private function Login_Failure(event:Event):void {
-				Alert.show("Could not log you in, please try again.");
+				authMsg.text = "Login failed, please try again.";
 			}
 		]]>
 	</mx:Script>
-
-	<mx:Form>
-		<mx:FormItem label="E-Mail Address">
+	<mx:Form width="100%" defaultButton="{loginBtn}">
+		<mx:FormItem label="E-Mail Address" width="100%" textAlign="left" required="true">
 			<mx:TextInput id="email_address" width="100%" text="{Session.getItem('stored_email')}"/>
 		</mx:FormItem>
-		<mx:FormItem label="Password">
+		<mx:FormItem label="Password" width="100%" required="true">
 			<mx:TextInput id="password" displayAsPassword="true" width="100%"/>
 		</mx:FormItem>
 	</mx:Form>
-	<mx:HBox>
-		<mx:Button click="processLogin();" label="Login" />
+	<mx:HBox width="100%" textAlign="left" horizontalAlign="right" verticalAlign="middle">
+		<mx:Label text="Authentication failed message here." width="100%" textAlign="left" color="#8A1515" fontWeight="bold" fontSize="14" id="authMsg"/>
+		<mx:Button id="loginBtn" click="processLogin();" label="Login"  textAlign="center" fontSize="16" color="#333333"/>
 	</mx:HBox>
 </mx:TitleWindow>
