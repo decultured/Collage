@@ -1,5 +1,7 @@
 #!/bin/sh
 
+./buildrelease
+
 mkdir airpackage
 
 cp assets/app-icons/*.png airpackage/
@@ -9,7 +11,6 @@ cp src/Collage.air airpackage/
 
 cd airpackage
 
-adt -certificate -cn SelfSign -o "Endless Paths" -c US 2048-RSA collagecert.p12 4Sq_gD_ecPi4fEA
 adt -package -storetype pkcs12 -keystore collagecert.p12 -storepass 4Sq_gD_ecPi4fEA Collage.air Collage.xml Collage.swf file-128.png icon-128.png
 
 cd ../
