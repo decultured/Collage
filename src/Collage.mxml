@@ -53,9 +53,9 @@
 		{
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown);
 
-			/*Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
+			Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
 			Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleTokenExpired);
-			Session.CheckToken();*/
+			Session.CheckToken();
 			
 			_EditDocumentView.InitializeForEdit(inspectorWindow, optionsBox);
 			
