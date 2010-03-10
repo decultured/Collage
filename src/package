@@ -1,4 +1,0 @@
-#!/bin/sh
-
-adt -certificate -cn SelfSign -o "Endless Paths" -c US 2048-RSA collagecert.p12 4Sq_gD_ecPi4fEA
-adt -package -storetype pkcs12 -keystore collagecert.p12 -keypass 4Sq_gD_ecPi4fEA Collage.air Collage.xml Collage.swf
