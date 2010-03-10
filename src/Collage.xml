@@ -4,6 +4,7 @@
     <version>0.1</version> 
     <filename>Collage</filename> 
 	<allowBrowserInvocation>true</allowBrowserInvocation>
+<<<<<<< Updated upstream
     <initialWindow> 
         <content>Collage.swf</content> 
         <visible>true</visible> 
@@ -13,3 +14,28 @@
         <height>700</height> 
     </initialWindow>
 </application>
+=======
+	<initialWindow>
+		<content>Collage.swf</content>
+		<visible>true</visible>
+		<systemChrome>standard</systemChrome>
+		<transparent>false</transparent>
+		<width>1000</width>
+		<height>700</height>
+	</initialWindow>
+	<icon>
+		<image128x128>icon-128.png</image128x128>
+	</icon>
+	<fileTypes>
+		<fileType>
+			<name>com.endlesspaths.Collage.Dashboard</name>
+			<extension>clg</extension>
+			<description>Collage Dashboard file</description>
+			<contentType>application/x-collage</contentType>
+			<icon>
+				<image128x128>file-128.png</image128x128>
+			</icon>
+		</fileType>
+	</fileTypes>
+</application>
+>>>>>>> Stashed changes

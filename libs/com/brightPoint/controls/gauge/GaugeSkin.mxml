@@ -95,10 +95,10 @@
 									startOffsets.push(270-DegrafaGauge(parent).calculateAngleFromValue(values[i+1]));
 									arcs.push((DegrafaGauge(parent).calculateAngleFromValue(values[i+1])-DegrafaGauge(parent).calculateAngleFromValue(values[i])));
 							}
-							startAngleOffsets.offset=startOffsets;
-							arcOffsets.offset=arcs;
-							colorOffsets.offset=colors;
-						 	alphaOffsets.offset=alphas;
+//							startAngleOffsets.offset=startOffsets;
+//							arcOffsets.offset=arcs;
+//							colorOffsets.offset=colors;
+//						 	alphaOffsets.offset=alphas;
 							alertRepeater.count=colors.length;
 							alertRepeater.invalidated=true;
 						}
@@ -213,10 +213,10 @@
 						</stroke>
 				</EllipticalArc>
 				<coreRepeaters:modifiers>
-					<PropertyModifier property="startAngle" offsetOperator="none" id="startAngleOffsets" />
-					<PropertyModifier property="arc" offsetOperator="none" id="arcOffsets" />
-					<PropertyModifier property="stroke.color" offsetOperator="none" id="colorOffsets" />
-					<PropertyModifier property="stroke.alpha" offsetOperator="none" id="alphaOffsets" />
+					<PropertyModifier property="startAngle" id="startAngleOffsets" />
+					<PropertyModifier property="arc" id="arcOffsets" />
+					<PropertyModifier property="stroke.color" id="colorOffsets" />
+					<PropertyModifier property="stroke.alpha" id="alphaOffsets" />
 				</coreRepeaters:modifiers>
 			</coreRepeaters:GeometryRepeater>
 			

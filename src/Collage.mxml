@@ -10,8 +10,6 @@
 	width="1000"
 	menu="{nativeMenu}"
 	title="Collage"
-	titleTextStyleName="appTitle"
-	headerHeight="21"
 	buttonAlignment="auto"
 	cornerRadius="4"
 	showStatusBar="true"
@@ -22,17 +20,8 @@
     paste="HandlePaste(event)"
 	nativeDragEnter="onDragIn(event)" 
 	nativeDragDrop="onDrop(event)" >
-	<mx:Style> 
-		WindowedApplication
-		{
-			background-color:"0x777777";
-			background-alpha:"1.0";
-		}
-		
-		.appTitle {
-			font-size: 14;
-		}
-	</mx:Style>
+	
+	<mx:Style source="yflexskin.css"/>
 	<mx:Script>
 	<![CDATA[
 		import com.adobe.serialization.json.JSON;
@@ -335,7 +324,7 @@
 		itemClick="{menuItemClicked(event)}"
 		menuShow="{menuShow(event)}"
 		keyEquivalentField="@key" keyEquivalentModifiersFunction="StandardOSModifier"
-		mnemonicIndexField="@mnemonicIndex"			
+		mnemonicIndexField="@mnemonicIndex"	
 		/>
     <mx:XML format="e4x" id="collageMenuData">
         <root>
