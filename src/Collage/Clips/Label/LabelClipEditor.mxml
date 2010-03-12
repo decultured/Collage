@@ -32,10 +32,12 @@
 		<mx:TextInput id="src" text="{model.text}" color="0x323232" width="100%" change="SettingsChanged()"/>
 		<mx:HRule width="100%" />
 		<mx:HBox width="100%" >
-			<mx:Label text="Text Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="textColorPicker" showTextField="true" selectedColor="{model.color}" change="SettingsChanged()" />
+			<mx:Label text="Text Color:" color="#000000" fontWeight="bold" />
+			<mx:ColorPicker id="textColorPicker" showTextField="true" selectedColor="{model.color}" change="SettingsChanged()" />
 		</mx:HBox>
 		<mx:HBox width="100%" >
-			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="{model.backgroundColor}" change="SettingsChanged()" />
+			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" />
+			<mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="{model.backgroundColor}" change="SettingsChanged()" />
 		</mx:HBox>
 		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
 		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="{model.backgroundAlpha}"

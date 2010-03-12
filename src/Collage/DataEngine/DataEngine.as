@@ -5,6 +5,7 @@ package Collage.DataEngine
 	import mx.controls.Alert;
 	import com.adobe.serialization.json.JSON;
 	import flash.filesystem.*;
+	import Collage.Logger.*;
 	
 	public class DataEngine extends EventDispatcher
 	{
@@ -46,11 +47,8 @@ package Collage.DataEngine
 			var dataSetSelections:Array = new Array();
 
 			for (var key:String in datasets) {
-				if (datasets[key].GetNumColumnsOfType(allowedTypes) < minAllowedColumns)// || datasets[key].totalRows < minAllowedRows)
-				{
-//					Alert.show(datasets[key].title + "\n" + Number(datasets[key].GetNumColumnsOfType(allowedTypes)) + " " + minAllowedColumns + "\n" + datasets[key].totalRows + " " + minAllowedRows);
+				if (datasets[key].GetNumColumnsOfType(allowedTypes) < minAllowedColumns)
 					continue;
-				}
 				
 				var newObject:Object = new Object;
 				newObject["label"] = datasets[key].title;
@@ -100,13 +98,13 @@ package Collage.DataEngine
 		private static function IOErrorHandler(event:IOErrorEvent):void
 		{
             event.target.removeEventListener(IOErrorEvent.IO_ERROR, IOErrorHandler);
-			Alert.show("ioErrorHandler: " + event);
+			Logger.Log("Data Engine IO Error: " + event, LogEntry.ERROR);
 		}
 		
         private static function SecurityErrorHandler(event:SecurityErrorEvent):void
 		{
             event.target.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, SecurityErrorHandler);
-            Alert.show("securityErrorHandler: " + event);
+			Logger.Log("Data Engine Security Error: " + event, LogEntry.ERROR);
         }
 
 		private static function CompleteHandler(event:Event):void
@@ -144,8 +142,7 @@ package Collage.DataEngine
 				events.dispatchEvent(new Event(COMPLETE));
 				loading = false;
 				loaded = true;
-				// TODO : Move to status bar
-				// Alert.show("Data Load Complete.");
+				Logger.Log("Data Load Complete", LogEntry.INFO);
 			}
 		}
 		
@@ -168,27 +165,26 @@ package Collage.DataEngine
 		}
 		
         private static function FileUploadHttpStatusHandler(event:HTTPStatusEvent):void {
-			Alert.show("httpStatusHandler: \n" + event + "\n" + event.target.data);
+			Logger.Log("Data Engine File Upload HTTP Status: " + event, LogEntry.DEBUG);
         }
 
 		private static function FileUploadIOErrorHandler(event:IOErrorEvent):void
 		{
             event.target.removeEventListener(IOErrorEvent.IO_ERROR, IOErrorHandler);
-			Alert.show("ioErrorHandler: \n" + DataEngine.getUrl("/api/v1/dataset/upload")+ "\n" + event + " " + event.target.data);
+			Logger.Log("Data Engine File Upload IO Error: " + event, LogEntry.ERROR);
 		}
 
         private static function FileUploadSecurityErrorHandler(event:SecurityErrorEvent):void
 		{
             event.target.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, SecurityErrorHandler);
-            Alert.show("securityErrorHandler: \n" + DataEngine.getUrl("/api/v1/dataset/upload"));
+			Logger.Log("Data Engine File Upload Security Error: " + event, LogEntry.ERROR);
         }
 
 		private static function FileUploadCompleteHandler(event:Event):void
 		{
 			event.target.removeEventListener(Event.COMPLETE, CompleteHandler);
             DataEngine.LoadAllDataSets();
-			// TODO : Status Update for file complete
-			Alert.show("File Upload Complete!");
+			Logger.Log("File Upload Complete!", LogEntry.INFO);
 		}
 	}
 }

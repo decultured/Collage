@@ -20,8 +20,8 @@
     paste="HandlePaste(event);"
 	nativeDragEnter="onDragIn(event)" 
 	nativeDragDrop="onDrop(event)" >
-	<mx:Style source="collageBasic.css"/>
 	<mx:Style source="yflexskin.css"/>
+	<mx:Style source="collageBasic.css"/>
 	<mx:Script>
 	<![CDATA[
 		import mx.containers.dividedBoxClasses.BoxDivider;
@@ -39,6 +39,7 @@
 	    import flash.desktop.ClipboardFormats;
 	    import flash.desktop.ClipboardTransferMode;
 		import Collage.DataEngine.*;
+		import Collage.Logger.*;
 		import org.alivepdf.pdf.*;
 		import org.alivepdf.pdf.PDF;	
 		import org.alivepdf.display.*;
@@ -50,11 +51,13 @@
 
 		private function Initialize():void
 		{
+			Logger.events.addEventListener(Logger.NEW_LOG_EVENT, LoggerStatusBarUpdate);
+			Logger.Log("Application Started", LogEntry.DEBUG   , this);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown);
 
-			Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
+			/*Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
 			Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleTokenExpired);
-			Session.CheckToken();
+			Session.CheckToken();*/
 			
 			_EditDocumentView.InitializeForEdit(inspectorWindow, optionsBox);
 			
@@ -62,6 +65,35 @@
 			this.nativeWindow.y = (Capabilities.screenResolutionY - this.height)/2;
 			
 //			this.nativeWindow.maximize();
+		}
+		
+		public function LoggerStatusBarUpdate(event:Event):void {
+			if (!Logger.LastLog())
+				return;
+				
+			switch (Logger.LastLog().level) {
+				case LogEntry.DEBUG:
+					statusBar.setStyle("color", 0x555555);
+					break;
+				case LogEntry.INFO:
+					statusBar.setStyle("color", 0x333333);
+					break;
+				case LogEntry.WARNING:
+					statusBar.setStyle("color", 0x999900);
+					break;
+				case LogEntry.ERROR:
+					statusBar.setStyle("color", 0xFF9955);
+					break;
+				case LogEntry.CRITICAL:
+					statusBar.setStyle("color", 0xFF0000);
+					break;
+				default:
+					statusBar.setStyle("color", 0x000000);
+					break;
+			}			
+			
+			if (Logger.LastLog().level >= LogEntry.INFO)
+				status = Logger.LastLog().text;
 		}
 		
 		public function HandleLoginSuccess(event:Event):void {
@@ -131,7 +163,7 @@
 				fs.writeUTFBytes(jsonFile); 
 				fs.close();
 			} catch(e:Error){
-				trace(e.message);
+				Logger.Log(e.message, LogEntry.ERROR, this);
 			}
 		}
 		
@@ -361,6 +393,10 @@
 				case "logout":
 					Session.Logout();
 					break;
+				case "debugger":
+					var newLoggerWindow:LoggerWindow = new LoggerWindow();
+					newLoggerWindow.open();
+					break;
 				case "hideInspector":
 					inspectorWindow.visible = !inspectorWindow.visible;
 
@@ -414,6 +450,7 @@
 				<menuitem label="Cut" enabled="false" command="cut" key="x"/>
 				<menuitem label="Copy" enabled="false" command="copy" key="c"/>
 				<menuitem label="Paste" command="paste" key="v"/>
+				<menuitem label="Delete" command="delete" />
                 <menuitem type="separator"/>
 				<menuitem label="Refresh datasets" command="refreshDatasets" key="r"/>
                 <menuitem type="separator"/>
@@ -441,6 +478,8 @@
             <menuitem label="View">
                 <menuitem label="Fullscreen" type="check" command="fullscreen" toggled="false"/>
                 <menuitem label="Hide Inspector" command="hideInspector" key="i"/>
+                <menuitem type="separator" />
+				<menuitem label="Debug Log Window" command="debugger" />
             </menuitem>
         </root>
     </mx:XML>

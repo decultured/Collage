@@ -34,3 +34,8 @@ WindowedApplication
 	verticalScrollPolicy:off;
 	width:"242";
 }
+
+.Label {
+	fontSharpness:"-400";
+	fontAntiAliasType:"advanced";
+}

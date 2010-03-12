@@ -11,6 +11,7 @@ package Collage.Document
 	import com.roguedevelopment.objecthandles.constraints.*;
 	import com.roguedevelopment.objecthandles.decorators.AlignmentDecorator;
 	import com.roguedevelopment.objecthandles.decorators.DecoratorManager;
+	import Collage.Logger.*;
 
 	public class EditDocumentView extends DocumentView
 	{
@@ -150,13 +151,14 @@ package Collage.Document
 			if (!super.AddClip(newClip))
 				return false;
 			AddObjectHandles(newClip);
+			Logger.Log("New clip", LogEntry.DEBUG, newClip);
 			return true;
 		}
 
 		public override function AddClipByType(clipType:String, position:Rectangle = null, dataObject:Object = null):Clip
 		{
 			var newClip:Clip = super.AddClipByType(clipType, position, dataObject);
-			AddObjectHandles(newClip);
+			//AddObjectHandles(newClip);
 			return newClip;
 
 		}
@@ -164,7 +166,7 @@ package Collage.Document
 		public override function AddClipFromData(data:Object, position:Rectangle = null):Clip
 		{
 			var newClip:Clip = super.AddClipFromData(data);
-			AddObjectHandles(newClip);
+			//AddObjectHandles(newClip);
 			return newClip;
 		}
 
@@ -369,6 +371,7 @@ package Collage.Document
 				var view:ClipView = _CurrentlySelected.view;
 				_ObjectHandles.unregisterComponent(view);
 				removeChild(view);
+				Logger.Log("Clip Deleted", LogEntry.DEBUG, this);
 			}
 		}
 		

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Window xmlns:mx="http://www.adobe.com/2006/mxml" 
+    layout="absolute" 
+    title="Document window" 
+    width="550" height="450"
+	creationComplete="Initialize()"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off">
+	<mx:Script>
+	<![CDATA[
+		import mx.collections.ArrayCollection;
+	
+		[Bindable]
+		public var levels:ArrayCollection = new ArrayCollection([
+				{label:"Debug", data:1}, 
+				{label:"Info", data:2}, 
+				{label:"Warning", data:3},
+			  	{label:"Error", data:3}, 
+			  	{label:"Critical", data:3}]);
+
+		[Bindable]
+		public var loggerEntries:ArrayCollection = new ArrayCollection();
+		
+		public function Initialize():void
+		{
+			loggerEntries = Logger.logEntries;
+		}
+
+		public function MessageBackgroundColor(level:int):Number {
+			switch (level) {
+				case LogEntry.DEBUG:
+					return 0xffffff;
+				case LogEntry.INFO:
+					return 0xdaffe0;
+				case LogEntry.WARNING:
+					return 0xfffdda;
+				case LogEntry.ERROR:
+					return 0xffe2c0;
+				case LogEntry.CRITICAL:
+					return 0xffdbe0;
+				default:
+					return 0xcccccc;
+			}			
+		}
+	]]>
+    </mx:Script>
+    <!-- <mx:DataGrid id="datagrid" dataProvider="{Logger.logEntries}" width="100%" height="100%" /> -->
+	<mx:ApplicationControlBar dock="true" paddingTop="0" paddingBottom="0" width="100%" height="30">
+		<mx:Label text="Docked" fontWeight="bold" color="0x000000"/>
+		<mx:ComboBox dataProvider="{levels}" width="150" color="0x000000" />
+	</mx:ApplicationControlBar>
+	<mx:Canvas top="30" bottom="0" left="0" right="0" horizontalScrollPolicy="off" >
+	<mx:VBox verticalGap="3" 
+		width="100%" height="100%" horizontalScrollPolicy="off"
+		paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5">
+		<mx:Repeater id="rp" dataProvider="{loggerEntries}">
+			<mx:VBox cornerRadius="5" 
+				dropShadowEnabled="true" 
+				shadowDistance="1"
+				dropShadowColor="0x333333"
+				borderStyle="solid"
+				backgroundColor="{MessageBackgroundColor(rp.currentItem.level)}"
+				backgroundAlpha="1"
+				width="100%"
+				verticalGap="3"
+				paddingTop="3" paddingBottom="3" paddingLeft="3" paddingRight="3" >
+				<mx:Label text="{String(rp.currentItem.text)}" fontWeight="bold" color="0x333333" fontSize="12" />
+				<mx:HBox>
+					<mx:Label text="{String(rp.currentItem.time)}" color="0x666666" fontSize="10" />
+					<mx:Spacer width="100%" />
+					<mx:Label text="{String(rp.currentItem.className)}" color="0x666666" fontSize="10" />
+				</mx:HBox>
+			</mx:VBox>
+		</mx:Repeater>
+	</mx:VBox>
+	</mx:Canvas>
+</mx:Window>

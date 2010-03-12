@@ -15,6 +15,7 @@ package Collage.Clips.Table
 		[Bindable] public var dataSetID:String = null;
 		[Bindable] public var backgroundAlpha:Number = 1.0;
 		[Bindable] public var backgroundColor:Number = 0xFFFFFF;
+		[Bindable] public var color:Number = 0x000000;
 
 		public var dataLoaded:Boolean = false;
 

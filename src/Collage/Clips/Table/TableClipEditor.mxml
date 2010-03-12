@@ -44,6 +44,7 @@
 				var tableModel:TableClip = _Model as TableClip;
 				tableModel.backgroundColor = backgroundColorPicker.selectedColor;
 				tableModel.backgroundAlpha = transparencySlider.value;
+				tableModel.color = textColorPicker.selectedColor;
 			}
 		}
 		private function DataEngineConnect():void
@@ -125,10 +126,14 @@
 	<flexlib:WindowShade label="General Styles" styleName="linkButtonWindowShade" width="100%">
 		<mx:HRule width="100%" />
 		<mx:HBox width="100%" >
+			<mx:Label text="Text Color:" color="#000000" fontWeight="bold" />
+			<mx:ColorPicker id="textColorPicker" showTextField="true" selectedColor="{model.color}" change="SettingsChanged()" />
+		</mx:HBox>
+		<mx:HBox width="100%" >
 			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" />
-			<mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF" change="SettingsChanged()" />
+			<mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="{model.backgroundColor}" change="SettingsChanged()" />
 		</mx:HBox>
 		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
-		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="1" change="SettingsChanged()" />
+		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="{model.backgroundAlpha}" change="SettingsChanged()" />
 	</flexlib:WindowShade>
 </clg:ClipEditor>

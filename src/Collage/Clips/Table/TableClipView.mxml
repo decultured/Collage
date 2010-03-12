@@ -24,8 +24,6 @@
 
 			if (event && event.property != "x" && event.property != "y" && event.property != "width" && event.property != "height")
 			{
-				setStyle("backgroundColor", tableModel.backgroundColor);
-				setStyle("backgroundAlpha", tableModel.backgroundAlpha);
 				if (datagrid && tableModel.columns && tableModel.data && tableModel.columns.length && tableModel.data.length) {
 					datagrid.columns = tableModel.columns;
 					datagrid.dataProvider = tableModel.data;
@@ -35,5 +33,5 @@
 		}
 	]]>
     </mx:Script>
-	<mx:DataGrid id="datagrid" color="0x323232" width="100%" height="100%" />
+	<mx:DataGrid id="datagrid" color="{model.color}" backgroundColor="{model.backgroundColor}" backgroundAlpha="{model.backgroundAlpha}" width="100%" height="100%" />
 </clg:ClipView>
