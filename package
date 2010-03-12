@@ -8,7 +8,6 @@ cp assets/app-icons/*.png airpackage/
 cp collagecert.p12 airpackage/
 cp src/Collage.xml airpackage/
 cp src/Collage.swf airpackage/
-cp src/Collage.air airpackage/
 
 cd airpackage
 
