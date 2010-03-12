@@ -65,7 +65,15 @@
 		}
 		
 		private function OnInvoke(event:InvokeEvent):void {
-			
+			for (var i:uint = 0; i < event.arguments.length; i++)
+			{
+				if (!event.currentDirectory || !event.currentDirectory.isDirectory)
+					return;
+				Logger.Log("Application Arugment: " + event.arguments[i], LogEntry.DEBUG, this);
+				var newFile:File = event.currentDirectory.resolvePath(event.arguments[i]);
+				if (newFile)
+					OpenFileObject(newFile);
+			}
 		}
 
 		private function onUpdate(event:UpdateEvent):void {
