@@ -20,7 +20,8 @@
     paste="HandlePaste(event);"
 	keyDown="HandleKeyDown(event);"
 	nativeDragEnter="onDragIn(event)"
-	nativeDragDrop="onDrop(event)" 
+	nativeDragDrop="onDrop(event)"
+	invoke="OnInvoke(event)"
 	closing="WindowClosing(event)" >
 	<mx:Style source="yflexskin.css"/>
 	<mx:Style source="collageBasic.css"/>
@@ -63,6 +64,10 @@
 			appUpdater.initialize();
 		}
 		
+		private function OnInvoke(event:InvokeEvent):void {
+			
+		}
+
 		private function onUpdate(event:UpdateEvent):void {
 			//start the process of checking for a new update and to install
 			appUpdater.checkNow();
@@ -74,15 +79,11 @@
 		{
 			Logger.events.addEventListener(Logger.NEW_LOG_EVENT, LoggerStatusBarUpdate);
 			Logger.Log("Application Started", LogEntry.DEBUG   , this);
-			Logger.Log("Application Started", LogEntry.INFO   , this);
-			Logger.Log("Application Started", LogEntry.WARNING   , this);
-			Logger.Log("Application Started", LogEntry.ERROR   , this);
-			Logger.Log("Application Started", LogEntry.CRITICAL   , this);
 			//stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown);
 
-			/*Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
+			Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
 			Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleTokenExpired);
-			Session.CheckToken();*/
+			Session.CheckToken();
 			
 			_EditDocumentView.InitializeForEdit(inspectorWindow, optionsBox);
 			
@@ -103,11 +104,9 @@
 			DataEngine.LoadAllDataSets();
 		}
 		
-		/*
 		public function HandleLoginFailure(event:Event):void {
 			PopUpManager.createPopUp(this, Login, true);
 		}
-		*/
 		
 		public function HandleTokenExpired(event:Event):void {
 			PopUpManager.createPopUp(this, Login, true);
@@ -133,8 +132,8 @@
 		
 		private function HandleKeyDown(event:KeyboardEvent):void
 		{
-			if (event.keyCode == KeyCodes.DELETE || event.keyCode == KeyCodes.BACKSPACE)
-				_EditDocumentView.deleteSelected();
+//			if (event.keyCode == KeyCodes.DELETE || event.keyCode == KeyCodes.BACKSPACE)
+//				_EditDocumentView.deleteSelected();
 		}
 		
 		private function WindowClosing(event:Event):void

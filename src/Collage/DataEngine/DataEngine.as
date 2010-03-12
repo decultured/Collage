@@ -90,9 +90,16 @@ package Collage.DataEngine
 			request.method = URLRequestMethod.GET;
 			loader.addEventListener(Event.COMPLETE, CompleteHandler);
             loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, SecurityErrorHandler);
+            loader.addEventListener(HTTPStatusEvent.HTTP_STATUS, HttpStatusHandler);
             loader.addEventListener(IOErrorEvent.IO_ERROR, IOErrorHandler);
 			
 			loader.load(request);
+		}
+		
+		private static function HttpStatusHandler(event:HTTPStatusEvent):void
+		{
+            event.target.removeEventListener(HTTPStatusEvent.HTTP_STATUS, HttpStatusHandler);
+			Logger.Log("Data Engine HTTP Status: " + event, LogEntry.DEBUG);
 		}
 		
 		private static function IOErrorHandler(event:IOErrorEvent):void
@@ -126,7 +133,7 @@ package Collage.DataEngine
 				for (var dataSetKey:String in results[key]) {
 					if (dataSetKey == "uploaded" || dataSetKey == "processed") {
 						(results[key][dataSetKey] == "true") ? newDataSet[dataSetKey] = true : newDataSet[dataSetKey] = false;
-					} else {
+					} else if (newDataSet.hasOwnProperty(dataSetKey)) {
 						newDataSet[dataSetKey] = results[key][dataSetKey];
 					}
 				}

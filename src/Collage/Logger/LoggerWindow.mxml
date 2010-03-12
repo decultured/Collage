@@ -89,11 +89,11 @@
 				width="100%"
 				verticalGap="3"
 				paddingTop="3" paddingBottom="3" paddingLeft="3" paddingRight="3" >
-				<mx:Label text="{String(rp.currentItem.text)}" fontWeight="bold" color="0x333333" fontSize="12" />
+				<mx:Text selectable="true" text="{String(rp.currentItem.text)}" fontWeight="bold" color="0x333333" fontSize="12" width="550"/>
 				<mx:HBox>
-					<mx:Label text="{String(rp.currentItem.time)}" color="0x666666" fontSize="10" />
+					<mx:Label selectable="true" text="{String(rp.currentItem.time)}" color="0x666666" fontSize="10" />
 					<mx:Spacer width="100%" />
-					<mx:Label text="{String(rp.currentItem.className)}" color="0x666666" fontSize="10" />
+					<mx:Label selectable="true" text="{String(rp.currentItem.className)}" color="0x666666" fontSize="10" />
 				</mx:HBox>
 			</mx:VBox>
 		</mx:Repeater>

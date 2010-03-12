@@ -30,7 +30,7 @@ package Collage.Logger
 		public static function LastLog():LogEntry
 		{
 			if (logEntries.length)
-				return logEntries[length - 1];
+				return logEntries[logEntries.length - 1];
 			else
 				return null;
 		}

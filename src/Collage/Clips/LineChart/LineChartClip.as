@@ -1,5 +1,6 @@
 package Collage.Clips.LineChart
 {
+	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
 	import Collage.Clip.*;
 	import flash.events.*;
@@ -12,7 +13,7 @@ package Collage.Clips.LineChart
 		[Bindable] public var xAxisDataColumn:String = null;
 		[Bindable] public var yAxisDataColumn:String = null; 
 
-		[Bindable] public var Data:Array = new Array();
+		[Bindable] public var Data:ArrayCollection = new ArrayCollection();
 		
 		public var dataLoaded:Boolean = false;
 		public var rowsRequested:Number = 10;
@@ -49,7 +50,7 @@ package Collage.Clips.LineChart
 		
 		public function ResetData():void
 		{
-			Data = new Array();
+			Data = new ArrayCollection();
 			dataLoaded = false;
 			
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
@@ -61,7 +62,7 @@ package Collage.Clips.LineChart
 			if (!dataset || !_DataQuery || !_DataQuery.result || !_DataQuery.result.rows is Array)
 				return;
 
-			Data = new Array();
+			var newData:Array = new Array();
 			var rows:Array = _DataQuery.result.rows;
 			
 			//Alert.show("Rows: " + rows.length);
@@ -99,7 +100,7 @@ package Collage.Clips.LineChart
 				if (yAxisMax < rows[rowKey][yAxisDataColumn])
 					yAxisMax = rows[rowKey][yAxisDataColumn];
 				
-				Data.push(newObject);
+				newData.push(newObject);
 			}
 			
 			if (xAxisMin >= xAxisMax) {
@@ -112,10 +113,12 @@ package Collage.Clips.LineChart
 				return;
 			} 
 			
-			Data.sortOn("x", Array.NUMERIC);
+			newData.sortOn("x", Array.NUMERIC);
 			dataLoaded = true;
 
+			Data = new ArrayCollection(newData);
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+			
 			_DataQuery = null;
 		}
 		

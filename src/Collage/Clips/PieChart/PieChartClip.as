@@ -56,7 +56,7 @@ package Collage.Clips.PieChart
 			if (!_DataQuery || !_DataQuery.result || !_DataQuery.result.rows is Array)
 				return;
 
-			Data = new Array();
+			var newData:Array = new Array();
 			var rows:Array = _DataQuery.result.rows;
 			
 			for (var rowKey:uint = 0; rowKey < rows.length; rowKey++)
@@ -70,10 +70,11 @@ package Collage.Clips.PieChart
 				newObject["label"] = rows[rowKey][labelColumn];
 				newObject["value"] = rows[rowKey][dataColumn];
 				
-				Data.push(newObject);
+				newData.push(newObject);
 			}
 
-			Data.sortOn("x", Array.NUMERIC);
+			newData.sortOn("x", Array.NUMERIC);
+			Data = newData;
 			dataLoaded = true;
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 			_DataQuery = null;

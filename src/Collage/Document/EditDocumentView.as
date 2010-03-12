@@ -151,7 +151,6 @@ package Collage.Document
 			if (!super.AddClip(newClip))
 				return false;
 			AddObjectHandles(newClip);
-			Logger.Log("New clip", LogEntry.DEBUG, newClip);
 			return true;
 		}
 

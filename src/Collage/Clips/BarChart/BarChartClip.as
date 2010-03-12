@@ -13,7 +13,7 @@ package Collage.Clips.BarChart
 		[Bindable] public var dataColumn:String = null; 
 		[Bindable] public var dataModifier:String = null; 
 		
-		public var Data:Array = new Array();
+		[Bindable] public var Data:Array = new Array();
 		public var dataLoaded:Boolean = false;
 		public var rowsRequested:Number = 10;
 
@@ -55,7 +55,7 @@ package Collage.Clips.BarChart
 			if (!_DataQuery || !_DataQuery.result || !_DataQuery.result.rows is Array)
 				return;
 
-			Data = new Array();
+			var newData:Array = new Array();
 			var rows:Array = _DataQuery.result.rows;
 			
 			for (var rowKey:uint = 0; rowKey < rows.length; rowKey++)
@@ -69,10 +69,11 @@ package Collage.Clips.BarChart
 				newObject["label"] = rows[rowKey][labelColumn];
 				newObject["value"] = rows[rowKey][dataColumn];
 				
-				Data.push(newObject);
+				newData.push(newObject);
 			}
 
-			Data.sortOn("x", Array.NUMERIC);
+			newData.sortOn("x", Array.NUMERIC);
+			Data = newData;
 			dataLoaded = true;
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 			_DataQuery = null;

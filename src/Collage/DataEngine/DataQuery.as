@@ -4,7 +4,8 @@ package Collage.DataEngine
 	import flash.events.*;
 	import mx.controls.Alert;
 	import com.adobe.serialization.json.JSON;
-
+	import Collage.Logger.*;
+	
 	public class DataQuery extends EventDispatcher
 	{
 		public static var COMPLETE:String = "complete";
@@ -83,38 +84,28 @@ package Collage.DataEngine
 			loader.addEventListener(Event.COMPLETE, CompleteHandler);
             loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, SecurityErrorHandler);
             loader.addEventListener(IOErrorEvent.IO_ERROR, IOErrorHandler);
-            loader.addEventListener(Event.OPEN, OpenHandler);
-            loader.addEventListener(ProgressEvent.PROGRESS, ProgressHandler);
             loader.addEventListener(HTTPStatusEvent.HTTP_STATUS, HttpStatusHandler);
 
-//			Alert.show(params['q']);
-
+			Logger.Log("New query: " + params['q'], LogEntry.DEBUG, this);
+			
 			loader.load(request);
 		}
 		
-        private function OpenHandler(event:Event):void {
-//            Alert.show("openHandler: " + event);
-        }
-
-        private function ProgressHandler(event:ProgressEvent):void {
-//            Alert.show("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal);
-        }
-
         private function HttpStatusHandler(event:HTTPStatusEvent):void {
-//            if (event.target
-//			Alert.show("httpStatusHandler: " + event);
+			event.target.removeEventListener(HTTPStatusEvent.HTTP_STATUS, HttpStatusHandler);
+			Logger.Log("Query Status: " + event, LogEntry.DEBUG, this);
         }
 
 		private function IOErrorHandler(event:IOErrorEvent):void
 		{
             event.target.removeEventListener(IOErrorEvent.IO_ERROR, IOErrorHandler);
-			Alert.show("ioErrorHandler: \n" + DataEngine.getUrl("/api/v1/dataset/" + dataset + "/query") + " \n" + queryString);
+			Logger.Log("Query IO Error: " + event, LogEntry.ERROR, this);
 		}
 		
         private function SecurityErrorHandler(event:SecurityErrorEvent):void
 		{
             event.target.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, SecurityErrorHandler);
-            Alert.show("securityErrorHandler: " + DataEngine.getUrl("/api/v1/dataset/" + dataset + "/query") + " \n" + queryString);
+			Logger.Log("Query Security Error: " + event, LogEntry.ERROR, this);
         }
 
 		private function CompleteHandler(event:Event):void
@@ -155,14 +146,12 @@ package Collage.DataEngine
 				}
 			}
 
-//			Alert.show(event.target.data);
+			Logger.Log("Data Query Loaded Successfully", LogEntry.INFO, this);
 
 			result.AdjustRowFieldTypes();
 			dispatchEvent(new Event(COMPLETE));
 			loading = false;
 			loaded = true;
-
 		}
-
 	}
 }
