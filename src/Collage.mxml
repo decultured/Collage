@@ -48,6 +48,25 @@
 		import org.alivepdf.images.*;
 		import org.alivepdf.layout.*;
 		import org.alivepdf.saving.*;
+		
+		/* auto updater ui */
+		import air.update.events.UpdateEvent;
+		import air.update.ApplicationUpdaterUI;
+		
+		private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
+		
+		private function checkUpdate():void {
+			appUpdater.updateURL = "http://version.endlesspaths.com/collage/latest.xml";
+			appUpdater.addEventListener(UpdateEvent.INITIALIZED, onUpdate);
+			/*appUpdater.addEventListener(ErrorEvent.ERROR, onError);*/
+			appUpdater.isCheckForUpdateVisible = false;
+			appUpdater.initialize();
+		}
+		
+		private function onUpdate(event:UpdateEvent):void {
+			//start the process of checking for a new update and to install
+			appUpdater.checkNow();
+		}
 
 		private var _Document:Document;
 
@@ -69,8 +88,10 @@
 			
 			this.nativeWindow.x = (Capabilities.screenResolutionX - this.width)/2;
 			this.nativeWindow.y = (Capabilities.screenResolutionY - this.height)/2;
+			this.nativeWindow.visible = true;
 			
-//			this.nativeWindow.maximize();
+			/* auto updater - called after everything else is initialized */
+			checkUpdate();
 		}
 		
 		public function LoggerStatusBarUpdate(event:Event):void {
@@ -468,7 +489,7 @@
                 <menuitem label="Google Maps" command="insertGoogleMaps"/>
             </menuitem>
             <menuitem label="View">
-                <menuitem label="Fullscreen" type="check" command="fullscreen" toggled="false"/>
+                <menuitem label="Fullscreen" type="check" command="fullscreen" toggled="false" key="f"/>
                 <menuitem label="Hide Inspector" command="hideInspector" key="i"/>
                 <menuitem type="separator" />
 				<menuitem label="Debug Log Window" command="debugger" />

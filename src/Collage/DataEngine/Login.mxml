@@ -3,7 +3,7 @@
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
 	title="Please login"
 	creationComplete="handleCreationComplete();"
-	close="closeMe();" showCloseButton="false" horizontalAlign="center" verticalAlign="middle">
+	close="closeMe();">
 	<mx:Script>
 		<![CDATA[
 			import flash.events.*;
