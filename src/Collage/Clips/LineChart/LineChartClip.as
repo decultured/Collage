@@ -13,7 +13,7 @@ package Collage.Clips.LineChart
 		[Bindable] public var xAxisDataColumn:String = null;
 		[Bindable] public var yAxisDataColumn:String = null; 
 
-		[Bindable] public var Data:ArrayCollection = new ArrayCollection();
+		[Bindable] public var Data:Array = new Array();
 		
 		public var dataLoaded:Boolean = false;
 		public var rowsRequested:Number = 10;
@@ -50,7 +50,7 @@ package Collage.Clips.LineChart
 		
 		public function ResetData():void
 		{
-			Data = new ArrayCollection();
+			Data = new Array();
 			dataLoaded = false;
 			
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
@@ -116,7 +116,7 @@ package Collage.Clips.LineChart
 			newData.sortOn("x", Array.NUMERIC);
 			dataLoaded = true;
 
-			Data = new ArrayCollection(newData);
+			Data = newData;
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 			
 			_DataQuery = null;
