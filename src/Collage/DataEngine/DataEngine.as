@@ -11,10 +11,7 @@ package Collage.DataEngine
 	{
 		/*public static var baseUrl:String = "http://dataengine.local/";*/
 		public static var baseUrl:String = "http://dataengine.endlesspaths.com/";
-<<<<<<< HEAD
-=======
-		
->>>>>>> efc66ab7553286313dfa093721b8c7e7a3dc8223
+
 		public static var COMPLETE:String = "complete";
 		
 		public static var datasets:Object = new Object();
