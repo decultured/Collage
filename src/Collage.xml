@@ -1,20 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?> 
-<application xmlns="http://ns.adobe.com/air/application/1.5"> 
-    <id>com.endlesspaths.Collage</id> 
-    <version>0.1</version> 
-    <filename>Collage</filename> 
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://ns.adobe.com/air/application/1.5">
+	<id>com.endlesspaths.Collage</id>
+	<version>0.1.8</version>
+	<filename>Collage</filename>
 	<allowBrowserInvocation>true</allowBrowserInvocation>
-<<<<<<< Updated upstream
-    <initialWindow> 
-        <content>Collage.swf</content> 
-        <visible>true</visible> 
-        <systemChrome>none</systemChrome> 
-        <transparent>true</transparent> 
-        <width>1000</width> 
-        <height>700</height> 
-    </initialWindow>
-</application>
-=======
 	<initialWindow>
 		<content>Collage.swf</content>
 		<visible>true</visible>
@@ -38,4 +27,3 @@
 		</fileType>
 	</fileTypes>
 </application>
->>>>>>> Stashed changes
