@@ -153,10 +153,13 @@
 		{
 			if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.BITMAP_FORMAT)) {
 				_EditDocumentView.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData);
+				Logger.Log("Bitmap Pasted", LogEntry.INFO, this);
 			} else if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.HTML_FORMAT)) {
 				_EditDocumentView.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.HTML_FORMAT) as String);
+				Logger.Log("HTML Pasted", LogEntry.INFO, this);
 			} else if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT)) {
 				_EditDocumentView.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String);
+				Logger.Log("Text Pasted", LogEntry.INFO, this);
 			}
 		}
 		
@@ -179,6 +182,7 @@
 				jsonFile = jsonFile.replace(/\n/g, File.lineEnding);
 				fs.writeUTFBytes(jsonFile); 
 				fs.close();
+				Logger.Log("File Saved: " + newFile.url, LogEntry.INFO, this);
 			} catch(e:Error){
 				Logger.Log(e.message, LogEntry.ERROR, this);
 			}
@@ -210,6 +214,7 @@
 			    stream.open(file, FileMode.READ);
 			    var fileData:Object = JSON.decode(stream.readUTFBytes(stream.bytesAvailable));
 			    _EditDocumentView.model.LoadFromObject(fileData);
+				Logger.Log("File Saved: " + file.url, LogEntry.INFO, this);
 			} catch(e:Error){
 				Alert.show(e.message);
 			}
@@ -233,6 +238,7 @@
 				fs.open(newFile,FileMode.WRITE);
 				fs.writeBytes(snapshot.data, 0, snapshot.data.length); 
 				fs.close();
+				Logger.Log("Image Saved: " + newFile.url, LogEntry.INFO, this);
 			} catch(e:Error){
 				trace(e.message);
 			}
@@ -277,6 +283,7 @@
 				var pdfBytes:ByteArray = newPDF.save(Method.LOCAL);
 				fs.writeBytes(pdfBytes); 
 				fs.close();
+				Logger.Log("PDF Saved: " + newFile.url, LogEntry.INFO, this);
 			} catch(e:Error){
 				trace(e.message);
 			}
@@ -294,9 +301,11 @@
 				if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "gif") {
 					var newClip:PictureClip = _EditDocumentView.AddClipByType("image") as PictureClip;
 					newClip.url = file.url;
+					Logger.Log("Image Dropped: " + file.url, LogEntry.INFO, this);
 				} else if (ext == "clg") {
 					OpenFile(file);
 				} else if (ext == "csv" || ext == "tsv") {
+					Logger.Log("Uploading CSV: " + file.url, LogEntry.INFO, this);
 					DataEngine.UploadCSV(file);
 				}
 				else {

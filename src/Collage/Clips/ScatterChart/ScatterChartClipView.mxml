@@ -8,24 +8,19 @@
 	verticalScrollPolicy="off" >
     <mx:Stroke id="linestroke" color="0xff0000" weight="2" alpha=".5"/>
 	<mx:PlotChart id="scatterchart" height="100%" width="100%" paddingLeft="5" paddingRight="5"
-		showDataTips="true" dataProvider="{model.Data}">
+		showDataTips="true" dataProvider="{model.Data}" seriesFilters="[]" >
 		<mx:verticalAxis>
 			<mx:LinearAxis id="vaxis" baseAtZero="false"/>
 		</mx:verticalAxis>			
 		<mx:horizontalAxis>
 			<mx:LinearAxis id="haxis" baseAtZero="false"/>
 		</mx:horizontalAxis>			
-		<mx:seriesFilters>
-			<mx:Array/>
-		</mx:seriesFilters>
 		<mx:series>
 		    <mx:PlotSeries
 				yField="y"
 				xField="x"
-				displayName="Values:" >
-				<mx:filters>
-					<mx:Array/>
-				</mx:filters>
+				displayName="Values:" 
+				filters="[]" >
 			</mx:PlotSeries>
 		</mx:series>
 	</mx:PlotChart>

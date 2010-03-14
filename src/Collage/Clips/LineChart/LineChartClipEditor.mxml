@@ -6,24 +6,29 @@
 	<mx:Script>
 	<![CDATA[
 		import mx.controls.Alert;
+		import Collage.Logger.*;
 		import Collage.DataEngine.*;
 		import mx.collections.ArrayCollection;
 		
 		[Bindable] public var dataSetSelections:Array = new Array();
 		[Bindable] public var dataSetColumnSelections:Array = new Array();
-		
+		[Bindable] public var formSelections:ArrayCollection = new ArrayCollection(
+							    [ {label:"Line", data:"segment"},
+								  {label:"Curve", data:"curve"},
+							      {label:"Step", data:"step"},
+							      {label:"Reverse Step", data:"reverseStep"},
+							      {label:"Vertical", data:"vertical"},
+							      {label:"Horizontal", data:"horizontal"}
+								]);
+		[Bindable] public var gridDirectionSelections:ArrayCollection = new ArrayCollection(
+							    [ {label:"Both", data:"both"},
+								  {label:"Horizontal", data:"horizontal"},
+							      {label:"Vertical", data:"vertical"}
+								]);
+
 		private function Initialize():void
 		{
 			DataEngineConnect();
-		}
-		
-		private function SettingsChanged():void
-		{
-			if (_Model) {
-				var lineChartModel:LineChartClip = _Model as LineChartClip;
-				lineChartModel.backgroundColor = backgroundColorPicker.selectedColor;
-				lineChartModel.backgroundAlpha = transparencySlider.value;
-			}
 		}
 		
 		private function DataEngineConnect():void
@@ -92,28 +97,119 @@
 				lineChartModel.ResetData();
 			}
 		}
+		
+		private function SettingsChanged():void
+		{
+			if (_Model) {
+				var lineChartModel:LineChartClip = _Model as LineChartClip;
+				lineChartModel.backgroundColor = backgroundColorPicker.selectedColor;
+				lineChartModel.backgroundAlpha = transparencySlider.value;
+				lineChartModel.form = formSelector.selectedItem.data;
+				lineChartModel.lineWeight = lineWeightSlider.value;
+				lineChartModel.lineAlpha = lineAlphaSlider.value;
+				lineChartModel.lineColor = lineColorPicker.selectedColor;
+				
+				// Grid Options
+				lineChartModel.gridVisible = gridVisible.selected;
+				lineChartModel.gridDirection = gridDirection.selectedItem.data;
+				lineChartModel.gridColor = gridColor.selectedColor;
+				lineChartModel.gridAlpha = gridAlpha.value;
+				lineChartModel.gridWeight = gridWeight.value;
+
+				// Grid Origins
+				lineChartModel.gridHOriginVisible = gridHOriginVisible.selected;
+				lineChartModel.gridHOriginColor = gridHOriginColor.selectedColor;
+				lineChartModel.gridHOriginAlpha = gridHOriginAlpha.value;
+				lineChartModel.gridHOriginWeight = gridHOriginWeight.value;
+				lineChartModel.gridVOriginVisible = gridVOriginVisible.selected;
+				lineChartModel.gridVOriginColor = gridVOriginColor.selectedColor;
+				lineChartModel.gridVOriginAlpha = gridVOriginAlpha.value;
+				lineChartModel.gridVOriginWeight = gridVOriginWeight.value;
+			}
+		}
 	]]>
     </mx:Script>
 	<flexlib:WindowShade label="Data Connection" styleName="linkButtonWindowShade" width="100%">
-		<mx:Label text="Data Set:" color="#000000" fontWeight="bold" />
+		<mx:Label text="Data Set:" />
 		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="230" change="DataSetSelectorChanged()"/>
-		<mx:Label text="Y Axis Value:" color="#000000" fontWeight="bold" />
+		<mx:Label text="Y Axis Value:" />
 		<mx:ComboBox id="dataSetYColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
-		<mx:Label text="X Axis Value:" color="#000000" fontWeight="bold" />
+		<mx:Label text="X Axis Value:" />
 		<mx:ComboBox id="dataSetXColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
-		<mx:Label text="Rows Requested:" color="#000000" fontWeight="bold" />
+		<mx:Label text="Rows Requested:" />
 		<mx:TextInput id="rowsRequested" text="{model.rowsRequested}" color="0x323232" width="100%" />
 		<mx:Button id="submitDataButton" color="0x323232" label="Apply" click="SubmitDataRequest()"  />
 	</flexlib:WindowShade>
 	<flexlib:WindowShade opened="false" label="General Styles" styleName="linkButtonWindowShade" width="100%">
 		<mx:HBox width="100%" >
-			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" />
+			<mx:Label text="Background Color:" />
 			<mx:Spacer width="100%" />
 			<mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="{model.backgroundColor}" change="SettingsChanged()" />
 			<mx:Spacer width="30" />
 		</mx:HBox>
-		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
+		<mx:Label text="Background Transparency:" />
 		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="{model.backgroundAlpha}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+	</flexlib:WindowShade>
+	<flexlib:WindowShade opened="false" label="Line Styles" styleName="linkButtonWindowShade" width="100%">
+		<mx:Label text="Line Style:" />
+		<mx:ComboBox id="formSelector" dataProvider="{formSelections}" width="230" change="SettingsChanged()" />
+		<mx:HBox width="100%" >
+			<mx:Label text="Line Color:" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="lineColorPicker" showTextField="true" selectedColor="{model.lineColor}" change="SettingsChanged()" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="Line Transparency:" />
+		<mx:HSlider id="lineAlphaSlider" minimum="0" maximum="1" value="{model.lineAlpha}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="Line Weight:" />
+		<mx:HSlider id="lineWeightSlider" minimum="0" maximum="10" value="{model.lineWeight}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+	</flexlib:WindowShade>
+	<flexlib:WindowShade opened="false" label="Grid Styles" styleName="linkButtonWindowShade" width="100%">
+		<mx:CheckBox id="gridVisible" label="Grid Visible" click="SettingsChanged()" selected="{model.gridVisible}" />
+		<mx:Label text="Grid Style:"/>
+		<mx:ComboBox id="gridDirection" dataProvider="{gridDirectionSelections}" width="230" change="SettingsChanged()" />
+		<mx:HBox width="100%" >
+			<mx:Label text="Grid Color:" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="gridColor" showTextField="true" selectedColor="{model.gridColor}" change="SettingsChanged()" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="Grid Transparency:" />
+		<mx:HSlider id="gridAlpha" minimum="0" maximum="1" value="{model.gridAlpha}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="Grid Weight:" />
+		<mx:HSlider id="gridWeight" minimum="0" maximum="15" snapInterval="1" value="{model.gridWeight}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<!-- Horizontal Origin -->
+		<mx:CheckBox id="gridHOriginVisible" label="Horizontal Origin" click="SettingsChanged()" selected="{model.gridHOriginVisible}" />
+		<mx:HBox width="100%" >
+			<mx:Label text="H Origin Color:" enabled="{model.gridHOriginVisible}" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="gridHOriginColor" showTextField="true" selectedColor="{model.gridHOriginColor}" change="SettingsChanged()" enabled="{model.gridHOriginVisible}" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="H Origin Transparency:" enabled="{model.gridHOriginVisible}" />
+		<mx:HSlider id="gridHOriginAlpha" minimum="0" maximum="1" value="{model.gridHOriginAlpha}" enabled="{model.gridHOriginVisible}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="H Origin  Weight:" enabled="{model.gridHOriginVisible}" />
+		<mx:HSlider id="gridHOriginWeight" minimum="0" maximum="15" snapInterval="1" value="{model.gridHOriginWeight}" enabled="{model.gridHOriginVisible}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<!-- Vertical Origin -->
+		<mx:CheckBox id="gridVOriginVisible" label="Vertical Origin" click="SettingsChanged()" selected="{model.gridVOriginVisible}" />
+		<mx:HBox width="100%" >
+			<mx:Label text="V Origin Color:" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="gridVOriginColor" showTextField="true" selectedColor="{model.gridVOriginColor}" change="SettingsChanged()" enabled="{model.gridVOriginVisible}" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="V Origin Transparency:" />
+		<mx:HSlider id="gridVOriginAlpha" minimum="0" maximum="1" value="{model.gridVOriginAlpha}" enabled="{model.gridVOriginVisible}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="V Origin  Weight:" />
+		<mx:HSlider id="gridVOriginWeight" minimum="0" maximum="15" snapInterval="1" value="{model.gridVOriginWeight}" enabled="{model.gridVOriginVisible}"
             allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
 	</flexlib:WindowShade>
 </clg:ClipEditor>

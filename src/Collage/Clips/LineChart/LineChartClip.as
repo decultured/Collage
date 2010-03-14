@@ -6,6 +6,7 @@ package Collage.Clips.LineChart
 	import flash.events.*;
 	import Collage.DataEngine.*;
 	import com.adobe.serialization.json.JSON;
+	import Collage.Logger.*;
 	
 	public class LineChartClip extends Clip
 	{		
@@ -18,9 +19,44 @@ package Collage.Clips.LineChart
 		public var dataLoaded:Boolean = false;
 		public var rowsRequested:Number = 10;
 		
-		[Bindable] public var backgroundColor:Number = 0xFFFFEE;
-		[Bindable] public var backgroundAlpha:Number = 1.0;
-                              
+		[Bindable] public var backgroundColor:Number = 0xFFFFFF;
+		[Bindable] public var backgroundAlpha:Number = 0.0;
+        
+        // Line Options
+		[Bindable] public var form:String = "line";
+		[Bindable] public var lineWeight:Number = 2;
+		[Bindable] public var lineAlpha:Number = 1;
+		[Bindable] public var lineColor:Number = 0xff0000;
+		
+		// Grid Options
+		[Bindable] public var gridVisible:Boolean = true;
+		[Bindable] public var gridDirection:String = "both";
+		[Bindable] public var gridColor:Number = 0xDDDDDD;
+		[Bindable] public var gridAlpha:Number = 1.0;
+		[Bindable] public var gridWeight:Number = 1;
+
+		// Grid Origins
+		[Bindable] public var gridHOriginVisible:Boolean = false;
+		[Bindable] public var gridHOriginColor:Number = 0x559955;
+		[Bindable] public var gridHOriginAlpha:Number = 0.5;
+		[Bindable] public var gridHOriginWeight:Number = 1;
+		[Bindable] public var gridVOriginVisible:Boolean = false;
+		[Bindable] public var gridVOriginColor:Number = 0x559955;
+		[Bindable] public var gridVOriginAlpha:Number = 0.5;
+		[Bindable] public var gridVOriginWeight:Number = 1;
+
+		// Vertical Axis 
+		[Bindable] public var vAxisVisible:Boolean = true;
+		[Bindable] public var vAxisColor:Number = 0xAAAAAA;
+		[Bindable] public var vAxisAlpha:Number = 1.0;
+		[Bindable] public var vAxisWeight:Number = 2;
+
+		// Horizontal Axis
+		[Bindable] public var hAxisVisible:Boolean = true;
+		[Bindable] public var hAxisColor:Number = 0xAAAAAA;
+		[Bindable] public var hAxisAlpha:Number = 1.0;
+		[Bindable] public var hAxisWeight:Number = 2;
+
 		private var _DataQuery:DataQuery = null;
 	
 		public function LineChartClip(dataObject:Object = null)
@@ -68,6 +104,7 @@ package Collage.Clips.LineChart
 			//Alert.show("Rows: " + rows.length);
 			if (rows.length < 3) {
 				Alert.show("Not enough data for chart!");
+				Logger.Log("Not enough data for chart - fewer than 3 rows", LogEntry.WARNING, this);
 				return;
 			}
 			
@@ -82,8 +119,8 @@ package Collage.Clips.LineChart
 			for (var rowKey:uint = 0; rowKey < rows.length; rowKey++)
 			{
 				if (!rows[rowKey][xAxisDataColumn] is Number || !rows[rowKey][yAxisDataColumn] is Number) {
-					Alert.show("NAN!!!");
-					break;
+					Logger.Log("Non-number row found for chart.", LogEntry.WARNING, this);
+					continue;
 				}
 				
 				var newObject:Object = new Object();
@@ -105,10 +142,12 @@ package Collage.Clips.LineChart
 			
 			if (xAxisMin >= xAxisMax) {
 				Alert.show("No variance on X Axis, please choose other data");
+				Logger.Log("No variance on X Axis, please choose other data", LogEntry.WARNING, this);
 				ResetData();
 				return;
 			} if (yAxisMin >= yAxisMax) {
 				Alert.show("No variance on Y Axis, please choose other data");
+				Logger.Log("No variance on Y Axis, please choose other data", LogEntry.WARNING, this);
 				ResetData();
 				return;
 			} 

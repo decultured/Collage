@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application xmlns="http://ns.adobe.com/air/application/1.5">
 	<id>com.endlesspaths.Collage</id>
-	<version>0.1.1</version>
+	<version>0.1.8</version>
 	<filename>Collage</filename>
 	<allowBrowserInvocation>true</allowBrowserInvocation>
 	<initialWindow>

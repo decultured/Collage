@@ -20,12 +20,46 @@
 
 		]]>
     </mx:Script>
+    <mx:Stroke id="hAxisStroke" color="#333333" weight="2" alpha="0.5"/>
+    <mx:Stroke id="vAxisStroke" color="#333333" weight="2" alpha="0.5"/>
+    <mx:Stroke id="gridStroke" color="#333333" weight="1" alpha="0.5"/>
 	<mx:SolidColor id="barfill" color="green" alpha="1"/>
-    <mx:Stroke id="barborder" color="0x009900" weight="1" alpha="1"/>
-     <mx:ColumnChart id="chart" height="100%" width="100%" paddingRight="5" paddingLeft="5" color="0x323232" showDataTips="true" dataProvider="{model.Data}" >
-		<mx:seriesFilters>
-			<mx:Array/>
-		</mx:seriesFilters>
+     <mx:ColumnChart id="chart" 
+		height="100%" width="100%" 
+		paddingRight="5" paddingLeft="5" 
+		color="0x323232" showDataTips="true"
+		dataProvider="{model.Data}"
+		seriesFilters="[]" >
+		<mx:verticalAxis>
+	        <mx:LinearAxis id="vAxis" />
+	    </mx:verticalAxis>
+	    <mx:horizontalAxis>
+	        <mx:CategoryAxis id="hAxis" categoryField="label" />
+	    </mx:horizontalAxis>
+	    <mx:verticalAxisRenderers>
+	        <mx:AxisRenderer
+	            axis="{vAxis}"
+	            showLine="false"
+	            tickPlacement="none"
+	            labelGap="12" />
+	    </mx:verticalAxisRenderers>
+
+	    <mx:horizontalAxisRenderers>
+	        <mx:AxisRenderer
+	            axis="{hAxis}"
+	            axisStroke="{hAxisStroke}"
+	            tickPlacement="none"
+	            labelGap="8" />
+	    </mx:horizontalAxisRenderers>
+
+	    <mx:backgroundElements>
+	        <mx:GridLines
+	            direction="horizontal"
+	            verticalShowOrigin="false"
+	            horizontalShowOrigin="true"
+	            horizontalStroke="{gridStroke}"
+	            horizontalOriginStroke="{hAxisStroke}" />
+	    </mx:backgroundElements>
         <mx:series>
 			<mx:ColumnSeries
 				labelPosition="callout"
@@ -33,10 +67,8 @@
 				yField="value" 
                 labelFunction="displayLabel" 
                 fill="{barfill}"
-                stroke="{barborder}" >
-				<mx:filters>
-					<mx:Array/>
-				</mx:filters>
+                stroke="{null}" 
+				filters="[]" >
             </mx:ColumnSeries>
         </mx:series>
     </mx:ColumnChart>
