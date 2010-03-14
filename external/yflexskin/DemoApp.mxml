@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="100%" height="100%">
+	
+	<mx:Style source="yflexskin.css"/>
+	
+	<mx:Image source="misc.swf" top="0" left="12" scaleContent="false" height="62"/>
+	<mx:MenuBar y="10" width="166" height="28" right="14">
+		<mx:dataProvider>
+			<mx:String>File</mx:String>
+			<mx:String>Edit</mx:String>
+			<mx:String>View</mx:String>
+		</mx:dataProvider>
+	</mx:MenuBar>
+	
+	<!-- body -->
+	<mx:HDividedBox horizontalGap="5" top="70" left="12" right="12" bottom="12">
+		
+	<!-- 1st -->
+	<mx:Panel layout="absolute" title="Welcome" height="100%" width="264">
+		<mx:NumericStepper x="40" y="218" width="90"/>
+		<mx:RadioButtonGroup id="radioGroup"/>
+		<mx:RadioButton x="40" y="280" label="Radio Button 1" selected="true" group="{radioGroup}"/>
+		<mx:RadioButton x="40" y="306" label="Radio Button 2" group="{radioGroup}"/>
+		<mx:CheckBox x="40" y="332" label="Check Box"/>
+		<mx:ComboBox x="40" y="154" editable="true" width="90">
+			<mx:dataProvider>
+				<mx:String>Editable</mx:String>
+			</mx:dataProvider>
+		</mx:ComboBox>
+		<mx:DateField x="40" y="248"/>
+		<mx:ColorPicker x="40" y="364"/>
+		<mx:Image x="80" y="368" source="nonexistent.jpg" alpha="1.0"/>
+		<mx:Button x="40" y="21" label="Cancel" width="79"/>
+		<mx:Button x="127" y="21" label="OK" width="79" styleName="primaryButton"/>
+		<mx:Button x="40" y="54" label="Disabled" enabled="false" width="79"/>
+		<mx:PopUpButton label="PopUp Button" width="144" x="40" y="121"/>
+		<mx:ToggleButtonBar selectedIndex="1" width="144" x="40" y="88">
+			<mx:dataProvider>
+				<mx:String>1st</mx:String>
+				<mx:String>2nd</mx:String>
+				<mx:String>3rd</mx:String>
+			</mx:dataProvider>
+		</mx:ToggleButtonBar>
+		<mx:HSlider minimum="0" maximum="100" thumbCount="2" values="[20,60]" showTrackHighlight="true" width="160" x="40" y="394"/>
+		<mx:VSlider x="215" y="248"/>
+		<mx:ComboBox x="40" y="186" width="144">
+			<mx:dataProvider>
+				<mx:String>Lorem</mx:String>
+				<mx:String>Ipsum</mx:String>
+				<mx:String>Dolor</mx:String>
+			</mx:dataProvider>
+		</mx:ComboBox>
+	</mx:Panel>
+	
+	<!-- 2nd -->
+	<mx:VDividedBox width="33%" height="100%">
+		<mx:TabNavigator height="150" x="316" y="64" width="100%">
+			<mx:Canvas label="Lorem" width="100%" height="100%">
+			<mx:ProgressBar id="progress" indeterminate="true" minimum="0" maximum="100" mode="manual" enabled="true" left="20" right="20" top="40"/>
+			</mx:Canvas>
+			<mx:Canvas label="Ipsum" width="100%" height="100%">
+			<mx:Form x="20" y="20">
+			</mx:Form>
+			</mx:Canvas>
+		</mx:TabNavigator>
+		<mx:Accordion x="316" y="386" height="100%" width="100%">
+			<mx:Canvas label="Lorem" width="100%" height="100%">
+			<mx:TextInput x="10" y="10" text="enter text..."/>
+			<mx:LinkBar y="51" x="10" width="180">
+				<mx:dataProvider>
+					<mx:String>Link Bar</mx:String>
+					<mx:String>Lorem Ipsum</mx:String>
+				</mx:dataProvider>
+			</mx:LinkBar>
+			</mx:Canvas>
+			<mx:Canvas label="Ipsum" width="100%" height="100%">
+			</mx:Canvas>
+			<mx:Canvas label="Dolor" width="100%" height="100%">
+			</mx:Canvas>
+		</mx:Accordion>
+		<mx:DataGrid x="316" y="282" height="100" width="100%">
+			<mx:columns>
+			<mx:DataGridColumn headerText="Column 1" dataField="col1"/>
+			<mx:DataGridColumn headerText="Column 2" dataField="col2"/>
+			<mx:DataGridColumn headerText="Column 3" dataField="col3"/>
+			</mx:columns>
+		</mx:DataGrid>
+	</mx:VDividedBox>
+	
+	<!-- 3rd -->
+	<mx:VDividedBox x="599" y="64" height="100%">
+		<mx:Panel width="220" height="250" title="Panel">
+			<mx:DateChooser x="0" y="0" height="100%" width="100%"/>
+			<mx:ControlBar>
+				<mx:Label text="ControlBar"/>
+			</mx:ControlBar>
+		</mx:Panel>
+		<mx:TitleWindow width="220" layout="absolute" title="Title Window" height="90%">
+			<mx:Tree showRoot="false" labelField="@label" width="100%" height="100%" x="0" y="0">
+				<mx:dataProvider>
+					<mx:XML xmlns="">
+						<nodes>
+							<node label="Lorem Ipsum">
+								<node label="Dolor sit amet"/>
+								<node label="Consectetuer adipiscing elit"/>
+							</node>
+							<node label="Quisque eget lorem">
+								<node label="Ac sapien rutrum vehicula"/>
+								<node label="Etiam euismod"/>
+								<node label="Vestibulum erat"/>
+							</node>
+							<node label="Aenean arcu">
+								<node label="Phasellus condimentum"/>
+								<node label="Augue ac orci"/>
+								<node label="Ut sapien felis"/>
+							</node>
+							<node label="Rhoncus non"/>
+							<node label="Gravida vestibulum"/>
+							<node label="Vehicula non massa"/>
+							<node label="Etiam eget lorem"/>
+							<node label="Congue massa aliquet semper"/>
+							<node label="Cras at arcu"/>
+							<node label="Sed magna porttitor nonummy"/>
+							<node label="Aliquam quis ipsum"/>
+							<node label="In blandit"/>
+							<node label="Venenatis justo"/>
+							<node label="Vestibulum varius"/>
+							<node label="Interdum libero"/>
+							<node label="Nullam lorem nisl"/>
+							<node label="Vulputate nec"/>
+						</nodes>
+					</mx:XML>
+				</mx:dataProvider>
+			</mx:Tree>
+		</mx:TitleWindow>
+	</mx:VDividedBox>	
+	</mx:HDividedBox>
+	
+</mx:Application>
