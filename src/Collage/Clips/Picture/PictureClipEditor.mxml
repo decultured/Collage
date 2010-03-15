@@ -35,16 +35,26 @@
 			var newFile:File = event.target as File;
 			var pictureModel:PictureClip = _Model as PictureClip;
 			pictureModel.url = newFile.url;
-			src.text = pictureModel.url; 
 		}
+		
+		protected function LoadImageFromURL():void
+		{
+			var pictureModel:PictureClip = _Model as PictureClip;
+			pictureModel.url = loadingURL.text;
+		}
+		
 	]]>
     </mx:Script>
 	<flexlib:WindowShade label="Picture Settings" styleName="linkButtonWindowShade" width="100%">
 		<mx:HRule width="100%" />
 		<mx:HBox width="100%" clipContent="true" horizontalScrollPolicy="off" >
-			<mx:Label text="File:" color="#000000" fontWeight="bold" />
-			<mx:Label id="src" text="Unknown" color="#323232" />
+			<mx:Label text="File:"/>
+			<mx:Label id="src" text="{model.url}"/>
 		</mx:HBox>
 		<mx:Button id="loadImageButton" label="Load from file" click="LoadFromFile()" />
+		<mx:HRule width="100%" />
+		<mx:Label text="Load From URL:" />
+		<mx:TextInput id="loadingURL" text="{model.url}"/>
+		<mx:Button id="loadURLButton" color="0x323232" label="Apply" click="LoadImageFromURL()" />
 	</flexlib:WindowShade>
 </clg:ClipEditor>
