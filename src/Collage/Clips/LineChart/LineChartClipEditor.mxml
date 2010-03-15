@@ -125,6 +125,18 @@
 				lineChartModel.gridVOriginColor = gridVOriginColor.selectedColor;
 				lineChartModel.gridVOriginAlpha = gridVOriginAlpha.value;
 				lineChartModel.gridVOriginWeight = gridVOriginWeight.value;
+				
+				// Vertical Axis 
+				lineChartModel.vAxisVisible = vAxisVisible.selected;
+				lineChartModel.vAxisColor = vAxisColor.selectedColor;
+				lineChartModel.vAxisAlpha = vAxisAlpha.value;
+				lineChartModel.vAxisWeight = vAxisWeight.value;
+
+				// Horizontal Axis
+				lineChartModel.hAxisVisible = hAxisVisible.selected;
+				lineChartModel.hAxisColor = hAxisColor.selectedColor;
+				lineChartModel.hAxisAlpha = hAxisAlpha.value;
+				lineChartModel.hAxisWeight = hAxisWeight.value;
 			}
 		}
 	]]>
@@ -210,6 +222,34 @@
             allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
 		<mx:Label text="V Origin  Weight:" />
 		<mx:HSlider id="gridVOriginWeight" minimum="0" maximum="15" snapInterval="1" value="{model.gridVOriginWeight}" enabled="{model.gridVOriginVisible}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+	</flexlib:WindowShade>
+	<flexlib:WindowShade opened="false" label="Axis Styles" styleName="linkButtonWindowShade" width="100%">
+		<mx:CheckBox id="hAxisVisible" label="Horizontal Axis" click="SettingsChanged()" selected="{model.hAxisVisible}" />
+		<mx:HBox width="100%" >
+			<mx:Label text="H Axis Color:"  enabled="{model.hAxisVisible}" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="hAxisColor" showTextField="true" selectedColor="{model.hAxisColor}" change="SettingsChanged()" enabled="{model.hAxisVisible}" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="H Axis Transparency:" enabled="{model.hAxisVisible}" />
+		<mx:HSlider id="hAxisAlpha" minimum="0" maximum="1" value="{model.hAxisAlpha}" enabled="{model.hAxisVisible}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="H Axis  Weight:" enabled="{model.hAxisVisible}" />
+		<mx:HSlider id="hAxisWeight" minimum="0" maximum="15" snapInterval="1" value="{model.hAxisWeight}" enabled="{model.hAxisVisible}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:CheckBox id="vAxisVisible" label="Vertical Axis" click="SettingsChanged()" selected="{model.vAxisVisible}" />
+		<mx:HBox width="100%" >
+			<mx:Label text="V Axis Color:"  enabled="{model.vAxisVisible}" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="vAxisColor" showTextField="true" selectedColor="{model.vAxisColor}" change="SettingsChanged()" enabled="{model.vAxisVisible}" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="V Axis Transparency:" enabled="{model.vAxisVisible}" />
+		<mx:HSlider id="vAxisAlpha" minimum="0" maximum="1" value="{model.vAxisAlpha}" enabled="{model.vAxisVisible}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="V Axis  Weight:" enabled="{model.vAxisVisible}" />
+		<mx:HSlider id="vAxisWeight" minimum="0" maximum="15" snapInterval="1" value="{model.vAxisWeight}" enabled="{model.vAxisVisible}"
             allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
 	</flexlib:WindowShade>
 </clg:ClipEditor>

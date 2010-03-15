@@ -29,9 +29,10 @@
 		}
 	]]>
     </mx:Script>
+
     <mx:Stroke id="linestroke" color="{model.lineColor}" weight="{model.lineWeight}" alpha="{model.lineAlpha}"/>
-    <mx:Stroke id="hAxisStroke" color="#333333" weight="2" alpha="0.5"/>
-    <mx:Stroke id="vAxisStroke" color="#333333" weight="2" alpha="0.5"/>
+    <mx:Stroke id="hAxisStroke" color="{model.hAxisColor}" weight="{model.hAxisWeight}" alpha="{model.hAxisAlpha}"/>
+    <mx:Stroke id="vAxisStroke" color="{model.vAxisColor}" weight="{model.vAxisWeight}" alpha="{model.vAxisAlpha}"/>
     <mx:Stroke id="gridStroke" color="{model.gridColor}" weight="{model.gridWeight}" alpha="{model.gridAlpha}"/>
     <mx:Stroke id="gridHOriginStroke" color="{model.gridHOriginColor}" weight="{model.gridHOriginWeight}" alpha="{model.gridHOriginAlpha}"/>
     <mx:Stroke id="gridVOriginStroke" color="{model.gridVOriginColor}" weight="{model.gridVOriginWeight}" alpha="{model.gridVOriginAlpha}"/>
@@ -44,7 +45,7 @@
 	        <mx:AxisRenderer
 	            axis="{vaxis}"
 	            axisStroke="{vAxisStroke}"
-	            showLine="false"
+	            showLine="{model.vAxisVisible}"
 	            tickPlacement="none"
 	            labelGap="12" />
 	    </mx:verticalAxisRenderers>
@@ -55,7 +56,7 @@
 	        <mx:AxisRenderer
 	            axis="{haxis}"
 	            axisStroke="{hAxisStroke}"
-	            showLine="true"
+	            showLine="{model.hAxisVisible}"
 	            tickPlacement="none"
 	            labelGap="12" />
 	    </mx:horizontalAxisRenderers>
