@@ -305,13 +305,30 @@
 				} else if (ext == "clg") {
 					OpenFile(file);
 				} else if (ext == "csv" || ext == "tsv") {
-					Logger.Log("Uploading CSV: " + file.url, LogEntry.INFO, this);
+					Logger.Log("Uploading Dropped CSV: " + file.url, LogEntry.INFO, this);
 					DataEngine.UploadCSV(file);
 				}
 				else {
 					//Alert.show("Unmapped Extension");
 				}
 			}
+		}
+		
+		private function UploadDataFile():void
+		{
+			var file:File = File.desktopDirectory;
+			file.addEventListener(Event.SELECT, UploadDataFileEvent);
+			file.browseForOpen("Open");
+		}
+			
+		public function UploadDataFileEvent(event:Event):void
+		{
+			if (!event.target || !event.target is File)
+				return;
+			
+			var file:File = event.target as File;
+			Logger.Log("Uploading CSV: " + file.url, LogEntry.INFO, this);
+			DataEngine.UploadCSV(file);
 		}
 
 		private function menuShow(menuEvent:FlexNativeMenuEvent):void
@@ -357,6 +374,9 @@
 					break;
 				case "savePDF":
 					SavePDF();
+					break;
+				case "uploadData":
+					UploadDataFile();
 					break;
 				case "print":
 					break;
@@ -469,7 +489,9 @@
                 <menuitem label="Save..." command="save" key="s"/>
                 <menuitem label="Save Image..." command="saveImage"/>
                 <menuitem label="Save PDF..." command="savePDF"/>
-                <menuitem type="separator"/>     
+                <menuitem type="separator"/>
+                <menuitem label="Upload Data..." command="uploadData"/>
+                <menuitem type="separator"/>
                 <menuitem label="Print..." key="p" command="print" enabled="false"/>
             </menuitem>
             <menuitem label="Edit">
