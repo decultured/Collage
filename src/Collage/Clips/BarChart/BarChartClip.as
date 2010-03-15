@@ -8,23 +8,24 @@ package Collage.Clips.BarChart
 	
 	public class BarChartClip extends Clip
 	{		
-		[Bindable] public var dataSetID:String = null;
-		[Bindable] public var labelColumn:String = null;
-		[Bindable] public var dataColumn:String = null; 
-		[Bindable] public var dataModifier:String = null; 
+		[Bindable][Savable] public var dataSetID:String = null;
+		[Bindable][Savable] public var labelColumn:String = null;
+		[Bindable][Savable] public var dataColumn:String = null; 
+		[Bindable][Savable] public var dataModifier:String = null; 
 		
-		[Bindable] public var Data:Array = new Array();
-		public var dataLoaded:Boolean = false;
-		public var rowsRequested:Number = 10;
+		[Bindable][Savable] public var Data:Array = new Array();
+		[Savable]public var dataLoaded:Boolean = false;
+		[Savable]public var rowsRequested:Number = 10;
 
-		[Bindable] public var backgroundAlpha:Number = 1.0;
-		[Bindable] public var backgroundColor:Number = 0xFFFFFF;
+		[Bindable][Savable] public var backgroundAlpha:Number = 1.0;
+		[Bindable][Savable] public var backgroundColor:Number = 0xFFFFFF;
 		
 		private var _DataQuery:DataQuery = null;
 	
 		public function BarChartClip(dataObject:Object = null)
 		{
 			super(dataObject);
+			type="barchart";
 			CreateView(new BarChartClipView());
 			CreateEditor(new BarChartClipEditor());
 		}
@@ -77,55 +78,6 @@ package Collage.Clips.BarChart
 			dataLoaded = true;
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 			_DataQuery = null;
-		}
-
-		public override function SaveToObject():Object
-		{
-			var newObject:Object = super.SaveToObject();
-
-			newObject["type"] = "barchart";
-			newObject["dataSetID"] = dataSetID;
-			newObject["labelColumn"] = labelColumn;
-			newObject["dataColumn"] = dataColumn;
-			newObject["dataModifier"] = dataModifier;
-			newObject["Data"] = Data;
-			newObject["rowsRequested"] = rowsRequested;
-			newObject["dataLoaded"] = dataLoaded;
-			newObject["backgroundColor"] = backgroundColor;
-			newObject["backgroundAlpha"] = backgroundAlpha;
-
-			return newObject;
-		}
-
-		public override function LoadFromObject(dataObject:Object):Boolean
-		{
-			if (!dataObject)
-				return false;
-			super.LoadFromObject(dataObject);
-			for (var key:String in dataObject)
-			{
-				if (key == "dataSetID") {
-					dataSetID = dataObject[key];
-				} else if (key == "labelColumn") {
-					labelColumn = dataObject[key];
-				} else if (key == "dataColumn") {
-					dataColumn = dataObject[key];
-				} else if (key == "dataModifier") {
-					dataModifier = dataObject[key];
-				} else if (key == "Data" && dataObject[key] is Array) {
-					Data = dataObject[key];
-				} else if (key == "dataLoaded") {
-					dataLoaded = dataObject[key];
-				} else if (key == "rowsRequested") {
-					rowsRequested = parseInt(dataObject[key]);
-				} else if (key == "backgroundColor") {
-					backgroundColor = parseInt(dataObject[key]);
-				} else if (key == "backgroundAlpha") {
-					backgroundAlpha = parseInt(dataObject[key]);
-				}	
-			}
-			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-			return true;
 		}
 	}
 }

@@ -11,27 +11,28 @@ package Collage.Clips.Guage
 	{
 		public var dataLoaded:Boolean = false;
 
-		[Bindable] public var dataSetID:String = null;
-		[Bindable] public var dataSetColumn:String = null;
-		[Bindable] public var dataSetColumnModifier:String = null;
+		[Savable][Bindable] public var dataSetID:String = null;
+		[Savable][Bindable] public var dataSetColumn:String = null;
+		[Savable][Bindable] public var dataSetColumnModifier:String = null;
 
-		[Bindable]public var value:Number = 75;
-		[Bindable]public var minimum:Number = 0;
-		[Bindable]public var maximum:Number = 100;
-		[Bindable]public var backgroundColor:Number = 0x327bc2;
-		[Bindable]public var bezelColor:Number = 0xAAAAAA;
-		[Bindable]public var measureMarksColor:Number = 0xFFFFFF;
-		[Bindable]public var measureMarksAlpha:Number = 1;
-		[Bindable]public var startAngle:Number = 45;
-		[Bindable]public var endAngle:Number = 315;
-		[Bindable]public var indicatorColor:Number = 0xFC5976;
-		[Bindable]public var indicatorCrownColor:Number = 0xAAAAAA;
+		[Savable][Bindable] public var value:Number = 75;
+		[Savable][Bindable] public var minimum:Number = 0;
+		[Savable][Bindable] public var maximum:Number = 100;
+		[Savable][Bindable] public var backgroundColor:Number = 0x327bc2;
+		[Savable][Bindable] public var bezelColor:Number = 0xAAAAAA;
+		[Savable][Bindable] public var measureMarksColor:Number = 0xFFFFFF;
+		[Savable][Bindable] public var measureMarksAlpha:Number = 1;
+		[Savable][Bindable] public var startAngle:Number = 45;
+		[Savable][Bindable] public var endAngle:Number = 315;
+		[Savable][Bindable] public var indicatorColor:Number = 0xFC5976;
+		[Savable][Bindable] public var indicatorCrownColor:Number = 0xAAAAAA;
 		
 		private var _DataQuery:DataQuery = null;
 
 		public function GuageClip(dataObject:Object = null)
 		{
 			super(dataObject);
+			type = "guage";
 			CreateView(new GuageClipView());
 			CreateEditor(new GuageClipEditor());
 		}
@@ -76,68 +77,5 @@ package Collage.Clips.Guage
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 			_DataQuery = null;
 		}
-	
-		public override function SaveToObject():Object
-		{
-			var newObject:Object = super.SaveToObject();
-
-			newObject["type"] = "guage";
-			newObject["dataSetID"] = dataSetID;
-			newObject["dataSetColumn"] = dataSetColumn;
-			newObject["dataSetColumnModifier"] = dataSetColumnModifier;
-			newObject["value"] = value;
-			newObject["minimum"] = minimum;
-			newObject["maximum"] = maximum;
-			newObject["backgroundColor"] = backgroundColor;
-			newObject["bezelColor"] = bezelColor;
-			newObject["measureMarksColor"] = measureMarksColor;
-			newObject["measureMarksAlpha"] = measureMarksAlpha;
-			newObject["startAngle"] = startAngle;
-			newObject["endAngle"] = endAngle;
-			newObject["indicatorColor"] = indicatorColor;
-			newObject["indicatorCrownColor"] = indicatorCrownColor;
-
-			return newObject;
-		}
-		
-		public override function LoadFromObject(dataObject:Object):Boolean
-		{
-			if (!dataObject)
-				return false;
-			super.LoadFromObject(dataObject);
-			for (var key:String in dataObject)
-			{
-				if (key == "dataSetID") {
-					dataSetID = dataObject[key];
-				} else if (key == "dataSetColumn") {
-					dataSetColumn = dataObject[key];
-				} else if (key == "dataSetColumnModifier") {
-					dataSetColumnModifier = dataObject[key];
-				} else if (key == "value") {
-					value = parseFloat(dataObject[key]);
-				} else if (key == "endAngle") {
-					endAngle = parseFloat(dataObject[key]);
-				} else if (key == "minimum") {
-					minimum = parseFloat(dataObject[key]);
-				} else if (key == "maximum") {
-					maximum = parseFloat(dataObject[key]);
-				} else if (key == "bezelColor") {
-					bezelColor = parseInt(dataObject[key]);
-				} else if (key == "indicatorColor") {
-					indicatorColor = parseInt(dataObject[key]);
-				} else if (key == "indicatorCrownColor") {
-					indicatorCrownColor = parseInt(dataObject[key]);
-				} else if (key == "measureMarksColor") {
-					measureMarksColor = parseInt(dataObject[key]);
-				} else if (key == "measureMarksAlpha") {
-					measureMarksAlpha = parseFloat(dataObject[key]);
-				} else if (key == "backgroundColor") {
-					backgroundColor = parseInt(dataObject[key]);
-				}
-			}
-			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-			return true;
-	
-		}		
 	}
 }

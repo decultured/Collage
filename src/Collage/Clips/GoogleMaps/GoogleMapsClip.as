@@ -6,22 +6,11 @@ package Collage.Clips.GoogleMaps
 	{
 		public function GoogleMapsClip(dataObject:Object = null)
 		{
-			moveFromCenter = true;
 			super(dataObject);
+			moveFromCenter = true;
+			type = "googlemaps";
 			CreateView(new GoogleMapsClipView());
 			CreateEditor(new GoogleMapsClipEditor());
 		}
-		
-		public override function Resized():void
-		{
-		}
-
-		public override function SaveToObject():Object
-		{
-			var newObject:Object = super.SaveToObject();
-			newObject["type"] = "skeleton";
-			return newObject;
-		}
-
 	}
 }

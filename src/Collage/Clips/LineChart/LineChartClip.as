@@ -10,52 +10,52 @@ package Collage.Clips.LineChart
 	
 	public class LineChartClip extends Clip
 	{		
-		[Bindable] public var dataSetID:String = null;
-		[Bindable] public var xAxisDataColumn:String = null;
-		[Bindable] public var yAxisDataColumn:String = null; 
+		[Bindable][Savable] public var dataSetID:String = null;
+		[Bindable][Savable] public var xAxisDataColumn:String = null;
+		[Bindable][Savable] public var yAxisDataColumn:String = null; 
 
-		[Bindable] public var Data:Array = new Array();
+		[Bindable][Savable] public var Data:Array = new Array();
 		
-		public var dataLoaded:Boolean = false;
-		public var rowsRequested:Number = 10;
+		[Savable] public var dataLoaded:Boolean = false;
+		[Savable] public var rowsRequested:Number = 10;
 		
-		[Bindable] public var backgroundColor:Number = 0xFFFFFF;
-		[Bindable] public var backgroundAlpha:Number = 0.0;
+		[Bindable][Savable] public var backgroundColor:Number = 0xFFFFFF;
+		[Bindable][Savable] public var backgroundAlpha:Number = 0.0;
         
         // Line Options
-		[Bindable] public var form:String = "line";
-		[Bindable] public var lineWeight:Number = 2;
-		[Bindable] public var lineAlpha:Number = 1;
-		[Bindable] public var lineColor:Number = 0xff0000;
+		[Bindable][Savable] public var form:String = "line";
+		[Bindable][Savable] public var lineWeight:Number = 2;
+		[Bindable][Savable] public var lineAlpha:Number = 1;
+		[Bindable][Savable] public var lineColor:Number = 0xff0000;
 		
 		// Grid Options
-		[Bindable] public var gridVisible:Boolean = true;
-		[Bindable] public var gridDirection:String = "both";
-		[Bindable] public var gridColor:Number = 0xDDDDDD;
-		[Bindable] public var gridAlpha:Number = 1.0;
-		[Bindable] public var gridWeight:Number = 1;
+		[Bindable][Savable] public var gridVisible:Boolean = true;
+		[Bindable][Savable] public var gridDirection:String = "both";
+		[Bindable][Savable] public var gridColor:Number = 0xDDDDDD;
+		[Bindable][Savable] public var gridAlpha:Number = 1.0;
+		[Bindable][Savable] public var gridWeight:Number = 1;
 
 		// Grid Origins
-		[Bindable] public var gridHOriginVisible:Boolean = false;
-		[Bindable] public var gridHOriginColor:Number = 0x559955;
-		[Bindable] public var gridHOriginAlpha:Number = 0.5;
-		[Bindable] public var gridHOriginWeight:Number = 1;
-		[Bindable] public var gridVOriginVisible:Boolean = false;
-		[Bindable] public var gridVOriginColor:Number = 0x559955;
-		[Bindable] public var gridVOriginAlpha:Number = 0.5;
-		[Bindable] public var gridVOriginWeight:Number = 1;
+		[Bindable][Savable] public var gridHOriginVisible:Boolean = false;
+		[Bindable][Savable] public var gridHOriginColor:Number = 0x559955;
+		[Bindable][Savable] public var gridHOriginAlpha:Number = 0.5;
+		[Bindable][Savable] public var gridHOriginWeight:Number = 1;
+		[Bindable][Savable] public var gridVOriginVisible:Boolean = false;
+		[Bindable][Savable] public var gridVOriginColor:Number = 0x559955;
+		[Bindable][Savable] public var gridVOriginAlpha:Number = 0.5;
+		[Bindable][Savable] public var gridVOriginWeight:Number = 1;
 
 		// Vertical Axis 
-		[Bindable] public var vAxisVisible:Boolean = true;
-		[Bindable] public var vAxisColor:Number = 0xAAAAAA;
-		[Bindable] public var vAxisAlpha:Number = 1.0;
-		[Bindable] public var vAxisWeight:Number = 2;
+		[Bindable][Savable] public var vAxisVisible:Boolean = true;
+		[Bindable][Savable] public var vAxisColor:Number = 0xAAAAAA;
+		[Bindable][Savable] public var vAxisAlpha:Number = 1.0;
+		[Bindable][Savable] public var vAxisWeight:Number = 2;
 
 		// Horizontal Axis
-		[Bindable] public var hAxisVisible:Boolean = true;
-		[Bindable] public var hAxisColor:Number = 0xAAAAAA;
-		[Bindable] public var hAxisAlpha:Number = 1.0;
-		[Bindable] public var hAxisWeight:Number = 2;
+		[Bindable][Savable] public var hAxisVisible:Boolean = true;
+		[Bindable][Savable] public var hAxisColor:Number = 0xAAAAAA;
+		[Bindable][Savable] public var hAxisAlpha:Number = 1.0;
+		[Bindable][Savable] public var hAxisWeight:Number = 2;
 
 		private var _DataQuery:DataQuery = null;
 	
@@ -64,6 +64,7 @@ package Collage.Clips.LineChart
 			super(dataObject);
 			CreateView(new LineChartClipView());
 			CreateEditor(new LineChartClipEditor());
+			type = "linechart";
 		}
 		
 		public override function Resized():void
@@ -159,52 +160,6 @@ package Collage.Clips.LineChart
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 			
 			_DataQuery = null;
-		}
-		
-		public override function SaveToObject():Object
-		{
-			var newObject:Object = super.SaveToObject();
-
-			newObject["type"] = "linechart";
-			newObject["dataSetID"] = dataSetID;
-			newObject["xAxisDataColumn"] = xAxisDataColumn;
-			newObject["yAxisDataColumn"] = yAxisDataColumn;
-			newObject["Data"] = Data;
-			newObject["dataLoaded"] = dataLoaded;
-			newObject["rowsRequested"] = rowsRequested;
-			newObject["backgroundColor"] = backgroundColor;
-			newObject["backgroundAlpha"] = backgroundAlpha;
-
-			return newObject;
-		}
-
-		public override function LoadFromObject(dataObject:Object):Boolean
-		{
-			if (!dataObject)
-				return false;
-			super.LoadFromObject(dataObject);
-			for (var key:String in dataObject)
-			{
-				if (key == "dataSetID") {
-					dataSetID = dataObject[key];
-				} else if (key == "xAxisDataColumn") {
-					xAxisDataColumn = dataObject[key];
-				} else if (key == "yAxisDataColumn") {
-					yAxisDataColumn = dataObject[key];
-				} else if (key == "Data" && dataObject[key] is Array) {
-					Data = dataObject[key];
-				} else if (key == "dataLoaded") {
-					dataLoaded = dataObject[key] as Boolean;
-				} else if (key == "rowsRequested") {
-					rowsRequested = parseInt(dataObject[key]);
-				} else if (key == "backgroundColor") {
-					backgroundColor = parseInt(dataObject[key]);
-				} else if (key == "backgroundAlpha") {
-					backgroundAlpha = parseFloat(dataObject[key]);
-				}	
-			}
-			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-			return true;
 		}
 	}
 }

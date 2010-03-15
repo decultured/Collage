@@ -8,24 +8,25 @@ package Collage.Clips.PieChart
 	
 	public class PieChartClip extends Clip
 	{		
-		[Bindable] public var dataSetID:String = null;
-		[Bindable] public var labelColumn:String = null;
-		[Bindable] public var dataColumn:String = null; 
-		[Bindable] public var dataModifier:String = null; 
-		[Bindable] public var isLineChart:Boolean = true; 
-		
-		[Bindable] public var Data:Array = new Array();
-		public var dataLoaded:Boolean = false;
-		public var rowsRequested:Number = 10;
+		[Savable][Bindable] public var dataSetID:String = null;
+		[Savable][Bindable] public var labelColumn:String = null;
+		[Savable][Bindable] public var dataColumn:String = null; 
+		[Savable][Bindable] public var dataModifier:String = null; 
+		[Savable][Bindable] public var isLineChart:Boolean = true; 
 
-		[Bindable] public var backgroundAlpha:Number = 1.0;
-		[Bindable] public var backgroundColor:Number = 0xFFFFFF;
+		[Savable][Bindable] public var Data:Array = new Array();
+		[Savable]public var rowsRequested:Number = 10;
+		public var dataLoaded:Boolean = false;
+
+		[Savable][Bindable] public var backgroundAlpha:Number = 1.0;
+		[Savable][Bindable] public var backgroundColor:Number = 0xFFFFFF;
 		
 		private var _DataQuery:DataQuery = null;
 	
 		public function PieChartClip(dataObject:Object = null)
 		{
 			super(dataObject);
+			type = "piechart";
 			CreateView(new PieChartClipView());
 			CreateEditor(new PieChartClipEditor());
 		}
@@ -78,55 +79,6 @@ package Collage.Clips.PieChart
 			dataLoaded = true;
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 			_DataQuery = null;
-		}
-
-		public override function SaveToObject():Object
-		{
-			var newObject:Object = super.SaveToObject();
-
-			newObject["type"] = "piechart";
-			newObject["dataSetID"] = dataSetID;
-			newObject["labelColumn"] = labelColumn;
-			newObject["dataColumn"] = dataColumn;
-			newObject["dataModifier"] = dataModifier;
-			newObject["Data"] = Data;
-			newObject["dataLoaded"] = dataLoaded;
-			newObject["rowsRequested"] = rowsRequested;
-			newObject["backgroundColor"] = backgroundColor;
-			newObject["backgroundAlpha"] = backgroundAlpha;
-
-			return newObject;
-		}
-
-		public override function LoadFromObject(dataObject:Object):Boolean
-		{
-			if (!dataObject)
-				return false;
-			super.LoadFromObject(dataObject);
-			for (var key:String in dataObject)
-			{
-				if (key == "dataSetID") {
-					dataSetID = dataObject[key];
-				} else if (key == "labelColumn") {
-					labelColumn = dataObject[key];
-				} else if (key == "dataColumn") {
-					dataColumn = dataObject[key];
-				} else if (key == "dataModifier") {
-					dataModifier = dataObject[key];
-				} else if (key == "Data" && dataObject[key] is Array) {
-					Data = dataObject[key];
-				} else if (key == "dataLoaded") {
-					dataLoaded = dataObject[key] as Boolean;
-				} else if (key == "rowsRequested") {
-					rowsRequested = parseInt(dataObject[key]);
-				} else if (key == "backgroundColor") {
-					backgroundColor = parseInt(dataObject[key]);
-				} else if (key == "backgroundAlpha") {
-					backgroundAlpha = parseInt(dataObject[key]);
-				}	
-			}
-			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-			return true;
 		}
 	}
 }

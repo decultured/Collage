@@ -43,7 +43,6 @@
 	            tickPlacement="none"
 	            labelGap="12" />
 	    </mx:verticalAxisRenderers>
-
 	    <mx:horizontalAxisRenderers>
 	        <mx:AxisRenderer
 	            axis="{hAxis}"
@@ -51,8 +50,7 @@
 	            tickPlacement="none"
 	            labelGap="8" />
 	    </mx:horizontalAxisRenderers>
-
-	    <mx:backgroundElements>
+    	<mx:backgroundElements>
 	        <mx:GridLines
 	            direction="horizontal"
 	            verticalShowOrigin="false"

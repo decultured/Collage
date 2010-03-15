@@ -138,7 +138,7 @@
 		<mx:Label text="Modifier:"/>
 		<mx:ComboBox id="modifierSelector" dataProvider="{modifierSelections}" enabled="false" width="230" change="ModifierSelectorChanged()" prompt="Please select a modifier..."/>
 		<mx:Label text="Rows Requested:"/>
-		<mx:TextInput id="rowsRequested" text="10" color="0x323232" width="100%" />
+		<mx:TextInput id="rowsRequested" color="0x323232" width="100%" text="{model.rowsRequested}"/>
 		<mx:Button id="submitDataButton" color="0x323232" label="Apply" click="SubmitDataRequest()" />
 	</flexlib:WindowShade>
 	<flexlib:WindowShade label="Bar Chart Settings" styleName="linkButtonWindowShade" width="100%">

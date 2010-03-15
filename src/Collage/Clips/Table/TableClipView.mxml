@@ -6,12 +6,12 @@
 	horizontalScrollPolicy="off"
 	verticalScrollPolicy="off"
 	creationComplete="Initialize()" >
-	
 	<mx:Script>
 	<![CDATA[
 		import mx.controls.Alert;
 		import mx.events.PropertyChangeEvent;
 		import mx.events.FlexEvent;
+		import mx.controls.dataGridClasses.*;	
 		
 		public function Initialize():void
 		{
@@ -24,10 +24,18 @@
 
 			if (event && event.property != "x" && event.property != "y" && event.property != "width" && event.property != "height")
 			{
-				if (datagrid && tableModel.columns && tableModel.data && tableModel.columns.length && tableModel.data.length) {
-					datagrid.columns = tableModel.columns;
+				if (datagrid && tableModel.data && tableModel.data.length) {
 					datagrid.dataProvider = tableModel.data;
 				}
+			} else if (event && event.property == "columns" && datagrid && tableModel.columns && tableModel.columns.length) {
+				for (var key:String in tableModel.columns) {
+					if (!tableModel.columns[key] is DataGridColumn)
+					{
+						tableModel.columns = new Array();
+						break;
+					}
+				}
+				datagrid.columns = tableModel.columns;
 			}
 			super.onModelChange(event);
 		}

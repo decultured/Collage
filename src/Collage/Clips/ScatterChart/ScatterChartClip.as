@@ -8,23 +8,24 @@ package Collage.Clips.ScatterChart
 	
 	public class ScatterChartClip extends Clip
 	{		
-		[Bindable] public var dataSetID:String = null;
-		[Bindable] public var xAxisDataColumn:String = null;
-		[Bindable] public var yAxisDataColumn:String = null; 
+		[Savable][Bindable] public var dataSetID:String = null;
+		[Savable][Bindable] public var xAxisDataColumn:String = null;
+		[Savable][Bindable] public var yAxisDataColumn:String = null; 
 
-		[Bindable] public var Data:Array = new Array();
-		
+		[Savable][Bindable] public var Data:Array = new Array();
+
 		public var dataLoaded:Boolean = false;
-		public var rowsRequested:Number = 10;
-		
-		[Bindable] public var backgroundColor:Number = 0xFFFFEE;
-		[Bindable] public var backgroundAlpha:Number = 1.0;
+		[Savable]public var rowsRequested:Number = 10;
+
+		[Savable][Bindable] public var backgroundColor:Number = 0xFFFFEE;
+		[Savable][Bindable] public var backgroundAlpha:Number = 1.0;
                               
 		private var _DataQuery:DataQuery = null;
 	
 		public function ScatterChartClip(dataObject:Object = null)
 		{
 			super(dataObject);
+			type = "scatterchart";
 			CreateView(new ScatterChartClipView());
 			CreateEditor(new ScatterChartClipEditor());
 		}
@@ -88,52 +89,6 @@ package Collage.Clips.ScatterChart
 
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 			_DataQuery = null;
-		}
-
-		public override function SaveToObject():Object
-		{
-			var newObject:Object = super.SaveToObject();
-
-			newObject["type"] = "scatterchart";
-			newObject["dataSetID"] = dataSetID;
-			newObject["xAxisDataColumn"] = xAxisDataColumn;
-			newObject["yAxisDataColumn"] = yAxisDataColumn;
-			newObject["Data"] = Data;
-			newObject["dataLoaded"] = dataLoaded;
-			newObject["rowsRequested"] = rowsRequested;
-			newObject["backgroundColor"] = backgroundColor;
-			newObject["backgroundAlpha"] = backgroundAlpha;
-
-			return newObject;
-		}
-
-		public override function LoadFromObject(dataObject:Object):Boolean
-		{
-			if (!dataObject)
-				return false;
-			super.LoadFromObject(dataObject);
-			for (var key:String in dataObject)
-			{
-				if (key == "dataSetID") {
-					dataSetID = dataObject[key];
-				} else if (key == "xAxisDataColumn") {
-					xAxisDataColumn = dataObject[key];
-				} else if (key == "yAxisDataColumn") {
-					yAxisDataColumn = dataObject[key];
-				} else if (key == "Data" && dataObject[key] is Array) {
-					Data = dataObject[key];
-				} else if (key == "dataLoaded") {
-					dataLoaded = dataObject[key] as Boolean;
-				} else if (key == "rowsRequested") {
-					rowsRequested = parseInt(dataObject[key]);
-				} else if (key == "backgroundColor") {
-					backgroundColor = parseInt(dataObject[key]);
-				} else if (key == "backgroundAlpha") {
-					backgroundAlpha = parseInt(dataObject[key]);
-				}	
-			}
-			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-			return true;
 		}
 	}
 }
