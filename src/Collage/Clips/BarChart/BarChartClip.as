@@ -36,7 +36,7 @@ package Collage.Clips.BarChart
 				_DataQuery.dataset = dataSetID;
 				_DataQuery.AddField(labelColumn, null, null, "val");
 				_DataQuery.AddField(dataColumn, "desc", dataModifier);
-				_DataQuery.limit = 10;
+				_DataQuery.limit = rowsRequested;
 				_DataQuery.LoadQueryResults();
 				_DataQuery.addEventListener(DataQuery.COMPLETE, QueryFinished);
 			}
@@ -72,7 +72,7 @@ package Collage.Clips.BarChart
 				newData.push(newObject);
 			}
 
-			newData.sortOn("x", Array.NUMERIC);
+			newData.sortOn("label", Array.NUMERIC);
 			Data = newData;
 			dataLoaded = true;
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));

@@ -31,7 +31,7 @@
 		dataProvider="{model.Data}"
 		seriesFilters="[]" >
 		<mx:verticalAxis>
-	        <mx:LinearAxis id="vAxis" />
+	        <mx:LinearAxis id="vAxis" baseAtZero="false" />
 	    </mx:verticalAxis>
 	    <mx:horizontalAxis>
 	        <mx:CategoryAxis id="hAxis" categoryField="label" />
