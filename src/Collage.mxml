@@ -541,6 +541,7 @@
 		<mx:Image id="addLabelBtn" source="@Embed('../assets/themes/dark/label.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addTextBoxBtn" source="@Embed('../assets/themes/dark/text-box.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addLineChartBtn" source="@Embed('../assets/themes/dark/line-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addScatterChartBtn" source="@Embed('../assets/themes/dark/scatter.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('scatterchart', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addBarChartBtn" source="@Embed('../assets/themes/dark/bar-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('barchart', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addPieChartBtn" source="@Embed('../assets/themes/dark/pie-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('piechart', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addGuageBtn" source="@Embed('../assets/themes/dark/guage.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('guage', new Rectangle(150, 150, 300, 300));" />
