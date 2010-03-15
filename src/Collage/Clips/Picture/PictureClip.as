@@ -5,6 +5,7 @@ package Collage.Clips.Picture
 	public class PictureClip extends Clip
 	{
 		[Bindable] public var aspectRatio:Number = 0;
+		[Bindable] public var imageLoaded:Boolean = false;
 		private var _URL:String = null;
 		
 		[Bindable]
