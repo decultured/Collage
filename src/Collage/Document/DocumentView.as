@@ -117,7 +117,7 @@ package Collage.Document
 		
 		private function LoadImage():void
 		{
-			if (!_BackgroundImage || _BackgroundLoaded)
+			if (!_BackgroundImage)
 				return;
 			
 			var docModel:Document = _Model as Document;

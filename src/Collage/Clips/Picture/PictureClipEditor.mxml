@@ -54,7 +54,7 @@
 		<mx:Button id="loadImageButton" label="Load from file" click="LoadFromFile()" />
 		<mx:HRule width="100%" />
 		<mx:Label text="Load From URL:" />
-		<mx:TextInput id="loadingURL" text="{model.url}"/>
+		<mx:TextInput id="loadingURL" text="{model.url}" width="100%" />
 		<mx:Button id="loadURLButton" color="0x323232" label="Apply" click="LoadImageFromURL()" />
 	</flexlib:WindowShade>
 </clg:ClipEditor>

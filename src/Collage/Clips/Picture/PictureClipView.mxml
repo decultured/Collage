@@ -21,7 +21,7 @@
 		
 		private function LoadImage():void
 		{
-			if (!displayImage || _Loaded)
+			if (!displayImage)
 				return;
 			
 			var pictureModel:PictureClip = _Model as PictureClip;
