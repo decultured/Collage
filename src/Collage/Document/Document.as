@@ -98,8 +98,8 @@ package Collage.Document
 			for (var key:String in dataObject)
 			{
 				if (key == "document") {
-					_URL = dataObject["document"]["url"];
-					_BackgroundColor = dataObject["document"]["backgroundColor"];
+					url = dataObject["document"]["url"];
+					backgroundColor = dataObject["document"]["backgroundColor"];
 					gridSize = dataObject["document"]["gridSize"];
 					gridColor = dataObject["document"]["gridColor"];
 					super.LoadFromObject(dataObject[key]);
