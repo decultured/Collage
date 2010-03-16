@@ -20,6 +20,12 @@ package Collage.Clips.ScatterChart
 		[Savable][Bindable] public var backgroundColor:Number = 0xFFFFEE;
 		[Savable][Bindable] public var backgroundAlpha:Number = 1.0;
                               
+        // Plot Options
+		[Bindable][Savable] public var plotShape:String = "circle";
+		[Bindable][Savable] public var plotRadius:Number = 2;
+		[Bindable][Savable] public var plotAlpha:Number = 1;
+		[Bindable][Savable] public var plotColor:Number = 0xff0000;
+
 		// Grid Options
 		[Bindable][Savable] public var gridVisible:Boolean = true;
 		[Bindable][Savable] public var gridDirection:String = "both";

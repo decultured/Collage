@@ -11,16 +11,34 @@
 	<![CDATA[
 		import mx.events.PropertyChangeEvent;
 		import mx.events.FlexEvent;
+		import mx.charts.renderers.*;
 
 		public function Initialize():void
 		{
 			onModelChange(null);
+			plotSeries.setStyle("itemRenderer", new ClassFactory(CircleItemRenderer));
+			plotSeries.setStyle("radius", model.plotRadius);
 		}
 
 		protected override function onModelChange(event:PropertyChangeEvent):void
 		{
+			var scatterChartModel:ScatterChartClip = _Model as ScatterChartClip;
+			if (event && event.property == "plotShape")
+			{
+				if (scatterChartModel.plotShape == "circle")
+					plotSeries.setStyle("itemRenderer", new ClassFactory(CircleItemRenderer));
+				else if (scatterChartModel.plotShape == "diamond")
+					plotSeries.setStyle("itemRenderer", new ClassFactory(DiamondItemRenderer));
+				else if (scatterChartModel.plotShape == "box")
+					plotSeries.setStyle("itemRenderer", new ClassFactory(BoxItemRenderer));
+				else if (scatterChartModel.plotShape == "triangle")
+					plotSeries.setStyle("itemRenderer", new ClassFactory(TriangleItemRenderer));
+				else if (scatterChartModel.plotShape == "cross")
+					plotSeries.setStyle("itemRenderer", new ClassFactory(CrossItemRenderer));
+			}
 			if (event && event.property != "x" && event.property != "y" && event.property != "width" && event.property != "height")
 			{
+				plotSeries.setStyle("radius", scatterChartModel.plotRadius);
 				scatterchart.invalidateDisplayList();
 				gridLines.invalidateDisplayList();
 //				gridLines.invalidateSeriesStyles();
@@ -34,6 +52,7 @@
     <mx:Stroke id="gridStroke" color="{model.gridColor}" weight="{model.gridWeight}" alpha="{model.gridAlpha}" caps="none"/>
     <mx:Stroke id="gridHOriginStroke" color="{model.gridHOriginColor}" weight="{model.gridHOriginWeight}" alpha="{model.gridHOriginAlpha}" caps="none"/>
     <mx:Stroke id="gridVOriginStroke" color="{model.gridVOriginColor}" weight="{model.gridVOriginWeight}" alpha="{model.gridVOriginAlpha}" caps="none"/>
+	<mx:SolidColor id="plotFill" color="{model.plotColor}" alpha="{model.plotAlpha}"/>
 	<mx:PlotChart id="scatterchart" height="100%" width="100%" paddingLeft="5" paddingRight="5"
 		showDataTips="true" dataProvider="{model.Data}" seriesFilters="[]" >
 		<mx:verticalAxis>
@@ -78,10 +97,13 @@
 	    </mx:backgroundElements>
 		<mx:series>
 		    <mx:PlotSeries
+				id="plotSeries"
 				yField="y"
 				xField="x"
 				displayName="Values:" 
-				filters="[]" >
+				filters="[]"
+				fill="{plotFill}"
+				>
 			</mx:PlotSeries>
 		</mx:series>
 	</mx:PlotChart>

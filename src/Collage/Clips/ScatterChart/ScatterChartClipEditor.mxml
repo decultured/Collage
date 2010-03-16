@@ -17,6 +17,13 @@
 								  {label:"Horizontal", data:"horizontal"},
 							      {label:"Vertical", data:"vertical"}
 								]);
+		[Bindable] public var plotShapeSelections:ArrayCollection = new ArrayCollection(
+							    [ {label:"Circle", data:"circle"},
+								  {label:"Diamond", data:"diamond"},
+								  {label:"Box", data:"box"},
+								  {label:"Triangle", data:"triangle"},
+							      {label:"Cross", data:"cross"}
+								]);
 		
 		private function Initialize():void
 		{
@@ -99,6 +106,11 @@
 				var scatterChartModel:ScatterChartClip = _Model as ScatterChartClip;
 				scatterChartModel.backgroundColor = backgroundColorPicker.selectedColor;
 				scatterChartModel.backgroundAlpha = transparencySlider.value;
+
+				scatterChartModel.plotShape = plotShape.selectedItem.data;
+				scatterChartModel.plotColor = plotColor.selectedColor;
+				scatterChartModel.plotAlpha = plotAlpha.value;
+				scatterChartModel.plotRadius = plotRadius.value;
 				
 				// Grid Options
 				scatterChartModel.gridVisible = gridVisible.selected;
@@ -158,6 +170,22 @@
 		</mx:HBox>
 		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
 		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="{model.backgroundAlpha}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+	</flexlib:WindowShade>
+	<flexlib:WindowShade opened="false" label="Plot Styles" styleName="linkButtonWindowShade" width="100%">
+		<mx:Label text="Plot Item Style:" />
+		<mx:ComboBox id="plotShape" dataProvider="{plotShapeSelections}" width="230" change="SettingsChanged()" />
+		<mx:HBox width="100%" >
+			<mx:Label text="Plot Shape Color:" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="plotColor" showTextField="true" selectedColor="{model.plotColor}" change="SettingsChanged()" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="Plot Transparency:" />
+		<mx:HSlider id="plotAlpha" minimum="0" maximum="1" value="{model.plotAlpha}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="Plot Radius:" />
+		<mx:HSlider id="plotRadius" minimum="1" maximum="30" value="{model.plotRadius}"
             allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
 	</flexlib:WindowShade>
 	<flexlib:WindowShade opened="false" label="Grid Styles" styleName="linkButtonWindowShade" width="100%">
