@@ -53,7 +53,7 @@
     <mx:Stroke id="gridHOriginStroke" color="{model.gridHOriginColor}" weight="{model.gridHOriginWeight}" alpha="{model.gridHOriginAlpha}" caps="none"/>
     <mx:Stroke id="gridVOriginStroke" color="{model.gridVOriginColor}" weight="{model.gridVOriginWeight}" alpha="{model.gridVOriginAlpha}" caps="none"/>
 	<mx:SolidColor id="plotFill" color="{model.plotColor}" alpha="{model.plotAlpha}"/>
-	<mx:PlotChart id="scatterchart" height="100%" width="100%" paddingLeft="5" paddingRight="5"
+	<mx:PlotChart id="scatterchart" height="100%" width="100%"
 		showDataTips="true" dataProvider="{model.Data}" seriesFilters="[]" >
 		<mx:verticalAxis>
 			<mx:LinearAxis id="vaxis" baseAtZero="false"/>
