@@ -29,7 +29,6 @@
 		}
 	]]>
     </mx:Script>
-
     <mx:Stroke id="linestroke" color="{model.lineColor}" weight="{model.lineWeight}" alpha="{model.lineAlpha}" caps="none"/>
     <mx:Stroke id="hAxisStroke" color="{model.hAxisColor}" weight="{model.hAxisWeight}" alpha="{model.hAxisAlpha}" caps="none"/>
     <mx:Stroke id="vAxisStroke" color="{model.vAxisColor}" weight="{model.vAxisWeight}" alpha="{model.vAxisAlpha}" caps="none"/>
@@ -60,6 +59,7 @@
 	            axis="{haxis}"
 	            axisStroke="{hAxisStroke}"
 	            showLine="{model.hAxisVisible}"
+				minorTickPlacement="none"
 	            tickPlacement="none"
 				fontSize="{model.hAxisLabelSize}"
 				color="{model.hAxisLabelColor}"

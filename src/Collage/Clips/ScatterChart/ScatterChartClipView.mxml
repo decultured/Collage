@@ -5,16 +5,77 @@
 	backgroundColor="{model.backgroundColor}"
 	backgroundAlpha="{model.backgroundAlpha}"
 	horizontalScrollPolicy="off"
-	verticalScrollPolicy="off" >
-    <mx:Stroke id="linestroke" color="0xff0000" weight="2" alpha=".5"/>
+	verticalScrollPolicy="off"
+	creationComplete="Initialize()" >
+	<mx:Script>
+	<![CDATA[
+		import mx.events.PropertyChangeEvent;
+		import mx.events.FlexEvent;
+
+		public function Initialize():void
+		{
+			onModelChange(null);
+		}
+
+		protected override function onModelChange(event:PropertyChangeEvent):void
+		{
+			if (event && event.property != "x" && event.property != "y" && event.property != "width" && event.property != "height")
+			{
+				scatterchart.invalidateDisplayList();
+				gridLines.invalidateDisplayList();
+//				gridLines.invalidateSeriesStyles();
+			}
+			super.onModelChange(event);
+		}
+	]]>
+    </mx:Script>
+    <mx:Stroke id="hAxisStroke" color="{model.hAxisColor}" weight="{model.hAxisWeight}" alpha="{model.hAxisAlpha}" caps="none"/>
+    <mx:Stroke id="vAxisStroke" color="{model.vAxisColor}" weight="{model.vAxisWeight}" alpha="{model.vAxisAlpha}" caps="none"/>
+    <mx:Stroke id="gridStroke" color="{model.gridColor}" weight="{model.gridWeight}" alpha="{model.gridAlpha}" caps="none"/>
+    <mx:Stroke id="gridHOriginStroke" color="{model.gridHOriginColor}" weight="{model.gridHOriginWeight}" alpha="{model.gridHOriginAlpha}" caps="none"/>
+    <mx:Stroke id="gridVOriginStroke" color="{model.gridVOriginColor}" weight="{model.gridVOriginWeight}" alpha="{model.gridVOriginAlpha}" caps="none"/>
 	<mx:PlotChart id="scatterchart" height="100%" width="100%" paddingLeft="5" paddingRight="5"
 		showDataTips="true" dataProvider="{model.Data}" seriesFilters="[]" >
 		<mx:verticalAxis>
 			<mx:LinearAxis id="vaxis" baseAtZero="false"/>
 		</mx:verticalAxis>			
-		<mx:horizontalAxis>
-			<mx:LinearAxis id="haxis" baseAtZero="false"/>
-		</mx:horizontalAxis>			
+	    <mx:verticalAxisRenderers>
+	        <mx:AxisRenderer
+	            axis="{vaxis}"
+				minorTickPlacement="none"
+	            tickPlacement="none"
+	            axisStroke="{vAxisStroke}"
+	            showLine="{model.vAxisVisible}"
+				fontSize="{model.vAxisLabelSize}"
+				color="{model.vAxisLabelColor}"
+	            labelGap="{model.vAxisLabelGap}" />
+	    </mx:verticalAxisRenderers>
+	    <mx:horizontalAxis>
+	        <mx:LinearAxis id="haxis" baseAtZero="false"/>
+	    </mx:horizontalAxis>
+	    <mx:horizontalAxisRenderers>
+	        <mx:AxisRenderer
+	            axis="{haxis}"
+	            axisStroke="{hAxisStroke}"
+	            showLine="{model.hAxisVisible}"
+				minorTickPlacement="none"
+	            tickPlacement="none"
+				fontSize="{model.hAxisLabelSize}"
+				color="{model.hAxisLabelColor}"
+	            labelGap="{model.hAxisLabelGap}" />
+	    </mx:horizontalAxisRenderers>
+	    <mx:backgroundElements>
+	        <mx:GridLines
+				id="gridLines"
+	            direction="{model.gridDirection}"
+	            verticalShowOrigin="{model.gridHOriginVisible}"
+				verticalOriginStroke="{gridVOriginStroke}"
+	            horizontalShowOrigin="{model.gridHOriginVisible}"
+				horizontalOriginStroke="{gridHOriginStroke}"
+				visible="{model.gridVisible}"
+	            horizontalStroke="{gridStroke}"
+				verticalStroke="{gridStroke}" />
+	    </mx:backgroundElements>
 		<mx:series>
 		    <mx:PlotSeries
 				yField="y"

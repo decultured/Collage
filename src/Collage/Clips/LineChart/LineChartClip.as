@@ -63,8 +63,6 @@ package Collage.Clips.LineChart
 		[Bindable][Savable] public var hAxisLabelColor:Number = 0x333333;
         [Bindable][Savable] public var hAxisLabelGap:Number = 10;
 
-
-
 		private var _DataQuery:DataQuery = null;
 	
 		public function LineChartClip(dataObject:Object = null)

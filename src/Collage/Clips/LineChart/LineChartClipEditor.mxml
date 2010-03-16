@@ -233,7 +233,7 @@
 	<flexlib:WindowShade opened="false" label="Label Styles" styleName="linkButtonWindowShade" width="100%">
 		<mx:HBox width="100%" >
 			<mx:Label text="H Axis Label Color:"/>
-			<mx:ColorPicker id="hAxisLabelColor" showTextField="true" selectedColor="{model.vAxisLabelColor}" change="SettingsChanged()" />
+			<mx:ColorPicker id="hAxisLabelColor" showTextField="true" selectedColor="{model.hAxisLabelColor}" change="SettingsChanged()" />
 		</mx:HBox>
 		<mx:Label text="H Axis Label Size:"/>
 		<mx:HSlider id="hAxisLabelSize" liveDragging="true" minimum="6" maximum="96" value="{model.hAxisLabelSize}" snapInterval="1" change="SettingsChanged()" />
