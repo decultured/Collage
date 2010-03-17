@@ -2,7 +2,7 @@ package Collage.DataEngine
 {
 	import flash.net.*;
 	import flash.events.*;
-	import flash.data.*;
+//	import flash.data.*;
 	import flash.utils.ByteArray;
 	import mx.controls.Alert;
 	import com.adobe.serialization.json.JSON;
@@ -37,9 +37,8 @@ package Collage.DataEngine
 		/* TODO: Fix this, i know its bad. */
 		public static function getItem(strKey:String):String {
 			try {
-				var bytes:ByteArray = EncryptedLocalStore.getItem(strKey);
-				
-				return bytes.readUTFBytes(bytes.length);
+//				var bytes:ByteArray = EncryptedLocalStore.getItem(strKey);
+//				return bytes.readUTFBytes(bytes.length);
 			} catch(e:Error) { }
 			
 			return null;
@@ -49,11 +48,11 @@ package Collage.DataEngine
 			var bytes:ByteArray = new ByteArray();
 			bytes.writeUTFBytes(val);
 			
-			EncryptedLocalStore.setItem(strKey, bytes);
+//			EncryptedLocalStore.setItem(strKey, bytes);
 		}
 		
 		public static function removeItem(strKey:String):void {
-			EncryptedLocalStore.removeItem(strKey);
+//			EncryptedLocalStore.removeItem(strKey);
 		}
 		
 		public static function CheckToken():void {

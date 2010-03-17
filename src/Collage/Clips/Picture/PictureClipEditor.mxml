@@ -9,8 +9,6 @@
 		{
 			if (_Model) {
 				var pictureModel:PictureClip = _Model as PictureClip;
-				if (pictureModel.url)
-					src.text = pictureModel.url;
 			}
 		}
 		
@@ -18,10 +16,9 @@
 		{
 			if (_Model) {
 				var pictureModel:PictureClip = _Model as PictureClip;
-				pictureModel.url = src.text;
 			}
 		}
-		
+/*		
 		public function LoadFromFile():void
 		{
 			var file:File = File.desktopDirectory;
@@ -36,7 +33,7 @@
 			var pictureModel:PictureClip = _Model as PictureClip;
 			pictureModel.url = newFile.url;
 		}
-		
+*/		
 		protected function LoadImageFromURL():void
 		{
 			var pictureModel:PictureClip = _Model as PictureClip;
@@ -47,12 +44,14 @@
     </mx:Script>
 	<flexlib:WindowShade label="Picture Settings" styleName="linkButtonWindowShade" width="100%">
 		<mx:HRule width="100%" />
+		<!--
 		<mx:HBox width="100%" clipContent="true" horizontalScrollPolicy="off" >
 			<mx:Label text="File:"/>
 			<mx:Label id="src" text="{model.url}"/>
 		</mx:HBox>
 		<mx:Button id="loadImageButton" label="Load from file" click="LoadFromFile()" />
 		<mx:HRule width="100%" />
+-->
 		<mx:Label text="Load From URL:" />
 		<mx:TextInput id="loadingURL" text="{model.url}" width="100%" />
 		<mx:Button id="loadURLButton" color="0x323232" label="Apply" click="LoadImageFromURL()" />

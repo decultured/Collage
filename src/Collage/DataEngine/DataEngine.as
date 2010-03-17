@@ -4,7 +4,6 @@ package Collage.DataEngine
 	import flash.events.*;
 	import mx.controls.Alert;
 	import com.adobe.serialization.json.JSON;
-	import flash.filesystem.*;
 	import Collage.Logger.*;
 	
 	public class DataEngine extends EventDispatcher

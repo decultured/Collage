@@ -9,8 +9,6 @@
 		{
 			if (_Model) {
 				var editDocument:Document = _Model as Document;
-				if (editDocument.url)
-					src.text = editDocument.url;
 
 				gridSize.text = editDocument.gridSize.toString();
 				snapToGrid.selected = editDocument.snap;
@@ -22,7 +20,7 @@
 				gridColorPicker.selectedColor = editDocument.gridColor;
 			}
 		}
-		
+/*		
 		private function FileChanged():void
 		{
 			if (_Model) {
@@ -47,7 +45,7 @@
 			editDocument.url = newFile.url;
 			src.text = editDocument.url; 
 		}
-
+*/
 		protected function SettingsChanged():void
 		{
 			if (_Model) {
@@ -109,9 +107,11 @@
 			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" /><mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="0xFFFFFF" change="SettingsChanged()"/>
 		</mx:HBox>
 		<mx:HRule width="100%" />
+<!--
 		<mx:HBox width="100%" clipContent="true" horizontalScrollPolicy="off" >
 			<mx:Label text="Image:" color="#000000" fontWeight="bold" /><mx:Label id="src" text="Unknown" color="#323232" />
 		</mx:HBox>
 		<mx:Button id="loadImageButton" label="Load Background Image" click="LoadFromFile()" />
+-->
 	</flexlib:WindowShade>
 </clg:ClipEditor>
