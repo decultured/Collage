@@ -1,5 +1,7 @@
 package Collage.Clip
 {
+	import flash.utils.*;
+	import Collage.Logger.*;
 	import mx.controls.Alert;
 	import com.roguedevelopment.objecthandles.IMoveable;
 	import com.roguedevelopment.objecthandles.IResizeable;
@@ -10,11 +12,12 @@ package Collage.Clip
 		private var _UID:String;
 		[Bindable] public var selected:Boolean = false;
 
-		[Bindable] public var x:Number = 10;
-		[Bindable] public var y:Number  = 10;
-		[Bindable] public var height:Number = 150;
-		[Bindable] public var width:Number = 150;
-		[Bindable] public var rotation:Number = 0;
+		[Savable] public var type:String = "clip";
+		[Bindable][Savable] public var x:Number = 10;
+		[Bindable][Savable] public var y:Number  = 10;
+		[Bindable][Savable] public var height:Number = 150;
+		[Bindable][Savable] public var width:Number = 150;
+		[Bindable][Savable] public var rotation:Number = 0;
 		
 		public var verticalSizable:Boolean = true;
 		public var horizontalSizable:Boolean = true;
@@ -62,38 +65,27 @@ package Collage.Clip
 			}
 		}
 
-		public function Resized():void
-		{
-		}
-
-		public function Moved():void
-		{
-		}
-
-		public function Rotated():void
-		{
-		}
-		
-		public function LoadFromData(data:Object):Boolean
-		{
-			return false;
-		}
-
-		public function LoadFromXML():Boolean
-		{
-			return false;
-		}
+		public function Resized():void { }
+		public function Moved():void { }
+ 		public function Rotated():void { }
+		public function LoadFromData(data:Object):Boolean { return false; }
+		public function LoadFromXML():Boolean {	return false; }
 		
 		public function SaveToObject():Object
 		{
+			var typeDef:XML = describeType(this);
+			
 			var newObject:Object = new Object();
 
-			newObject["type"] = "clip";
-			newObject["x"] = x;
-			newObject["y"] = y;
-			newObject["height"] = height;
-			newObject["width"] = width;
-			newObject["rotation"] = rotation;
+			for each (var metadata:XML in typeDef..metadata)
+			{
+				Logger.Log(metadata["@name"], LogEntry.DEBUG, this);
+				if (metadata["@name"] != "Savable")
+					continue;
+
+				if (this.hasOwnProperty(metadata.parent()["@name"]))
+					newObject[metadata.parent()["@name"]] = this[metadata.parent()["@name"]];
+			}
 
 			return newObject;
 		}
@@ -103,20 +95,15 @@ package Collage.Clip
 			if (!dataObject)
 				return false;
 
-			for (var key:String in dataObject)
-			{
-				if (key == "x") {
-					x = parseInt(dataObject[key]);
-				} else if (key == "y") {
-					y = parseInt(dataObject[key]);
-				} else if (key == "height") {
-					height = parseInt(dataObject[key]);
-				} else if (key == "width") {
-					width = parseInt(dataObject[key]);
-				} else if (key == "rotation") {
-					rotation = parseFloat(dataObject[key]);
-				} 
+			for(var obj_k:String in dataObject) {
+				try {
+					if(this.hasOwnProperty(obj_k))
+						this[obj_k] = dataObject[obj_k];
+				} catch(e:Error) {
+					
+				}
 			}
+
 			return true;
 		}
 	}

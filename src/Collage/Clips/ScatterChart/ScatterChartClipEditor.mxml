@@ -11,19 +11,23 @@
 		
 		[Bindable] public var dataSetSelections:Array = new Array();
 		[Bindable] public var dataSetColumnSelections:Array = new Array();
+
+		[Bindable] public var gridDirectionSelections:ArrayCollection = new ArrayCollection(
+							    [ {label:"Both", data:"both"},
+								  {label:"Horizontal", data:"horizontal"},
+							      {label:"Vertical", data:"vertical"}
+								]);
+		[Bindable] public var plotShapeSelections:ArrayCollection = new ArrayCollection(
+							    [ {label:"Circle", data:"circle"},
+								  {label:"Diamond", data:"diamond"},
+								  {label:"Box", data:"box"},
+								  {label:"Triangle", data:"triangle"},
+							      {label:"Cross", data:"cross"}
+								]);
 		
 		private function Initialize():void
 		{
 			DataEngineConnect();
-		}
-		
-		private function SettingsChanged():void
-		{
-			if (_Model) {
-				var scatterChartModel:ScatterChartClip = _Model as ScatterChartClip;
-				scatterChartModel.backgroundColor = backgroundColorPicker.selectedColor;
-				scatterChartModel.backgroundAlpha = transparencySlider.value;
-			}
 		}
 		
 		private function DataEngineConnect():void
@@ -95,6 +99,55 @@
 				scatterChartModel.ResetData();
 			}
 		}
+
+		private function SettingsChanged():void
+		{
+			if (_Model) {
+				var scatterChartModel:ScatterChartClip = _Model as ScatterChartClip;
+				scatterChartModel.backgroundColor = backgroundColorPicker.selectedColor;
+				scatterChartModel.backgroundAlpha = transparencySlider.value;
+
+				scatterChartModel.plotShape = plotShape.selectedItem.data;
+				scatterChartModel.plotColor = plotColor.selectedColor;
+				scatterChartModel.plotAlpha = plotAlpha.value;
+				scatterChartModel.plotRadius = plotRadius.value;
+				
+				// Grid Options
+				scatterChartModel.gridVisible = gridVisible.selected;
+				scatterChartModel.gridDirection = gridDirection.selectedItem.data;
+				scatterChartModel.gridColor = gridColor.selectedColor;
+				scatterChartModel.gridAlpha = gridAlpha.value;
+				scatterChartModel.gridWeight = gridWeight.value;
+
+				// Grid Origins
+				scatterChartModel.gridHOriginVisible = gridHOriginVisible.selected;
+				scatterChartModel.gridHOriginColor = gridHOriginColor.selectedColor;
+				scatterChartModel.gridHOriginAlpha = gridHOriginAlpha.value;
+				scatterChartModel.gridHOriginWeight = gridHOriginWeight.value;
+				scatterChartModel.gridVOriginVisible = gridVOriginVisible.selected;
+				scatterChartModel.gridVOriginColor = gridVOriginColor.selectedColor;
+				scatterChartModel.gridVOriginAlpha = gridVOriginAlpha.value;
+				scatterChartModel.gridVOriginWeight = gridVOriginWeight.value;
+				
+				// Vertical Axis 
+				scatterChartModel.vAxisVisible = vAxisVisible.selected;
+				scatterChartModel.vAxisColor = vAxisColor.selectedColor;
+				scatterChartModel.vAxisAlpha = vAxisAlpha.value;
+				scatterChartModel.vAxisWeight = vAxisWeight.value;
+				scatterChartModel.vAxisLabelSize = vAxisLabelSize.value;
+				scatterChartModel.vAxisLabelColor = vAxisLabelColor.selectedColor;
+		        scatterChartModel.vAxisLabelGap = vAxisLabelGap.value;
+
+				// Horizontal Axis
+				scatterChartModel.hAxisVisible = hAxisVisible.selected;
+				scatterChartModel.hAxisColor = hAxisColor.selectedColor;
+				scatterChartModel.hAxisAlpha = hAxisAlpha.value;
+				scatterChartModel.hAxisWeight = hAxisWeight.value;
+				scatterChartModel.hAxisLabelSize = hAxisLabelSize.value;
+				scatterChartModel.hAxisLabelColor = hAxisLabelColor.selectedColor;
+		        scatterChartModel.hAxisLabelGap = hAxisLabelGap.value;
+			}
+		}
 	]]>
     </mx:Script>
 	<flexlib:WindowShade label="Data Connection" styleName="linkButtonWindowShade" width="100%">
@@ -117,6 +170,113 @@
 		</mx:HBox>
 		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
 		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="{model.backgroundAlpha}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+	</flexlib:WindowShade>
+	<flexlib:WindowShade opened="false" label="Plot Styles" styleName="linkButtonWindowShade" width="100%">
+		<mx:Label text="Plot Item Style:" />
+		<mx:ComboBox id="plotShape" dataProvider="{plotShapeSelections}" width="230" change="SettingsChanged()" />
+		<mx:HBox width="100%" >
+			<mx:Label text="Plot Shape Color:" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="plotColor" showTextField="true" selectedColor="{model.plotColor}" change="SettingsChanged()" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="Plot Transparency:" />
+		<mx:HSlider id="plotAlpha" minimum="0" maximum="1" value="{model.plotAlpha}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="Plot Radius:" />
+		<mx:HSlider id="plotRadius" minimum="1" maximum="30" value="{model.plotRadius}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+	</flexlib:WindowShade>
+	<flexlib:WindowShade opened="false" label="Grid Styles" styleName="linkButtonWindowShade" width="100%">
+		<mx:CheckBox id="gridVisible" label="Grid Visible" click="SettingsChanged()" selected="{model.gridVisible}" />
+		<mx:Label text="Grid Style:"/>
+		<mx:ComboBox id="gridDirection" dataProvider="{gridDirectionSelections}" width="230" change="SettingsChanged()" />
+		<mx:HBox width="100%" >
+			<mx:Label text="Grid Color:" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="gridColor" showTextField="true" selectedColor="{model.gridColor}" change="SettingsChanged()" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="Grid Transparency:" />
+		<mx:HSlider id="gridAlpha" minimum="0" maximum="1" value="{model.gridAlpha}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="Grid Weight:" />
+		<mx:HSlider id="gridWeight" minimum="0" maximum="15" snapInterval="1" value="{model.gridWeight}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<!-- Horizontal Origin -->
+		<mx:CheckBox id="gridHOriginVisible" label="Horizontal Origin" click="SettingsChanged()" selected="{model.gridHOriginVisible}" />
+		<mx:HBox width="100%" >
+			<mx:Label text="H Origin Color:" enabled="{model.gridHOriginVisible}" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="gridHOriginColor" showTextField="true" selectedColor="{model.gridHOriginColor}" change="SettingsChanged()" enabled="{model.gridHOriginVisible}" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="H Origin Transparency:" enabled="{model.gridHOriginVisible}" />
+		<mx:HSlider id="gridHOriginAlpha" minimum="0" maximum="1" value="{model.gridHOriginAlpha}" enabled="{model.gridHOriginVisible}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="H Origin  Weight:" enabled="{model.gridHOriginVisible}" />
+		<mx:HSlider id="gridHOriginWeight" minimum="0" maximum="15" snapInterval="1" value="{model.gridHOriginWeight}" enabled="{model.gridHOriginVisible}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<!-- Vertical Origin -->
+		<mx:CheckBox id="gridVOriginVisible" label="Vertical Origin" click="SettingsChanged()" selected="{model.gridVOriginVisible}" />
+		<mx:HBox width="100%" >
+			<mx:Label text="V Origin Color:" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="gridVOriginColor" showTextField="true" selectedColor="{model.gridVOriginColor}" change="SettingsChanged()" enabled="{model.gridVOriginVisible}" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="V Origin Transparency:" />
+		<mx:HSlider id="gridVOriginAlpha" minimum="0" maximum="1" value="{model.gridVOriginAlpha}" enabled="{model.gridVOriginVisible}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="V Origin  Weight:" />
+		<mx:HSlider id="gridVOriginWeight" minimum="0" maximum="15" snapInterval="1" value="{model.gridVOriginWeight}" enabled="{model.gridVOriginVisible}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+	</flexlib:WindowShade>
+	<flexlib:WindowShade opened="false" label="Label Styles" styleName="linkButtonWindowShade" width="100%">
+		<mx:HBox width="100%" >
+			<mx:Label text="H Axis Label Color:"/>
+			<mx:ColorPicker id="hAxisLabelColor" showTextField="true" selectedColor="{model.hAxisLabelColor}" change="SettingsChanged()" />
+		</mx:HBox>
+		<mx:Label text="H Axis Label Size:"/>
+		<mx:HSlider id="hAxisLabelSize" liveDragging="true" minimum="6" maximum="96" value="{model.hAxisLabelSize}" snapInterval="1" change="SettingsChanged()" />
+		<mx:Label text="H Axis Label Gap:"/>
+		<mx:HSlider id="hAxisLabelGap" liveDragging="true" minimum="0" maximum="96" value="{model.hAxisLabelGap}" snapInterval="1" change="SettingsChanged()" />
+		<mx:HBox width="100%" >
+			<mx:Label text="V Axis Label Color:"/>
+			<mx:ColorPicker id="vAxisLabelColor" showTextField="true" selectedColor="{model.vAxisLabelColor}" change="SettingsChanged()" />
+		</mx:HBox>
+		<mx:Label text="V Axis Label Size:"/>
+		<mx:HSlider id="vAxisLabelSize" liveDragging="true" minimum="6" maximum="96" value="{model.vAxisLabelSize}" snapInterval="1" change="SettingsChanged()" />
+		<mx:Label text="V Axis Label Gap:"/>
+		<mx:HSlider id="vAxisLabelGap" liveDragging="true" minimum="0" maximum="96" value="{model.vAxisLabelGap}" snapInterval="1" change="SettingsChanged()" />
+	</flexlib:WindowShade>
+	<flexlib:WindowShade opened="false" label="Axis Styles" styleName="linkButtonWindowShade" width="100%">
+		<mx:CheckBox id="hAxisVisible" label="Horizontal Axis" click="SettingsChanged()" selected="{model.hAxisVisible}" />
+		<mx:HBox width="100%" >
+			<mx:Label text="H Axis Color:"  enabled="{model.hAxisVisible}" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="hAxisColor" showTextField="true" selectedColor="{model.hAxisColor}" change="SettingsChanged()" enabled="{model.hAxisVisible}" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="H Axis Transparency:" enabled="{model.hAxisVisible}" />
+		<mx:HSlider id="hAxisAlpha" minimum="0" maximum="1" value="{model.hAxisAlpha}" enabled="{model.hAxisVisible}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="H Axis  Weight:" enabled="{model.hAxisVisible}" />
+		<mx:HSlider id="hAxisWeight" minimum="0" maximum="15" snapInterval="1" value="{model.hAxisWeight}" enabled="{model.hAxisVisible}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:CheckBox id="vAxisVisible" label="Vertical Axis" click="SettingsChanged()" selected="{model.vAxisVisible}" />
+		<mx:HBox width="100%" >
+			<mx:Label text="V Axis Color:"  enabled="{model.vAxisVisible}" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="vAxisColor" showTextField="true" selectedColor="{model.vAxisColor}" change="SettingsChanged()" enabled="{model.vAxisVisible}" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="V Axis Transparency:" enabled="{model.vAxisVisible}" />
+		<mx:HSlider id="vAxisAlpha" minimum="0" maximum="1" value="{model.vAxisAlpha}" enabled="{model.vAxisVisible}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="V Axis  Weight:" enabled="{model.vAxisVisible}" />
+		<mx:HSlider id="vAxisWeight" minimum="0" maximum="15" snapInterval="1" value="{model.vAxisWeight}" enabled="{model.vAxisVisible}"
             allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
 	</flexlib:WindowShade>
 </clg:ClipEditor>

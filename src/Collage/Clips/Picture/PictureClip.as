@@ -6,42 +6,16 @@ package Collage.Clips.Picture
 	{
 		[Bindable] public var aspectRatio:Number = 0;
 		[Bindable] public var imageLoaded:Boolean = false;
-		private var _URL:String = null;
-		
-		[Bindable]
-		public function get url():String {return _URL;}
-		public function set url(url:String):void
-		{
-			_URL = url;
-		}
+		[Bindable][Savable] public var url:String = null;
 		
 		public function PictureClip(dataObject:Object = null)
 		{
 			super(dataObject);
-			CreateView();
-			CreateEditor();
+			type = "image";
+			CreateView(new PictureClipView());
+			CreateEditor(new PictureClipEditor());
 		}
 		
-		public override function CreateView(newView:ClipView = null):void
-		{
-			if (newView)
-				_View = newView;
-			else {
-				_View = new PictureClipView();
-				_View.model = this;
-			}
-		}
-
-		public override function CreateEditor(newEditor:ClipEditor = null):void
-		{
-			if (newEditor)
-				_Editor = newEditor;
-			else {
-				_Editor = new PictureClipEditor();
-				_Editor.model = this;
-			}
-		}
-
 		public override function Resized():void
 		{
 			if (!height || !aspectRatio)
@@ -61,30 +35,5 @@ package Collage.Clips.Picture
 			var view:PictureClipView = _View as PictureClipView;
 			return view.LoadFromData(data);
 		}
-		
-		public override function SaveToObject():Object
-		{
-			var newObject:Object = super.SaveToObject();
-
-			newObject["type"] = "image";
-			newObject["url"] = url;
-
-			return newObject;
-		}
-		
-		public override function LoadFromObject(dataObject:Object):Boolean
-		{
-			if (!dataObject)
-				return false;
-			super.LoadFromObject(dataObject);
-			for (var key:String in dataObject)
-			{
-				if (key == "url") {
-					url = dataObject[key];
-				}
-			}
-			return true;
-		}
-
 	}
 }

@@ -7,15 +7,9 @@ package Collage.Clips.ClipSkeleton
 		public function LabelClip(dataObject:Object = null)
 		{
 			super(dataObject);
+			type = "skeleton";
 			CreateView(new SkeletonClipView());
 			CreateEditor(new SkeletonClipEditor());
-		}
-
-		public override function SaveToObject():Object
-		{
-			var newObject:Object = super.SaveToObject();
-			newObject["type"] = "skeleton";
-			return newObject;
 		}
 	}
 }

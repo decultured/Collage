@@ -12,24 +12,25 @@ package Collage.Clips.Table
 	{
 		public static var QUERY_FINISHED:String = "Query Finished";
 		
-		[Bindable] public var dataSetID:String = null;
-		[Bindable] public var backgroundAlpha:Number = 1.0;
-		[Bindable] public var backgroundColor:Number = 0xFFFFFF;
-		[Bindable] public var color:Number = 0x000000;
+		[Savable][Bindable] public var dataSetID:String = null;
+		[Savable][Bindable] public var backgroundAlpha:Number = 1.0;
+		[Savable][Bindable] public var backgroundColor:Number = 0xFFFFFF;
+		[Savable][Bindable] public var color:Number = 0x000000;
 
 		public var dataLoaded:Boolean = false;
 
 		public var columns:Array = new Array();
-		public var data:Array = new Array();
-		public var rowsRequested:Number = 10;
+		[Savable]public var data:Array = new Array();
+		[Savable]public var rowsRequested:Number = 10;
 
 		private var _DataQuery:DataQuery = null;
 
 		public function TableClip(dataObject:Object = null)
 		{
+			super(dataObject);
 			rotatable = false;
 			moveFromCenter = true;
-			super(dataObject);
+			type = "table";
 			CreateView();
 			CreateEditor();
 		}
@@ -135,13 +136,6 @@ package Collage.Clips.Table
 		{
 			var newObject:Object = super.SaveToObject();
 
-			newObject["type"] = "table";
-			newObject["dataSetID"] = dataSetID;
-			newObject["backgroundAlpha"] = backgroundAlpha;
-			newObject["backgroundColor"] = backgroundColor;
-			newObject["dataLoaded"] = dataLoaded;
-			newObject["rowsRequested"] = rowsRequested;
-
 			if (columns) {
 				newObject["columns"] = new Array();
 				for (var i:uint = 0; i < columns.length; i++) {
@@ -152,7 +146,6 @@ package Collage.Clips.Table
 					newObject["columns"][i]["visible"] = newColumn.visible;
 				}
 			}
-			newObject["data"] = data;
 
 			return newObject;
 		}
@@ -162,22 +155,10 @@ package Collage.Clips.Table
 			if (!dataObject)
 				return false;
 			super.LoadFromObject(dataObject);
+			columns = new Array();
 			for (var key:String in dataObject)
 			{
-				if (key == "dataSetID") {
-					dataSetID = dataObject[key];
-				} else if (key == "dataLoaded") {
-					dataLoaded = dataObject[key];
-				} else if (key == "rowsRequested") {
-					rowsRequested = parseInt(dataObject[key]);
-				} else if (key == "backgroundColor") {
-					backgroundColor = parseInt(dataObject[key]);
-				} else if (key == "backgroundAlpha") {
-					backgroundAlpha = parseInt(dataObject[key]);
-				} else if (key == "data" && dataObject[key] is Array) {
-					data = dataObject[key];
-				} 
-				else if (key == "columns" && dataObject[key] is Array) {
+				if (key == "columns" && dataObject[key] is Array) {
 					columns = new Array();
 					var colArray:Array = dataObject[key];
 					for (var i:uint = 0; i < colArray.length; i++) {

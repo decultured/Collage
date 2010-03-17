@@ -131,12 +131,18 @@
 				lineChartModel.vAxisColor = vAxisColor.selectedColor;
 				lineChartModel.vAxisAlpha = vAxisAlpha.value;
 				lineChartModel.vAxisWeight = vAxisWeight.value;
+				lineChartModel.vAxisLabelSize = vAxisLabelSize.value;
+				lineChartModel.vAxisLabelColor = vAxisLabelColor.selectedColor;
+		        lineChartModel.vAxisLabelGap = vAxisLabelGap.value;
 
 				// Horizontal Axis
 				lineChartModel.hAxisVisible = hAxisVisible.selected;
 				lineChartModel.hAxisColor = hAxisColor.selectedColor;
 				lineChartModel.hAxisAlpha = hAxisAlpha.value;
 				lineChartModel.hAxisWeight = hAxisWeight.value;
+				lineChartModel.hAxisLabelSize = hAxisLabelSize.value;
+				lineChartModel.hAxisLabelColor = hAxisLabelColor.selectedColor;
+		        lineChartModel.hAxisLabelGap = hAxisLabelGap.value;
 			}
 		}
 	]]>
@@ -223,6 +229,24 @@
 		<mx:Label text="V Origin  Weight:" />
 		<mx:HSlider id="gridVOriginWeight" minimum="0" maximum="15" snapInterval="1" value="{model.gridVOriginWeight}" enabled="{model.gridVOriginVisible}"
             allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+	</flexlib:WindowShade>
+	<flexlib:WindowShade opened="false" label="Label Styles" styleName="linkButtonWindowShade" width="100%">
+		<mx:HBox width="100%" >
+			<mx:Label text="H Axis Label Color:"/>
+			<mx:ColorPicker id="hAxisLabelColor" showTextField="true" selectedColor="{model.hAxisLabelColor}" change="SettingsChanged()" />
+		</mx:HBox>
+		<mx:Label text="H Axis Label Size:"/>
+		<mx:HSlider id="hAxisLabelSize" liveDragging="true" minimum="6" maximum="96" value="{model.hAxisLabelSize}" snapInterval="1" change="SettingsChanged()" />
+		<mx:Label text="H Axis Label Gap:"/>
+		<mx:HSlider id="hAxisLabelGap" liveDragging="true" minimum="0" maximum="96" value="{model.hAxisLabelGap}" snapInterval="1" change="SettingsChanged()" />
+		<mx:HBox width="100%" >
+			<mx:Label text="V Axis Label Color:"/>
+			<mx:ColorPicker id="vAxisLabelColor" showTextField="true" selectedColor="{model.vAxisLabelColor}" change="SettingsChanged()" />
+		</mx:HBox>
+		<mx:Label text="V Axis Label Size:"/>
+		<mx:HSlider id="vAxisLabelSize" liveDragging="true" minimum="6" maximum="96" value="{model.vAxisLabelSize}" snapInterval="1" change="SettingsChanged()" />
+		<mx:Label text="V Axis Label Gap:"/>
+		<mx:HSlider id="vAxisLabelGap" liveDragging="true" minimum="0" maximum="96" value="{model.vAxisLabelGap}" snapInterval="1" change="SettingsChanged()" />
 	</flexlib:WindowShade>
 	<flexlib:WindowShade opened="false" label="Axis Styles" styleName="linkButtonWindowShade" width="100%">
 		<mx:CheckBox id="hAxisVisible" label="Horizontal Axis" click="SettingsChanged()" selected="{model.hAxisVisible}" />

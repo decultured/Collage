@@ -4,13 +4,29 @@
 	backgroundColor="{model.backgroundColor}"
 	backgroundAlpha="{model.backgroundAlpha}"
 	horizontalScrollPolicy="off"
-	verticalScrollPolicy="off" >
+	verticalScrollPolicy="off"
+	creationComplete="Initialize()" >
 	
 	<mx:Script>
 		<![CDATA[
         import mx.collections.ArrayCollection;
 		import mx.events.PropertyChangeEvent;
-        import mx.collections.ArrayCollection;
+		import mx.events.FlexEvent;
+
+		public function Initialize():void
+		{
+			onModelChange(null);
+		}
+
+		protected override function onModelChange(event:PropertyChangeEvent):void
+		{
+			if (event && event.property != "x" && event.property != "y" && event.property != "width" && event.property != "height")
+			{
+				chart.invalidateDisplayList();
+				gridLines.invalidateDisplayList();
+			}
+			super.onModelChange(event);
+		}
 
         private function displayLabel(data:Object, field:String, index:Number, percentValue:Number):String {
 			var barChartModel:BarChartClip = _Model as BarChartClip;
@@ -20,45 +36,56 @@
 
 		]]>
     </mx:Script>
-    <mx:Stroke id="hAxisStroke" color="#333333" weight="2" alpha="0.5"/>
-    <mx:Stroke id="vAxisStroke" color="#333333" weight="2" alpha="0.5"/>
-    <mx:Stroke id="gridStroke" color="#333333" weight="1" alpha="0.5"/>
-	<mx:SolidColor id="barfill" color="green" alpha="1"/>
+    <mx:Stroke id="hAxisStroke" color="{model.hAxisColor}" weight="{model.hAxisWeight}" alpha="{model.hAxisAlpha}" caps="none"/>
+    <mx:Stroke id="vAxisStroke" color="{model.vAxisColor}" weight="{model.vAxisWeight}" alpha="{model.vAxisAlpha}" caps="none"/>
+    <mx:Stroke id="gridStroke" color="{model.gridColor}" weight="{model.gridWeight}" alpha="{model.gridAlpha}" caps="none"/>
+    <mx:Stroke id="gridHOriginStroke" color="{model.gridHOriginColor}" weight="{model.gridHOriginWeight}" alpha="{model.gridHOriginAlpha}" caps="none"/>
+    <mx:Stroke id="gridVOriginStroke" color="{model.gridVOriginColor}" weight="{model.gridVOriginWeight}" alpha="{model.gridVOriginAlpha}" caps="none"/>
+	<mx:SolidColor id="barfill" color="{model.barColor}" alpha="{model.barAlpha}"/>
      <mx:ColumnChart id="chart" 
 		height="100%" width="100%" 
-		paddingRight="5" paddingLeft="5" 
 		color="0x323232" showDataTips="true"
 		dataProvider="{model.Data}"
 		seriesFilters="[]" >
 		<mx:verticalAxis>
-	        <mx:LinearAxis id="vAxis" baseAtZero="false" />
-	    </mx:verticalAxis>
-	    <mx:horizontalAxis>
-	        <mx:CategoryAxis id="hAxis" categoryField="label" />
-	    </mx:horizontalAxis>
+			<mx:LinearAxis id="vaxis" baseAtZero="false"/>
+		</mx:verticalAxis>			
 	    <mx:verticalAxisRenderers>
 	        <mx:AxisRenderer
-	            axis="{vAxis}"
-	            showLine="false"
+	            axis="{vaxis}"
+				minorTickPlacement="none"
 	            tickPlacement="none"
-	            labelGap="12" />
+	            axisStroke="{vAxisStroke}"
+	            showLine="{model.vAxisVisible}"
+				fontSize="{model.vAxisLabelSize}"
+				color="{model.vAxisLabelColor}"
+	            labelGap="{model.vAxisLabelGap}" />
 	    </mx:verticalAxisRenderers>
-
+	    <mx:horizontalAxis>
+	        <mx:CategoryAxis id="haxis" categoryField="label" />
+	    </mx:horizontalAxis>
 	    <mx:horizontalAxisRenderers>
 	        <mx:AxisRenderer
-	            axis="{hAxis}"
+	            axis="{haxis}"
 	            axisStroke="{hAxisStroke}"
+	            showLine="{model.hAxisVisible}"
+				minorTickPlacement="none"
 	            tickPlacement="none"
-	            labelGap="8" />
+				fontSize="{model.hAxisLabelSize}"
+				color="{model.hAxisLabelColor}"
+	            labelGap="{model.hAxisLabelGap}" />
 	    </mx:horizontalAxisRenderers>
-
 	    <mx:backgroundElements>
 	        <mx:GridLines
-	            direction="horizontal"
-	            verticalShowOrigin="false"
-	            horizontalShowOrigin="true"
+				id="gridLines"
+	            direction="{model.gridDirection}"
+	            verticalShowOrigin="{model.gridHOriginVisible}"
+				verticalOriginStroke="{gridVOriginStroke}"
+	            horizontalShowOrigin="{model.gridHOriginVisible}"
+				horizontalOriginStroke="{gridHOriginStroke}"
+				visible="{model.gridVisible}"
 	            horizontalStroke="{gridStroke}"
-	            horizontalOriginStroke="{hAxisStroke}" />
+				verticalStroke="{gridStroke}" />
 	    </mx:backgroundElements>
         <mx:series>
 			<mx:ColumnSeries

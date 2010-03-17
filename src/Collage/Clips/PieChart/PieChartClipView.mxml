@@ -32,14 +32,14 @@
 		]]>
      </mx:Script>
 
-	<mx:Stroke id="callouts" weight="2" color="0x999999" alpha=".8" caps="square"/>
-    <mx:Stroke id="radial" weight="1" color="0xFFFFCC" alpha=".3"/>
-    <mx:Stroke id="pieborder" color="0x000000" weight="2" alpha=".5"/>
-     <mx:PieChart id="chart" height="100%" width="100%" paddingRight="5" paddingLeft="5" color="0x323232"
+	<mx:Stroke id="callouts" weight="{model.calloutWeight}" color="{model.calloutColor}" alpha="{model.calloutAlpha}" caps="none"/>
+    <mx:Stroke id="radial" weight="{model.radialWeight}" color="{model.radialColor}" alpha="{model.radialAlpha}"/>
+    <mx:Stroke id="pieborder" color="{model.borderColor}" weight="{model.borderWeight}" alpha="{model.borderAlpha}"/>
+     <mx:PieChart id="chart" height="100%" width="100%" color="0x323232"
         showDataTips="true" dataProvider="{model.Data}" >
         <mx:series>
             <mx:PieSeries
-				labelPosition="callout"
+				labelPosition="{model.labelPosition}"
 				field="value"
 				nameField="label"
                 labelFunction="displayLabel" 

@@ -6,9 +6,9 @@ mkdir airpackage
 
 cp assets/app-icons/*.png airpackage/
 cp collagecert.p12 airpackage/
-cp src/Collage.xml airpackage/
-cp src/Collage.swf airpackage/
-cp src/Collage.air airpackage/
+cp src/Desktop/Collage.xml airpackage/
+cp src/Desktop/Collage.swf airpackage/
+#cp src/Desktop/Collage.air airpackage/
 
 cd airpackage
 

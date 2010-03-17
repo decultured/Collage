@@ -22,9 +22,9 @@
 	nativeDragEnter="onDragIn(event)"
 	nativeDragDrop="onDrop(event)"
 	invoke="OnInvoke(event)"
-	closing="WindowClosing(event)" xmlns:Collage="Collage.*">
-	<mx:Style source="yflexskin.css"/>
-	<mx:Style source="collageBasic.css"/>
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off"
+	closing="WindowClosing(event)" >
 	<mx:Script>
 	<![CDATA[
 		import mx.containers.dividedBoxClasses.BoxDivider;
@@ -308,13 +308,30 @@
 				} else if (ext == "clg") {
 					OpenFile(file);
 				} else if (ext == "csv" || ext == "tsv") {
-					Logger.Log("Uploading CSV: " + file.url, LogEntry.INFO, this);
+					Logger.Log("Uploading Dropped CSV: " + file.url, LogEntry.INFO, this);
 					DataEngine.UploadCSV(file);
 				}
 				else {
 					//Alert.show("Unmapped Extension");
 				}
 			}
+		}
+		
+		private function UploadDataFile():void
+		{
+			var file:File = File.desktopDirectory;
+			file.addEventListener(Event.SELECT, UploadDataFileEvent);
+			file.browseForOpen("Open");
+		}
+			
+		public function UploadDataFileEvent(event:Event):void
+		{
+			if (!event.target || !event.target is File)
+				return;
+			
+			var file:File = event.target as File;
+			Logger.Log("Uploading CSV: " + file.url, LogEntry.INFO, this);
+			DataEngine.UploadCSV(file);
 		}
 
 		private function menuShow(menuEvent:FlexNativeMenuEvent):void
@@ -360,6 +377,9 @@
 					break;
 				case "savePDF":
 					SavePDF();
+					break;
+				case "uploadData":
+					UploadDataFile();
 					break;
 				case "print":
 					break;
@@ -430,16 +450,16 @@
 					newLoggerWindow.open();
 					break;
 				case "hideInspector":
-					inspectorWindow.visible = !inspectorWindow.visible;
+					inspectorCanvas.visible = !inspectorCanvas.visible;
 
-					if (!inspectorWindow.visible) {
+					if (!inspectorCanvas.visible) {
 						menuEvent.item.@label = "Show Inspector";
-						inspectorWindow.width = 0;
-						editCanvas.setStyle("width","100%");
+						inspectorCanvas.width = 0;
+						editCanvas.setStyle("right","0");
 					} else {
 						menuEvent.item.@label = "Hide Inspector";
-						inspectorWindow.width = 250;
-						editCanvas.setStyle("width","100%");
+						inspectorCanvas.width = 255;
+						editCanvas.setStyle("right","255");
 					}
 					
 					break;
@@ -473,7 +493,9 @@
                 <menuitem label="Save..." command="save" key="s"/>
                 <menuitem label="Save Image..." command="saveImage"/>
                 <menuitem label="Save PDF..." command="savePDF"/>
-                <menuitem type="separator"/>     
+                <menuitem type="separator"/>
+                <menuitem label="Upload Data..." command="uploadData"/>
+                <menuitem type="separator"/>
                 <menuitem label="Print..." key="p" command="print" enabled="false"/>
             </menuitem>
             <menuitem label="Edit">
@@ -517,55 +539,40 @@
         </root>
     </mx:XML>
 	<mx:VBox height="100%" left="0" width="32" backgroundColor="#D6D6D6" backgroundAlpha="1" horizontalScrollPolicy="off" verticalScrollPolicy="off" paddingLeft="4" paddingRight="4" paddingTop="4" paddingBottom="4">
-		<mx:Image id="fullscreenBtn" source="@Embed('../assets/themes/dark/fullscreen.png')" width="24" height="24" click="Fullscreen();" />
+		<mx:Image id="fullscreenBtn" source="@Embed('../../assets/themes/dark/fullscreen.png')" width="24" height="24" click="Fullscreen();" />
 		<mx:HRule width="24" />
-		<mx:Image id="addImageBtn" source="@Embed('../assets/themes/dark/image.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addLabelBtn" source="@Embed('../assets/themes/dark/label.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addTextBoxBtn" source="@Embed('../assets/themes/dark/text-box.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addLineChartBtn" source="@Embed('../assets/themes/dark/line-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addBarChartBtn" source="@Embed('../assets/themes/dark/bar-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('barchart', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addPieChartBtn" source="@Embed('../assets/themes/dark/pie-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('piechart', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addGuageBtn" source="@Embed('../assets/themes/dark/guage.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('guage', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addTableBtn" source="@Embed('../assets/themes/dark/datagrid.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('table', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addDataLabelBtn" source="@Embed('../assets/themes/dark/datalabel.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('datalabel', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addImageBtn" source="@Embed('../../assets/themes/dark/image.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addLabelBtn" source="@Embed('../../assets/themes/dark/label.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addTextBoxBtn" source="@Embed('../../assets/themes/dark/text-box.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addLineChartBtn" source="@Embed('../../assets/themes/dark/line-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addScatterChartBtn" source="@Embed('../../assets/themes/dark/scatter.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('scatterchart', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addBarChartBtn" source="@Embed('../../assets/themes/dark/bar-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('barchart', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addPieChartBtn" source="@Embed('../../assets/themes/dark/pie-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('piechart', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addGuageBtn" source="@Embed('../../assets/themes/dark/guage.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('guage', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addTableBtn" source="@Embed('../../assets/themes/dark/datagrid.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('table', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addDataLabelBtn" source="@Embed('../../assets/themes/dark/datalabel.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('datalabel', new Rectangle(150, 150, 300, 300));" />
 	</mx:VBox>
-    <mx:HBox top="0" left="32" right="0" bottom="0" dropShadowEnabled="false" horizontalScrollPolicy="off" verticalScrollPolicy="off" horizontalGap="0" >
-        <mx:Canvas id="editCanvas" label="Canvas 1" width="100%" height="100%" color="0x323232" backgroundColor="#ACACAC" backgroundAlpha="1" click="_EditDocumentView.BackgroundClick(event);">
-			<mx:Box top="0" left="0" right="0" bottom="0" paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20"  horizontalAlign="center" verticalAlign="middle" backgroundAlpha="0" backgroundColor="0xffffff">
-				<clg:EditDocumentView id="_EditDocumentView" 
+	<mx:Canvas id="editCanvas" label="Canvas 1" right="265" left="32" height="100%" color="0x323232" backgroundColor="#ACACAC" backgroundAlpha="1" click="_EditDocumentView.BackgroundClick(event);">
+		<mx:Box top="0" left="0" right="0" bottom="0" paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20"  horizontalAlign="center" verticalAlign="middle" backgroundAlpha="0" backgroundColor="0xffffff">
+			<clg:EditDocumentView id="_EditDocumentView" 
 					width="800" height="600" 
 					dropShadowEnabled="true" 
 					click="_EditDocumentView.BackgroundClick(event);" 
 					backgroundColor="#FFFFFF" backgroundAlpha="1" borderThickness="0"
 					horizontalScrollPolicy="off"
 					verticalScrollPolicy="off" >
-					<mx:HBox id="optionsBox" visible="false" paddingBottom="6" paddingTop="6">
-						<mx:Image id="lockButton" source="@Embed('../assets/themes/dark/lock.png')" click="_EditDocumentView.lockSelected()" />
-						<mx:Image id="deleteButton" source="@Embed('../assets/themes/dark/delete.png')" click="_EditDocumentView.deleteSelected()" />
-					</mx:HBox>			
-				</clg:EditDocumentView>
-				<degrafa:Surface>
-					<degrafa:strokes>
-						<degrafa:SolidStroke id="gridStroke" color="#aaa" weight="1" alpha=".2"/>
-					</degrafa:strokes>
-					<degrafa:GeometryGroup>
-						<degrafa:VerticalLineRepeater count="10" stroke="{gridStroke}"
-														x="0" y="0" y1="600"
-														offsetX="0" offsetY="0"
-														moveOffsetX="{0}" moveOffsetY="0"/>
-						<degrafa:HorizontalLineRepeater	count="10" stroke="{gridStroke}"
-														x="0" y="0" x1="800"
-														offsetX="0" offsetY="0"
-														moveOffsetX="0" moveOffsetY="0"/>
 
-					</degrafa:GeometryGroup>
-				</degrafa:Surface>
-			</mx:Box>
-        </mx:Canvas>
-        <mx:Box id="inspectorWindow" width="250" height="100%" backgroundColor="#ACACAC" backgroundAlpha="1" horizontalScrollPolicy="off" paddingLeft="4" paddingRight="4" paddingTop="4" paddingBottom="4"  >
-        </mx:Box>
-    </mx:HBox>
+				<mx:HBox id="optionsBox" visible="false" paddingBottom="6" paddingTop="6">
+					<!-- <mx:Image id="lockButton" source="@Embed('../../assets/themes/dark/lock.png')" click="_EditDocumentView.lockSelected()" /> -->
+					<mx:Image id="deleteButton" source="@Embed('../../assets/themes/dark/delete.png')" click="_EditDocumentView.deleteSelected()" />
+				</mx:HBox>			
+			</clg:EditDocumentView>
+		</mx:Box>
+	</mx:Canvas>
+	<mx:Canvas id="inspectorCanvas" right="0" width="255" top="0" bottom="0" backgroundColor="#ACACAC" backgroundAlpha="1" verticalScrollPolicy="on" horizontalScrollPolicy="off">
+		<mx:Box id="inspectorWindow" left="0" right="0" top="0" bottom="0" backgroundColor="#ACACAC" backgroundAlpha="1">
+		</mx:Box>
+	</mx:Canvas>
 	
 	<Collage:WelcomeScreen id="welcomeScreen" height="100%" width="100%" visible="false" />
-	
 </mx:WindowedApplication>
