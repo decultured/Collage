@@ -22,7 +22,7 @@
 	nativeDragEnter="onDragIn(event)"
 	nativeDragDrop="onDrop(event)"
 	invoke="OnInvoke(event)"
-	closing="WindowClosing(event)" >
+	closing="WindowClosing(event)" xmlns:Collage="Collage.*">
 	<mx:Style source="yflexskin.css"/>
 	<mx:Style source="collageBasic.css"/>
 	<mx:Script>
@@ -109,15 +109,18 @@
 		}
 		
 		public function HandleLoginSuccess(event:Event):void {
+			welcomeScreen.visible = false;
 			DataEngine.LoadAllDataSets();
 		}
 		
 		public function HandleLoginFailure(event:Event):void {
-			PopUpManager.createPopUp(this, Login, true);
+			welcomeScreen.visible = true;
+//			PopUpManager.createPopUp(welcomeScreen, Login, false);
 		}
 		
 		public function HandleTokenExpired(event:Event):void {
-			PopUpManager.createPopUp(this, Login, true);
+			welcomeScreen.visible = true;
+//			PopUpManager.createPopUp(welcomeScreen, Login, false);
 		}
 
 		private function StandardOSModifier(item:Object):Array{
@@ -446,6 +449,7 @@
 		}		
 	]]>
 	</mx:Script>
+	
 	<mx:FlexNativeMenu id="nativeMenu" dataProvider="{collageMenuData}" 
 		labelField="@label" 
 		showRoot="false"
@@ -561,4 +565,7 @@
         <mx:Box id="inspectorWindow" width="250" height="100%" backgroundColor="#ACACAC" backgroundAlpha="1" horizontalScrollPolicy="off" paddingLeft="4" paddingRight="4" paddingTop="4" paddingBottom="4"  >
         </mx:Box>
     </mx:HBox>
+	
+	<Collage:WelcomeScreen id="welcomeScreen" height="100%" width="100%" visible="false" />
+	
 </mx:WindowedApplication>

@@ -3,7 +3,8 @@
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
 	title="Please login"
 	creationComplete="handleCreationComplete();"
-	close="closeMe();">
+	close="closeMe();"
+	 horizontalAlign="center" verticalAlign="top" defaultButton="{loginBtn}" paddingLeft="15" paddingRight="15" paddingTop="10" paddingBottom="15">
 	<mx:Script>
 		<![CDATA[
 			import flash.events.*;
@@ -13,7 +14,7 @@
 			private function handleCreationComplete():void {
 				// Center the TitleWindow container 
 				// over the control that created it.
-				PopUpManager.centerPopUp(this);
+//				PopUpManager.centerPopUp(this);
 				
 				authMsg.text = "";
 				
