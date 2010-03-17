@@ -152,46 +152,5 @@ package Collage.DataEngine
 				Logger.Log("Data Load Complete", LogEntry.INFO);
 			}
 		}
-		
-		public static function UploadCSV(file:File):void {
-			var request:URLRequest = new URLRequest(DataEngine.getUrl("/api/v1/dataset/upload"));
-			var loader:URLLoader = new URLLoader();
-			var header:URLRequestHeader = new URLRequestHeader("X-Requested-With", "XMLHttpRequest");
-			request.method = URLRequestMethod.POST;
-            request.requestHeaders.push(header);
-			
-			var params:URLVariables = new URLVariables();
-			params.auth_token = Session.AuthToken;
-			request.data = params;
-
-			file.addEventListener(Event.COMPLETE, FileUploadCompleteHandler);
-            file.addEventListener(SecurityErrorEvent.SECURITY_ERROR, FileUploadSecurityErrorHandler);
-            file.addEventListener(IOErrorEvent.IO_ERROR, FileUploadIOErrorHandler);
-            file.addEventListener(HTTPStatusEvent.HTTP_STATUS, FileUploadHttpStatusHandler);
-			file.upload(request,"datafile");
-		}
-		
-        private static function FileUploadHttpStatusHandler(event:HTTPStatusEvent):void {
-			Logger.Log("Data Engine File Upload HTTP Status: " + event, LogEntry.DEBUG);
-        }
-
-		private static function FileUploadIOErrorHandler(event:IOErrorEvent):void
-		{
-            event.target.removeEventListener(IOErrorEvent.IO_ERROR, IOErrorHandler);
-			Logger.Log("Data Engine File Upload IO Error: " + event, LogEntry.ERROR);
-		}
-
-        private static function FileUploadSecurityErrorHandler(event:SecurityErrorEvent):void
-		{
-            event.target.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, SecurityErrorHandler);
-			Logger.Log("Data Engine File Upload Security Error: " + event, LogEntry.ERROR);
-        }
-
-		private static function FileUploadCompleteHandler(event:Event):void
-		{
-			event.target.removeEventListener(Event.COMPLETE, CompleteHandler);
-            DataEngine.LoadAllDataSets();
-			Logger.Log("File Upload Complete!", LogEntry.INFO);
-		}
 	}
 }

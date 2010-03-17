@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<mx:Application 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:clg="Collage.Document.*"
+	xmlns:degrafa="http://www.degrafa.com/2007"
+	layout="absolute" 
+	height="100%"
+	width="100%"
+	title="Collage"
+	buttonAlignment="auto"
+	borderThickness="1"
+	borderColor="#999999"
+	applicationComplete="Initialize()"
+	keyDown="HandleKeyDown(event);"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off" >
+	<mx:Style source="../Common/yflexskin.css"/>
+	<mx:Style source="../Common/collageBasic.css"/>
+	<mx:Script>
+	<![CDATA[
+		import mx.containers.dividedBoxClasses.BoxDivider;
+		import com.adobe.serialization.json.JSON;
+		import Collage.Document.*;
+		import Collage.Clips.Picture.*;
+		import mx.controls.Alert;
+		import mx.managers.PopUpManager;
+		import mx.core.IFlexDisplayObject;
+		import mx.events.*;
+		import flash.events.*;
+		import Collage.DataEngine.*;
+		import Collage.Logger.Logger;
+
+		/* auto updater ui */
+		import air.update.events.UpdateEvent;
+		import air.update.ApplicationUpdaterUI;
+
+		private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
+
+		private function checkUpdate():void {
+			appUpdater.updateURL = "http://version.endlesspaths.com/collage/latest.xml";
+			appUpdater.addEventListener(UpdateEvent.INITIALIZED, onUpdate);
+			/*appUpdater.addEventListener(ErrorEvent.ERROR, onError);*/
+			appUpdater.isCheckForUpdateVisible = false;
+			appUpdater.initialize();
+		}
+
+		private function OnInvoke(event:InvokeEvent):void {
+			for (var i:uint = 0; i < event.arguments.length; i++)
+			{
+				if (!event.currentDirectory || !event.currentDirectory.isDirectory)
+					return;
+				Logger.Log("Application Arugment: " + event.arguments[i], LogEntry.DEBUG, this);
+				var newFile:File = event.currentDirectory.resolvePath(event.arguments[i]);
+				if (newFile)
+					OpenFileObject(newFile);
+			}
+		}
+
+		private function onUpdate(event:UpdateEvent):void {
+			//start the process of checking for a new update and to install
+			appUpdater.checkNow();
+		}
+
+		private var _Document:Document;
+
+		private function Initialize():void
+		{
+			Logger.events.addEventListener(Logger.NEW_LOG_EVENT, LoggerStatusBarUpdate);
+			Logger.Log("Application Started", LogEntry.DEBUG   , this);
+			//stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown);
+
+			Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
+			Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleTokenExpired);
+			Session.CheckToken();
+
+			/* auto updater - called after everything else is initialized */
+			checkUpdate();
+		}
+
+		public function LoggerStatusBarUpdate(event:Event):void {
+			if (Logger.LastLog() != null && Logger.LastLog().level >= 0)//LogEntry.INFO)
+				status = Logger.LastLog().text;
+		}
+
+		public function HandleLoginSuccess(event:Event):void {
+			DataEngine.LoadAllDataSets();
+		}
+
+		public function HandleLoginFailure(event:Event):void {
+			PopUpManager.createPopUp(this, Login, true);
+		}
+
+		public function HandleTokenExpired(event:Event):void {
+			PopUpManager.createPopUp(this, Login, true);
+		}
+
+		private function Fullscreen():void
+		{
+			if (stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE)
+				stage.displayState = StageDisplayState.NORMAL;
+			else
+				stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+		}
+
+		private function HandleKeyDown(event:KeyboardEvent):void
+		{
+		}
+
+		public function OpenFile(file:File = null):void
+		{
+			if (file) {
+				OpenFileObject(file);
+				return;
+			}
+			file = File.desktopDirectory;
+			file.addEventListener(Event.SELECT, OpenFileEvent);
+			file.browseForOpen("Open");
+		}
+
+		protected function OpenFileEvent(event:Event):void
+		{
+			OpenFileObject(event.target as File);
+		}
+
+		public function OpenFileObject(file:File):void
+		{
+			if (!file)
+				return;
+
+			var stream:FileStream = new FileStream();
+			try{
+			    stream.open(file, FileMode.READ);
+			    var fileData:Object = JSON.decode(stream.readUTFBytes(stream.bytesAvailable));
+			    _EditDocumentView.model.LoadFromObject(fileData);
+				Logger.Log("File Saved: " + file.url, LogEntry.INFO, this);
+			} catch(e:Error){
+				Alert.show(e.message);
+			}
+		}
+	]]>
+	</mx:Script>
+	<mx:Canvas id="viewCanvas" label="Canvas 1" right="0" left="0" top="0" bottom="0" color="0x323232" backgroundColor="#ACACAC" backgroundAlpha="1">
+		<mx:Box top="0" left="0" right="0" bottom="0" horizontalAlign="center" verticalAlign="middle" backgroundAlpha="0" backgroundColor="0xffffff">
+			<clg:DocumentView id="_DocumentView" 
+					width="800" height="600" 
+					dropShadowEnabled="true" 
+					backgroundColor="#FFFFFF" backgroundAlpha="1" borderThickness="0"
+					horizontalScrollPolicy="off"
+					verticalScrollPolicy="off" >
+			</clg:DocumentView>
+		</mx:Box>
+	</mx:Canvas>
+</mx:Application>

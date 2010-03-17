@@ -29,10 +29,8 @@
 	<mx:Style source="../Common/collageBasic.css"/>
 	<mx:Script>
 	<![CDATA[
-		import mx.containers.dividedBoxClasses.BoxDivider;
 		import com.adobe.serialization.json.JSON;
-		import Collage.Document.*;
-		import Collage.Clips.Picture.*;
+		import mx.containers.dividedBoxClasses.BoxDivider;
 		import mx.graphics.ImageSnapshot;
 		import mx.graphics.codec.*;
 		import mx.controls.Alert;
@@ -40,9 +38,12 @@
 		import mx.core.IFlexDisplayObject;
 		import mx.events.*;
 		import flash.events.*;
+		import flash.filesystem.*;
 		import flash.desktop.Clipboard;
 	    import flash.desktop.ClipboardFormats;
 	    import flash.desktop.ClipboardTransferMode;
+		import Collage.Document.*;
+		import Collage.Clips.Picture.*;
 		import Collage.DataEngine.*;
 		import Collage.Logger.*;
 		import org.alivepdf.pdf.*;
@@ -308,7 +309,7 @@
 					OpenFile(file);
 				} else if (ext == "csv" || ext == "tsv") {
 					Logger.Log("Uploading Dropped CSV: " + file.url, LogEntry.INFO, this);
-					DataEngine.UploadCSV(file);
+					UploadCSV(file);
 				}
 				else {
 					//Alert.show("Unmapped Extension");
@@ -330,7 +331,7 @@
 			
 			var file:File = event.target as File;
 			Logger.Log("Uploading CSV: " + file.url, LogEntry.INFO, this);
-			DataEngine.UploadCSV(file);
+			UploadCSV(file);
 		}
 
 		private function menuShow(menuEvent:FlexNativeMenuEvent):void
@@ -466,6 +467,50 @@
 					Alert.show("Unrecognized Menu Command: " + command + "  " + menuEvent.item.@label);
 			}
 		}		
+
+		public static function UploadCSV(file:File):void {
+			var request:URLRequest = new URLRequest(DataEngine.getUrl("/api/v1/dataset/upload"));
+			var loader:URLLoader = new URLLoader();
+			var header:URLRequestHeader = new URLRequestHeader("X-Requested-With", "XMLHttpRequest");
+			request.method = URLRequestMethod.POST;
+            request.requestHeaders.push(header);
+			
+			var params:URLVariables = new URLVariables();
+			params.auth_token = Session.AuthToken;
+			request.data = params;
+
+			file.addEventListener(Event.COMPLETE, FileUploadCompleteHandler);
+            file.addEventListener(SecurityErrorEvent.SECURITY_ERROR, FileUploadSecurityErrorHandler);
+            file.addEventListener(IOErrorEvent.IO_ERROR, FileUploadIOErrorHandler);
+            file.addEventListener(HTTPStatusEvent.HTTP_STATUS, FileUploadHttpStatusHandler);
+			file.upload(request,"datafile");
+		}
+		
+        private static function FileUploadHttpStatusHandler(event:HTTPStatusEvent):void {
+            event.target.removeEventListener(IOErrorEvent.IO_ERROR, FileUploadHttpStatusHandler);
+			Logger.Log("Data Engine File Upload HTTP Status: " + event, LogEntry.DEBUG);
+        }
+
+		private static function FileUploadIOErrorHandler(event:IOErrorEvent):void
+		{
+            event.target.removeEventListener(IOErrorEvent.IO_ERROR, FileUploadIOErrorHandler);
+			Logger.Log("Data Engine File Upload IO Error: " + event, LogEntry.ERROR);
+		}
+
+        private static function FileUploadSecurityErrorHandler(event:SecurityErrorEvent):void
+		{
+            event.target.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, FileUploadSecurityErrorHandler);
+			Logger.Log("Data Engine File Upload Security Error: " + event, LogEntry.ERROR);
+        }
+
+		private static function FileUploadCompleteHandler(event:Event):void
+		{
+			event.target.removeEventListener(Event.COMPLETE, FileUploadCompleteHandler);
+            DataEngine.LoadAllDataSets();
+			Logger.Log("File Upload Complete!", LogEntry.INFO);
+		}
+
+
 	]]>
 	</mx:Script>
 	<mx:FlexNativeMenu id="nativeMenu" dataProvider="{collageMenuData}" 
