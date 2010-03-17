@@ -20,6 +20,20 @@ package Collage.Clips.PieChart
 
 		[Savable][Bindable] public var backgroundAlpha:Number = 1.0;
 		[Savable][Bindable] public var backgroundColor:Number = 0xFFFFFF;
+
+		[Savable][Bindable] public var borderColor:Number = 0x000000;
+		[Savable][Bindable] public var borderAlpha:Number = 0.5;
+		[Savable][Bindable] public var borderWeight:Number = 2;
+		
+		[Savable][Bindable] public var radialColor:Number = 0x000000;
+		[Savable][Bindable] public var radialAlpha:Number = 0.5;
+		[Savable][Bindable] public var radialWeight:Number = 2;
+		
+		[Savable][Bindable] public var calloutColor:Number = 0x000000;
+		[Savable][Bindable] public var calloutAlpha:Number = 0.5;
+		[Savable][Bindable] public var calloutWeight:Number = 2;
+		
+		[Savable][Bindable] public var labelPosition:String = "callout";
 		
 		private var _DataQuery:DataQuery = null;
 	
