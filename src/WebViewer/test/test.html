@@ -8,11 +8,11 @@
 <body>
 <div id="collage-view"></div>
 <script type="text/javascript">
-  var filename= "collageView.swf?seed=" + (Math.floor(Math.random()*99999999)).toString();
-  var flashvars = {};
+  var filename= "collage_view.swf?seed=" + (Math.floor(Math.random()*99999999)).toString();
+  var flashvars = {dashboard_url:"avatar.clg"};
   var params = {};
   var attributes = {};
-  swfobject.embedSWF(filename, "collage-view", "640", "480", "10.0.0", "expressInstall.swf", flashvars, params, attributes);
+  swfobject.embedSWF(filename, "collage-view", "1024", "768", "10.0.0", "expressInstall.swf", flashvars, params, attributes);
 </script>
 </body>
 </html>

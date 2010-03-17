@@ -25,10 +25,13 @@ package Collage.Document
 		
 		public function DocumentView()
 		{
+			super();
 			AddBackgroundImage();
+			var newModel:Document = new Document();
+			newModel.CreateView(this);
+			model = newModel;
 			ClipFactory.RegisterClipDefinitions();
 			_Clips = new Object();
-			super();
 		}
 
 		public function ViewResized():void

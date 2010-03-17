@@ -31,9 +31,9 @@ package Collage.Document
 		public function EditDocumentView()
 		{
 			super();
-			var newModel:Document = new Document();
-			newModel.CreateEditView(this);
-			model = newModel;
+//			var newModel:Document = new Document();
+//			newModel.CreateEditView(this);
+//			model = newModel;
 			_Grid.visible = false;
 			this.rawChildren.addChild(_Grid);
 			DrawGrid();
