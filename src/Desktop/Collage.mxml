@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <mx:WindowedApplication 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:Collage="Collage.*"
 	xmlns:clg="Collage.Document.*"
 	xmlns:degrafa="http://www.degrafa.com/2007"
 	layout="absolute"
@@ -25,6 +26,8 @@
 	horizontalScrollPolicy="off"
 	verticalScrollPolicy="off"
 	closing="WindowClosing(event)" >
+	<mx:Style source="../Common/yflexskin.css"/>
+	<mx:Style source="../Common/collageBasic.css"/>
 	<mx:Script>
 	<![CDATA[
 		import mx.containers.dividedBoxClasses.BoxDivider;
