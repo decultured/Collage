@@ -34,6 +34,8 @@ package Collage.Clips.PieChart
 		[Savable][Bindable] public var calloutWeight:Number = 2;
 		
 		[Savable][Bindable] public var labelPosition:String = "callout";
+		[Savable][Bindable] public var labelColor:Number = 0x333333;
+		[Savable][Bindable] public var labelSize:Number = 10;
 		
 		private var _DataQuery:DataQuery = null;
 	

@@ -18,6 +18,14 @@
 		      {label:"Mode", data:"mode"}
 			]);
 	
+		[Bindable] public var labelPositionSelections:ArrayCollection = new ArrayCollection(
+		    [ {label:"Callout", data:"callout"},
+		      {label:"Inside", data:"inside"},
+		      {label:"Inside With Callout", data:"insideWithCallout"},
+		      {label:"Outside", data:"outside"},
+		      {label:"None", data:"none"}
+			]);
+
 		[Bindable] public var dataSetSelections:Array = new Array();
 		[Bindable] public var labelColumnSelections:Array = new Array();
 		[Bindable] public var dataColumnSelections:Array = new Array();
@@ -33,14 +41,6 @@
 			}
 		}
 		
-		private function SettingsChanged():void
-		{
-			if (_Model) {
-				var pieChartModel:PieChartClip = _Model as PieChartClip;
-				pieChartModel.backgroundColor = backgroundColorPicker.selectedColor;
-				pieChartModel.backgroundAlpha = transparencySlider.value;
-			}
-		}
 		private function DataEngineConnect():void
 		{
 			DataEngine.events.addEventListener(DataEngine.COMPLETE, DatasLoaded);
@@ -124,6 +124,32 @@
 			pieChartModel.dataModifier = modifierSelector.selectedItem.data;
 			pieChartModel.RunQuery();
 		}
+		
+		private function SettingsChanged():void
+		{
+			if (_Model) {
+				var pieChartModel:PieChartClip = _Model as PieChartClip;
+				pieChartModel.backgroundColor = backgroundColorPicker.selectedColor;
+				pieChartModel.backgroundAlpha = transparencySlider.value;
+				
+				pieChartModel.borderColor = borderColor.selectedColor;
+				pieChartModel.borderAlpha = borderAlpha.value;
+				pieChartModel.borderWeight = borderWeight.value;
+
+				pieChartModel.radialColor = radialColor.selectedColor;
+				pieChartModel.radialAlpha = radialAlpha.value;
+				pieChartModel.radialWeight = radialWeight.value;
+
+				pieChartModel.calloutColor = calloutColor.selectedColor;
+				pieChartModel.calloutAlpha = calloutAlpha.value;
+				pieChartModel.calloutWeight = calloutWeight.value;
+
+				pieChartModel.labelPosition = labelPosition.selectedItem.data;
+				pieChartModel.labelColor = labelColor.selectedColor;
+				pieChartModel.labelSize = labelSize.value;
+			}
+		}
+		
 	]]>
     </mx:Script>
 	<flexlib:WindowShade label="Data Connection" styleName="linkButtonWindowShade" width="100%">
@@ -139,7 +165,7 @@
 		<mx:TextInput id="rowsRequested" text="10" color="0x323232" width="100%" />
 		<mx:Button id="submitDataButton" color="0x323232" label="Apply" click="SubmitDataRequest()"  />
 	</flexlib:WindowShade>
-	<flexlib:WindowShade label="Pie Chart Settings" styleName="linkButtonWindowShade" width="100%">
+	<flexlib:WindowShade label="Basic Styles" styleName="linkButtonWindowShade" width="100%">
 		<mx:HRule width="100%" />
 		<mx:HBox width="100%" >
 			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" />
@@ -147,6 +173,55 @@
 		</mx:HBox>
 		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
 		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="{model.backgroundAlpha}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:HBox width="100%" >
+			<mx:Label text="Radial Colors:" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="radialColor" showTextField="true" selectedColor="{model.radialColor}" change="SettingsChanged()" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="Radial Transparency:" />
+		<mx:HSlider id="radialAlpha" minimum="0" maximum="1" value="{model.radialAlpha}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="Radial Weight:" />
+		<mx:HSlider id="radialWeight" minimum="1" maximum="15" snapInterval="1" value="{model.radialWeight}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:HBox width="100%" >
+			<mx:Label text="Border Color:" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="borderColor" showTextField="true" selectedColor="{model.borderColor}" change="SettingsChanged()" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="Border Transparency:" />
+		<mx:HSlider id="borderAlpha" minimum="0" maximum="1" value="{model.borderAlpha}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="Border Weight:" />
+		<mx:HSlider id="borderWeight" minimum="1" maximum="15" snapInterval="1" value="{model.borderWeight}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+	</flexlib:WindowShade>
+	<flexlib:WindowShade label="Label Styles" styleName="linkButtonWindowShade" width="100%">
+		<mx:Label text="Label Position:"/>
+		<mx:ComboBox id="labelPosition" dataProvider="{labelPositionSelections}" width="230" change="SettingsChanged()" />
+		<mx:Label text="Label Size:" />
+		<mx:HSlider id="labelSize" minimum="9" maximum="72" snapInterval="1" value="{model.labelSize}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:HBox width="100%" >
+			<mx:Label text="Label Color:" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="labelColor" showTextField="true" selectedColor="{model.labelColor}" change="SettingsChanged()" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:HBox width="100%" >
+			<mx:Label text="Callout Color:" />
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="calloutColor" showTextField="true" selectedColor="{model.calloutColor}" change="SettingsChanged()" />
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="Callout Transparency:" />
+		<mx:HSlider id="calloutAlpha" minimum="0" maximum="1" value="{model.calloutAlpha}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="Callout Weight:" />
+		<mx:HSlider id="calloutWeight" minimum="1" maximum="15" snapInterval="1" value="{model.calloutWeight}"
             allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
 	</flexlib:WindowShade>
 </clg:ClipEditor>

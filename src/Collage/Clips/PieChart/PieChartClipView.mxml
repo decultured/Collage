@@ -22,6 +22,8 @@
 		{
 			var pieChartModel:PieChartClip = _Model as PieChartClip;
 
+			chart.invalidateDisplayList();
+			
 			if (!pieChartModel.Data || pieChartModel.Data.length < 1)
 				noDataWarningLabel.visible = true
 			else 
@@ -35,12 +37,16 @@
 	<mx:Stroke id="callouts" weight="{model.calloutWeight}" color="{model.calloutColor}" alpha="{model.calloutAlpha}" caps="none"/>
     <mx:Stroke id="radial" weight="{model.radialWeight}" color="{model.radialColor}" alpha="{model.radialAlpha}"/>
     <mx:Stroke id="pieborder" color="{model.borderColor}" weight="{model.borderWeight}" alpha="{model.borderAlpha}"/>
-     <mx:PieChart id="chart" height="100%" width="100%" color="0x323232"
+     <mx:PieChart id="chart" height="100%" width="100%"
         showDataTips="true" dataProvider="{model.Data}" >
         <mx:series>
             <mx:PieSeries
 				labelPosition="{model.labelPosition}"
 				field="value"
+				fontAntiAliasType="advanced"
+				fontSharpness="-400"
+				fontSize="{model.labelSize}"
+				color="{model.labelColor}"
 				nameField="label"
                 labelFunction="displayLabel" 
                 calloutStroke="{callouts}" 
