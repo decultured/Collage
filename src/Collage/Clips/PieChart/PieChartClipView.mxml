@@ -37,10 +37,11 @@
 	<mx:Stroke id="callouts" weight="{model.calloutWeight}" color="{model.calloutColor}" alpha="{model.calloutAlpha}" caps="none"/>
     <mx:Stroke id="radial" weight="{model.radialWeight}" color="{model.radialColor}" alpha="{model.radialAlpha}"/>
     <mx:Stroke id="pieborder" color="{model.borderColor}" weight="{model.borderWeight}" alpha="{model.borderAlpha}"/>
-     <mx:PieChart id="chart" height="100%" width="100%"
+     <mx:PieChart id="chart" height="100%" width="100%" innerRadius="{model.innerRadius}"
         showDataTips="true" dataProvider="{model.Data}" >
         <mx:series>
             <mx:PieSeries
+				explodeRadius="{model.explodeRadius}"
 				labelPosition="{model.labelPosition}"
 				field="value"
 				fontAntiAliasType="advanced"

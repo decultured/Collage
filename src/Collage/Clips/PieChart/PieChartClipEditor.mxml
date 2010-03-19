@@ -131,6 +131,8 @@
 				var pieChartModel:PieChartClip = _Model as PieChartClip;
 				pieChartModel.backgroundColor = backgroundColorPicker.selectedColor;
 				pieChartModel.backgroundAlpha = transparencySlider.value;
+				pieChartModel.innerRadius = innerRadius.value;
+				pieChartModel.explodeRadius = explodeRadius.value;
 				
 				pieChartModel.borderColor = borderColor.selectedColor;
 				pieChartModel.borderAlpha = borderAlpha.value;
@@ -153,25 +155,31 @@
 	]]>
     </mx:Script>
 	<flexlib:WindowShade label="Data Connection" styleName="linkButtonWindowShade" width="100%">
-		<mx:Label text="Data Set:" color="#000000" fontWeight="bold" />
+		<mx:Label text="Data Set:"/>
 		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="230" change="DataSetSelectorChanged()"/>
-		<mx:Label text="Label (Group) Column:" color="#000000" fontWeight="bold" />
+		<mx:Label text="Label (Group) Column:"/>
 		<mx:ComboBox id="labelColumnSelector" dataProvider="{labelColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
-		<mx:Label text="Data Column:" color="#000000" fontWeight="bold" />
+		<mx:Label text="Data Column:"/>
 		<mx:ComboBox id="dataColumnSelector" dataProvider="{dataColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
-		<mx:Label text="Modifier:" color="#000000" fontWeight="bold" />
+		<mx:Label text="Modifier:"/>
 		<mx:ComboBox id="modifierSelector" dataProvider="{modifierSelections}" enabled="false" width="230" change="ModifierSelectorChanged()"/>
-		<mx:Label text="Rows Requested:" color="#000000" fontWeight="bold" />
+		<mx:Label text="Rows Requested:"/>
 		<mx:TextInput id="rowsRequested" text="10" color="0x323232" width="100%" />
 		<mx:Button id="submitDataButton" color="0x323232" label="Apply" click="SubmitDataRequest()"  />
 	</flexlib:WindowShade>
 	<flexlib:WindowShade label="Basic Styles" styleName="linkButtonWindowShade" width="100%">
+		<mx:Label text="Inside Radius:" />
+		<mx:HSlider id="innerRadius" minimum="0" maximum="1" value="{model.innerRadius}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
+		<mx:Label text="Explode Radius:" />
+		<mx:HSlider id="explodeRadius" minimum="0" maximum="1" value="{model.explodeRadius}"
+            allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
 		<mx:HRule width="100%" />
 		<mx:HBox width="100%" >
-			<mx:Label text="Background Color:" color="#000000" fontWeight="bold" />
+			<mx:Label text="Background Color:"/>
 			<mx:ColorPicker id="backgroundColorPicker" showTextField="true" selectedColor="{model.backgroundColor}" change="SettingsChanged()" />
 		</mx:HBox>
-		<mx:Label text="Background Transparency:" color="#000000" fontWeight="bold" />
+		<mx:Label text="Background Transparency:"/>
 		<mx:HSlider id="transparencySlider" minimum="0" maximum="1" value="{model.backgroundAlpha}"
             allowTrackClick="true" liveDragging="true" change="SettingsChanged()" />
 		<mx:HBox width="100%" >
