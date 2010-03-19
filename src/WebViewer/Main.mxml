@@ -115,6 +115,8 @@
 			<clg:DocumentView id="_DocumentView" 
 					width="800" height="600" 
 					dropShadowEnabled="true" 
+					borderStyle="solid"
+					dropShadowColor="0x000000"
 					backgroundColor="#FFFFFF" backgroundAlpha="1" borderThickness="0"
 					horizontalScrollPolicy="off"
 					verticalScrollPolicy="off" >
