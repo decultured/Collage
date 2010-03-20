@@ -2,6 +2,7 @@ package Collage.Document
 {
 	import flash.geom.*;
 	import flash.display.*;
+	import mx.containers.*;
 	import Collage.Clip.*;
 	import mx.controls.Alert;
 	import mx.events.PropertyChangeEvent;
@@ -25,20 +26,21 @@ package Collage.Document
 		public function set optionsBox(optionsBox:UIComponent):void {_OptionsBox = optionsBox;}
 		public function get optionsBox():UIComponent {return _OptionsBox;}
 
+		private var _GridCanvas:Canvas = new Canvas(); 
 		private var _Grid:Shape = new Shape(); 
 		protected var _DecoratorManager:DecoratorManager;
 		
 		public function EditDocumentView()
 		{
 			super();
-//			var newModel:Document = new Document();
-//			newModel.CreateEditView(this);
-//			model = newModel;
 			_Grid.visible = false;
-			this.rawChildren.addChild(_Grid);
+			this.addChildAt(_GridCanvas, 1);
+			_GridCanvas.setStyle("top", 0);
+			_GridCanvas.setStyle("left", 0);
+			_GridCanvas.setStyle("bottom", 0);
+			_GridCanvas.setStyle("right", 0);
+			_GridCanvas.rawChildren.addChild(_Grid);
 			DrawGrid();
-			
-//			_BackgroundImage.addEventListener(MouseEvent.CLICK, BackgroundClick);
 		}
 
 		public function InitializeForEdit(newInspector:UIComponent, newOptionsBox:UIComponent):void
@@ -157,7 +159,6 @@ package Collage.Document
 		public override function AddClipByType(clipType:String, position:Rectangle = null, dataObject:Object = null):Clip
 		{
 			var newClip:Clip = super.AddClipByType(clipType, position, dataObject);
-			//AddObjectHandles(newClip);
 			return newClip;
 
 		}
@@ -165,7 +166,6 @@ package Collage.Document
 		public override function AddClipFromData(data:Object, position:Rectangle = null):Clip
 		{
 			var newClip:Clip = super.AddClipFromData(data);
-			//AddObjectHandles(newClip);
 			return newClip;
 		}
 
@@ -188,7 +188,7 @@ package Collage.Document
 		public function IsObjectAtBack():Boolean {
 			if (_CurrentlySelected && _CurrentlySelected.selected && getChildren().length > 1 ) {
 				var index:int = getChildIndex(_CurrentlySelected.view);
-				if (index == 0)
+				if (index == 2)
 					return true;
 			}
 			return false;
@@ -209,7 +209,7 @@ package Collage.Document
 		public function MoveSelectedBackward():Boolean {
 			if (_CurrentlySelected && _CurrentlySelected.selected && getChildren().length > 1 ) {
 				var index:int = getChildIndex(_CurrentlySelected.view);
-				if (index > 0) {
+				if (index > 2) {
 					setChildIndex(_CurrentlySelected.view, index - 1);
 					return true;
 				}
@@ -220,8 +220,8 @@ package Collage.Document
 		public function MoveSelectedToBack():Boolean {
 			if (_CurrentlySelected && _CurrentlySelected.selected && getChildren().length > 1 ) {
 				var index:int = getChildIndex(_CurrentlySelected.view);
-				if (index != 0) {
-					setChildIndex(_CurrentlySelected.view, 0);
+				if (index > 2) {
+					setChildIndex(_CurrentlySelected.view, 2);
 					return true;
 				}
 			}
@@ -331,7 +331,7 @@ package Collage.Document
 		    	_Grid.graphics.lineTo(docModel.width, yPos); 
 			}
 
-			this.rawChildren.setChildIndex(_Grid, 1);
+			this.setChildIndex(_GridCanvas, getChildIndex(_BackgroundImage) + 1);
 		} 
 		
 		protected override function onModelChange( event:PropertyChangeEvent):void

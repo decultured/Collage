@@ -69,7 +69,7 @@ package Collage.Document
 			_BackgroundImage.setStyle("right", 0);
 			_BackgroundImage.setStyle("horizontalAlign", "center");
 			_BackgroundImage.setStyle("verticalAlign", "middle");
-			addChild(_BackgroundImage);			
+			addChildAt(_BackgroundImage, 0);			
 		}
 		
 		public function AddClip(newClip:Clip):Boolean
