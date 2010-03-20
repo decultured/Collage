@@ -1,5 +1,6 @@
 package Collage.Clips.Picture
 {
+	import flash.events.*;
 	import Collage.Clip.*;
 	
 	public class PictureClip extends Clip
@@ -7,6 +8,9 @@ package Collage.Clips.Picture
 		[Bindable] public var aspectRatio:Number = 0;
 		[Bindable] public var imageLoaded:Boolean = false;
 		[Bindable][Savable] public var url:String = null;
+		[Bindable][Savable] public var fileId:String = null;
+		
+		public static const IMAGE_LOADED:String = "PictureClip_ImageLoaded";
 		
 		public function PictureClip(dataObject:Object = null)
 		{

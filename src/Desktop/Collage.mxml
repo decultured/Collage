@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?> 
-<mx:WindowedApplication 
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:Collage="Collage.*"
 	xmlns:clg="Collage.Document.*"
@@ -46,20 +46,21 @@
 		import Collage.Document.*;
 		import Collage.Clips.Picture.*;
 		import Collage.DataEngine.*;
+		import Collage.DataEngine.Storage.*;
 		import Collage.Logger.*;
 		import org.alivepdf.pdf.*;
-		import org.alivepdf.pdf.PDF;	
+		import org.alivepdf.pdf.PDF;
 		import org.alivepdf.display.*;
 		import org.alivepdf.images.*;
 		import org.alivepdf.layout.*;
 		import org.alivepdf.saving.*;
-		
+
 		/* auto updater ui */
 		import air.update.events.UpdateEvent;
 		import air.update.ApplicationUpdaterUI;
-		
+
 		private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
-		
+
 		private function checkUpdate():void {
 			appUpdater.updateURL = "http://version.endlesspaths.com/collage/latest.xml";
 			appUpdater.addEventListener(UpdateEvent.INITIALIZED, onUpdate);
@@ -67,7 +68,7 @@
 			appUpdater.isCheckForUpdateVisible = false;
 			appUpdater.initialize();
 		}
-		
+
 		private function OnInvoke(event:InvokeEvent):void {
 			for (var i:uint = 0; i < event.arguments.length; i++)
 			{
@@ -86,9 +87,13 @@
 		}
 
 		private var _Document:Document;
+		private var _Dashboard:DashboardFile; // cloud dashboard file
+		private var _DashboardImages:Array;
 
 		private function Initialize():void
 		{
+			_DashboardImages = new Array();
+			
 			Logger.events.addEventListener(Logger.NEW_LOG_EVENT, LoggerStatusBarUpdate);
 			Logger.Log("Application Started", LogEntry.DEBUG   , this);
 			//stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown);
@@ -96,35 +101,33 @@
 			Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
 			Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleTokenExpired);
 			Session.CheckToken();
-			
+
 			_EditDocumentView.InitializeForEdit(inspectorWindow, optionsBox);
-			
+
 			this.nativeWindow.x = (Capabilities.screenResolutionX - this.width)/2;
 			this.nativeWindow.y = (Capabilities.screenResolutionY - this.height)/2;
 			this.nativeWindow.visible = true;
-			
+
 			/* auto updater - called after everything else is initialized */
 			checkUpdate();
 		}
-		
+
 		public function LoggerStatusBarUpdate(event:Event):void {
 			if (Logger.LastLog() != null && Logger.LastLog().level >= 0)//LogEntry.INFO)
 				status = Logger.LastLog().text;
 		}
-		
+
 		public function HandleLoginSuccess(event:Event):void {
 			welcomeScreen.visible = false;
 			DataEngine.LoadAllDataSets();
 		}
-		
+
 		public function HandleLoginFailure(event:Event):void {
 			welcomeScreen.visible = true;
-//			PopUpManager.createPopUp(welcomeScreen, Login, false);
 		}
-		
+
 		public function HandleTokenExpired(event:Event):void {
 			welcomeScreen.visible = true;
-//			PopUpManager.createPopUp(welcomeScreen, Login, false);
 		}
 
 		private function StandardOSModifier(item:Object):Array{
@@ -133,10 +136,10 @@
 				modifiers.push(Keyboard.CONTROL);
 			} else if (Capabilities.os.indexOf("Mac OS") >= 0){
 				modifiers.push(Keyboard.COMMAND);
-			} 
+			}
 			return modifiers;
 		}
-					
+
 		private function Fullscreen():void
 		{
 			if (stage.displayState == StageDisplayState.FULL_SCREEN_INTERACTIVE)
@@ -144,13 +147,13 @@
 			else
 				stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 		}
-		
+
 		private function HandleKeyDown(event:KeyboardEvent):void
 		{
 //			if (event.keyCode == KeyCodes.DELETE || event.keyCode == KeyCodes.BACKSPACE)
 //				_EditDocumentView.deleteSelected();
 		}
-		
+
 		private function WindowClosing(event:Event):void
 		{
 
@@ -159,7 +162,12 @@
 		public function HandlePaste(event:Event):void
 		{
 			if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.BITMAP_FORMAT)) {
-				_EditDocumentView.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData);
+				/*var clip:PictureClip = _EditDocumentView.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData) as PictureClip;*/
+				var clip:PictureClip = _EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300)) as PictureClip;
+				clip.addEventListener(PictureClip.IMAGE_LOADED, PictureClip_ImageLoaded);
+				
+				clip.LoadFromData( Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData );
+				
 				Logger.Log("Bitmap Pasted", LogEntry.INFO, this);
 			} 
 /*			else if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.HTML_FORMAT)) {
@@ -170,7 +178,7 @@
 				Logger.Log("Text Pasted", LogEntry.INFO, this);
 			}
 */		}
-		
+
 		public function SaveFile():void
 		{
 			var file:File = File.desktopDirectory.resolvePath("file.clg");
@@ -178,24 +186,183 @@
 			_EditDocumentView.ClearSelection();
 			file.browseForSave("Save As");
 		}
-			
+
 		protected function SaveFileEvent(event:Event):void
 		{
 			var jsonFile:String = JSON.encode(_EditDocumentView.model.SaveToObject());
-			
+
 			var newFile:File = event.target as File;
 			var fs:FileStream = new FileStream();
 			try{
 				fs.open(newFile,FileMode.WRITE);
 				jsonFile = jsonFile.replace(/\n/g, File.lineEnding);
-				fs.writeUTFBytes(jsonFile); 
+				fs.writeUTFBytes(jsonFile);
 				fs.close();
 				Logger.Log("File Saved: " + newFile.url, LogEntry.INFO, this);
 			} catch(e:Error){
 				Logger.Log(e.message, LogEntry.ERROR, this);
 			}
 		}
+
+		private var saveDashboardForm:DashboardSaveUI;
+		public function CloudFile_SaveDashboard():void {
+			if(saveDashboardForm == null) {
+				saveDashboardForm = PopUpManager.createPopUp(this, DashboardSaveUI, true) as DashboardSaveUI;
+				saveDashboardForm.addEventListener(DashboardSaveUI.CLOSED, CloudFile_SaveDashboardUI_Closed);
+				saveDashboardForm.addEventListener(DashboardSaveUI.COMPLETE, CloudFile_SaveDashboardUI_Complete);
+				
+				if(_Dashboard != null) {
+					if(_Dashboard.Title != null) {
+						saveDashboardForm.Title = _Dashboard.Title;
+					}
+					
+					if(_Dashboard.ID != null) {
+						saveDashboardForm.dispatchEvent(new Event(DashboardSaveUI.COMPLETE));
+						saveDashboardForm.dispatchEvent(new Event(DashboardSaveUI.CLOSED));
+					}
+				}
+			} else {
+				PopUpManager.bringToFront(saveDashboardForm);
+			}
+		}
+
+		public function CloudFile_SaveDashboardUI_Closed(e:Event):void {
+			PopUpManager.removePopUp( saveDashboardForm );
+			saveDashboardForm = null;
+		}
+
+		public function CloudFile_SaveDashboardUI_Complete(e:Event):void
+		{
+			var jsonFile:String = JSON.encode(_EditDocumentView.model.SaveToObject());
+
+			if(_Dashboard == null) {
+				_Dashboard = new DashboardFile();
+				_Dashboard.addEventListener(CloudFile.SAVE_SUCCESS, CloudFile_SaveDashboard_SuccessEvent)
+				_Dashboard.addEventListener(CloudFile.SAVE_FAILURE, CloudFile_SaveDashboard_FailureEvent)
+			}
+
+			_Dashboard.Title = saveDashboardForm.Title;
+			_Dashboard.Content = jsonFile;
+			_Dashboard.Attachments = _DashboardImages;
+
+			var snapshot:ImageSnapshot = ImageSnapshot.captureImage(_EditDocumentView);
+			_Dashboard.Filedata = snapshot.data;
+
+			try{
+				Logger.Log("Saving to cloud.", LogEntry.INFO, this);
+				_Dashboard.Save();
+			} catch(e:Error){
+				Logger.Log(e.message, LogEntry.ERROR, this);
+			}
+		}
+
+		public function CloudFile_SaveDashboard_SuccessEvent(event:Event):void {
+			Logger.Log("Saved to cloud.", LogEntry.INFO, this);
+		}
+
+		public function CloudFile_SaveDashboard_FailureEvent(event:Event):void {
+			Logger.Log("Failure saving to cloud.", LogEntry.INFO, this);
+		}
 		
+		public function PictureClip_ImageLoaded(event:Event):void {
+			var clip:PictureClip = event.target as PictureClip;
+			if(clip.fileId != null) {
+				return;
+			}
+			
+			if(clip.url == null || clip.url.substring(0, 7) == "file://") {
+				var clipView:PictureClipView = clip.view as PictureClipView;
+				if(clipView.BitmapImage == null) {
+					return;
+				}
+				
+				var pngEncoder:PNGEncoder = new PNGEncoder();
+				
+				var imgFile:DashboardImage = new DashboardImage();
+				imgFile.clip = clip;
+				imgFile.Filedata = pngEncoder.encode( clipView.BitmapImage );
+				imgFile.addEventListener(CloudFile.SAVE_SUCCESS, CloudFile_SaveAttachment_SuccessEvent);
+				imgFile.addEventListener(CloudFile.SAVE_FAILURE, CloudFile_SaveAttachment_FailureEvent);
+				
+				imgFile.Save();
+				
+				_DashboardImages.push( imgFile );
+			}
+		}
+		
+		public function CloudFile_SaveAttachment(e:Event):void {
+			var docView:DocumentView = _EditDocumentView as DocumentView;
+			for (var clipKey:String in docView.clips) {
+				if (docView.clips[clipKey]) {
+					if(docView.clips[clipKey].type == "image" && (docView.clips[clipKey].url == null || docView.clips[clipKey].url.substring(0, 6) == "file://")) {
+						Alert.show(docView.clips[clipKey].url);
+						var clipView:PictureClipView = docView.clips[clipKey].view as PictureClipView;
+						var pngEncoder:PNGEncoder = new PNGEncoder();
+						
+						var imgFile:DashboardImage = new DashboardImage();
+						imgFile.Filedata = pngEncoder.encode( clipView.BitmapImage );
+
+						/*imgFile.addEventListener(CloudFile.SAVE_SUCCESS, CloudFile_SaveAttachment_SuccessEvent);*/
+						imgFile.addEventListener(CloudFile.SAVE_FAILURE, CloudFile_SaveAttachment_FailureEvent);
+						
+						imgFile.Save();
+						
+						docView.clips[clipKey].url = imgFile.URL;
+					}
+				}
+			}
+		}
+		
+		public function CloudFile_SaveAttachment_SuccessEvent(event:Event):void {;
+			Logger.Log("Saved image to cloud.", LogEntry.INFO, this);
+		}
+		
+		public function CloudFile_SaveAttachment_FailureEvent(event:Event):void {
+			Logger.Log("Failure saving image to cloud.", LogEntry.INFO, this);
+		}
+
+		private var openDashboardForm:DashboardListUI;
+		public function CloudFile_OpenDashboard():void {
+			if(openDashboardForm == null) {
+				openDashboardForm = PopUpManager.createPopUp(this, DashboardListUI, true) as DashboardListUI;
+				openDashboardForm.addEventListener(DashboardSaveUI.CLOSED, CloudFile_OpenDashboardUI_Closed);
+				openDashboardForm.addEventListener(DashboardSaveUI.COMPLETE, CloudFile_OpenDashboardUI_Complete);
+			} else {
+				PopUpManager.bringToFront(openDashboardForm);
+			}
+		}
+
+		public function CloudFile_OpenDashboardUI_Closed(e:Event):void {
+			PopUpManager.removePopUp( openDashboardForm );
+			openDashboardForm = null;
+		}
+
+		public function CloudFile_OpenDashboardUI_Complete(e:Event):void
+		{
+			_Dashboard = null;
+			_Dashboard = new DashboardFile();
+			_Dashboard.addEventListener(CloudFile.OPEN_SUCCESS, CloudFile_OpenDashboard_SuccessEvent)
+			_Dashboard.addEventListener(CloudFile.OPEN_FAILURE, CloudFile_OpenDashboard_FailureEvent)
+
+			try{
+				Logger.Log("Opening from cloud.", LogEntry.INFO, this);
+				_Dashboard.Open( openDashboardForm.DashboardID );
+			} catch(e:Error){
+				Logger.Log(e.message, LogEntry.ERROR, this);
+			}
+		}
+
+		public function CloudFile_OpenDashboard_SuccessEvent(event:Event):void {
+			Logger.Log("Opened from cloud.", LogEntry.INFO, this);
+
+			var fileData:Object = JSON.decode( _Dashboard.Content );
+		    _EditDocumentView.model.LoadFromObject(fileData);
+		}
+
+		public function CloudFile_OpenDashboard_FailureEvent(event:Event):void {
+			Logger.Log("Failure opening from cloud.", LogEntry.INFO, this);
+		}
+
 		public function OpenFile(file:File = null):void
 		{
 			if (file) {
@@ -206,17 +373,17 @@
 			file.addEventListener(Event.SELECT, OpenFileEvent);
 			file.browseForOpen("Open");
 		}
-			
+
 		protected function OpenFileEvent(event:Event):void
 		{
 			OpenFileObject(event.target as File);
 		}
-		
+
 		public function OpenFileObject(file:File):void
 		{
 			if (!file)
 				return;
-			
+
 			var stream:FileStream = new FileStream();
 			try{
 			    stream.open(file, FileMode.READ);
@@ -227,7 +394,7 @@
 				Alert.show(e.message);
 			}
 		}
-		
+
 		public function SaveImage():void
 		{
 			var file:File = File.desktopDirectory.resolvePath("snapshot.png");
@@ -235,23 +402,23 @@
 			_EditDocumentView.ClearSelection();
 			file.browseForSave("Save As");
 		}
-			
+
 		protected function SaveImageEvent(event:Event):void
 		{
 			var snapshot:ImageSnapshot = ImageSnapshot.captureImage(_EditDocumentView);
-			
+
 			var newFile:File = event.target as File;
 			var fs:FileStream = new FileStream();
 			try{
 				fs.open(newFile,FileMode.WRITE);
-				fs.writeBytes(snapshot.data, 0, snapshot.data.length); 
+				fs.writeBytes(snapshot.data, 0, snapshot.data.length);
 				fs.close();
 				Logger.Log("Image Saved: " + newFile.url, LogEntry.INFO, this);
 			} catch(e:Error){
 				trace(e.message);
 			}
 		}
-		
+
 		public function SavePDF():void
 		{
 			var file:File = File.desktopDirectory.resolvePath("report.pdf");
@@ -259,14 +426,14 @@
 			_EditDocumentView.ClearSelection();
 			file.browseForSave("Save As");
 		}
-			
+
 		protected function SavePDFEvent(event:Event):void
 		{
 			var snapshot:ImageSnapshot = ImageSnapshot.captureImage(_EditDocumentView, 0, new JPEGEncoder());
 			var snapshotBitmap:BitmapData = ImageSnapshot.captureBitmapData(_EditDocumentView);
 
 			var newPDF:PDF = new PDF(Orientation.LANDSCAPE, Unit.MM, Size.LETTER);
-			newPDF.setDisplayMode(Display.FULL_WIDTH); 
+			newPDF.setDisplayMode(Display.FULL_WIDTH);
 
 			newPDF.addPage();
 //			newPDF.addImageStream(snapshot.data, ColorSpace.DEVICE_RGB, new Resize ( Mode.FIT_TO_PAGE, Position.CENTERED ));
@@ -283,20 +450,20 @@
 			newPDF.setXY(10,95);
 			newPDF.addMultiCell(200,5,desc.text);
 */
-			
+
 			var newFile:File = event.target as File;
 			var fs:FileStream = new FileStream();
 			try{
 				fs.open(newFile,FileMode.WRITE);
 				var pdfBytes:ByteArray = newPDF.save(Method.LOCAL);
-				fs.writeBytes(pdfBytes); 
+				fs.writeBytes(pdfBytes);
 				fs.close();
 				Logger.Log("PDF Saved: " + newFile.url, LogEntry.INFO, this);
 			} catch(e:Error){
 				trace(e.message);
 			}
 		}
-		
+
 		private function onDragIn(event:NativeDragEvent):void{
 			NativeDragManager.acceptDragDrop(this);
 		}
@@ -305,9 +472,10 @@
 			var dropfiles:Array = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
 			for each (var file:File in dropfiles){
 				var ext:String = file.extension.toLowerCase();
-				
+
 				if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "gif") {
 					var newClip:PictureClip = _EditDocumentView.AddClipByType("image") as PictureClip;
+					newClip.addEventListener(PictureClip.IMAGE_LOADED, PictureClip_ImageLoaded);
 					newClip.url = file.url;
 					Logger.Log("Image Dropped: " + file.url, LogEntry.INFO, this);
 				} else if (ext == "clg") {
@@ -321,19 +489,19 @@
 				}
 			}
 		}
-		
+
 		private function UploadDataFile():void
 		{
 			var file:File = File.desktopDirectory;
 			file.addEventListener(Event.SELECT, UploadDataFileEvent);
 			file.browseForOpen("Open");
 		}
-			
+
 		public function UploadDataFileEvent(event:Event):void
 		{
 			if (!event.target || !event.target is File)
 				return;
-			
+
 			var file:File = event.target as File;
 			Logger.Log("Uploading CSV: " + file.url, LogEntry.INFO, this);
 			UploadCSV(file);
@@ -344,6 +512,11 @@
 			if (!_EditDocumentView.IsObjectSelected()) {
 //				collageMenuData..
 			}
+		}
+		
+		private function addImageClip():void {
+			var img:PictureClip = _EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300)) as PictureClip;
+			img.addEventListener(PictureClip.IMAGE_LOADED, PictureClip_ImageLoaded);
 		}
 
 		private function menuItemClicked(menuEvent:FlexNativeMenuEvent):void
@@ -368,6 +541,9 @@
 					break;
 				case "new":
 					_EditDocumentView.NewDocument();
+					_Dashboard = null;
+					_DashboardImages = null;
+					_DashboardImages = new Array();
 					break;
 				case "about":
 					break;
@@ -376,6 +552,12 @@
 					break;
 				case "save":
 					SaveFile();
+					break;
+				case "cloudstorage_opendashboard":
+					CloudFile_OpenDashboard();
+					break;
+				case "cloudstorage_savedashboard":
+					CloudFile_SaveDashboard();
 					break;
 				case "saveImage":
 					SaveImage();
@@ -405,7 +587,7 @@
 					_EditDocumentView.MoveSelectedToBack();
 					break;
 				case "insertImage":
-					_EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300));
+					addImageClip();
 					break;
 				case "insertLabel":
 					_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 300, 300));
@@ -466,7 +648,7 @@
 						inspectorCanvas.width = 255;
 						editCanvas.setStyle("right","255");
 					}
-					
+
 					break;
 				default:
 					Alert.show("Unrecognized Menu Command: " + command + "  " + menuEvent.item.@label);
@@ -514,18 +696,15 @@
             DataEngine.LoadAllDataSets();
 			Logger.Log("File Upload Complete!", LogEntry.INFO);
 		}
-
-
 	]]>
 	</mx:Script>
-	
 	<mx:FlexNativeMenu id="nativeMenu" dataProvider="{collageMenuData}" 
-		labelField="@label" 
+		labelField="@label"
 		showRoot="false"
 		itemClick="{menuItemClicked(event)}"
 		menuShow="{menuShow(event)}"
 		keyEquivalentField="@key" keyEquivalentModifiersFunction="StandardOSModifier"
-		mnemonicIndexField="@mnemonicIndex"	
+		mnemonicIndexField="@mnemonicIndex"
 		/>
     <mx:XML format="e4x" id="collageMenuData">
         <root>
@@ -537,13 +716,18 @@
             </menuitem>
             <menuitem label="File">
                 <menuitem label="New" command="new" key="n"/>
-                <menuitem label="Open..." command="open" key="o"/>
-                <menuitem type="separator"/>     
-                <menuitem label="Save..." command="save" key="s"/>
-                <menuitem label="Save Image..." command="saveImage"/>
-                <menuitem label="Save PDF..." command="savePDF"/>
+                <menuitem label="Open..." command="open" key="o" />
+				<menuitem label="Open from Cloud..." command="cloudstorage_opendashboard" />
                 <menuitem type="separator"/>
-                <menuitem label="Upload Data..." command="uploadData"/>
+                <menuitem label="Save..." command="save" key="s" />
+				<menuitem label="Save to Cloud..." command="cloudstorage_savedashboard" />
+				<menuitem type="separator"/>
+				<menuitem label="Export">
+	                <menuitem label="PNG Image" command="saveImage"/>
+	                <menuitem label="Adobe PDF" command="savePDF" />
+				</menuitem>
+                <menuitem type="separator"/>
+                <menuitem label="Upload Dataset..." command="uploadData"/>
                 <menuitem type="separator"/>
                 <menuitem label="Print..." key="p" command="print" enabled="false"/>
             </menuitem>
@@ -567,7 +751,7 @@
                 <menuitem label="Image" command="insertImage"/>
                 <menuitem label="Label" command="insertLabel"/>
                 <menuitem label="Text Box" command="insertTextBox"/>
-                <menuitem type="separator" />     
+                <menuitem type="separator" />
                 <menuitem label="Data Label" command="insertDataLabel"/>
                 <menuitem label="Table" command="insertTable"/>
                 <menuitem label="Line" command="insertLineChart"/>
@@ -575,7 +759,7 @@
                 <menuitem label="Bar Chart" command="insertBarChart"/>
                 <menuitem label="Pie Chart" command="insertPieChart"/>
                 <menuitem label="Guage" command="insertGuage"/>
-                <menuitem type="separator" />     
+                <menuitem type="separator" />
                 <menuitem label="Web Embed" command="insertWebEmbed"/>
                 <menuitem label="Google Maps" command="insertGoogleMaps"/>
             </menuitem>
@@ -590,7 +774,7 @@
 	<mx:VBox height="100%" left="0" width="32" backgroundColor="#D6D6D6" backgroundAlpha="1" horizontalScrollPolicy="off" verticalScrollPolicy="off" paddingLeft="4" paddingRight="4" paddingTop="4" paddingBottom="4">
 		<mx:Image id="fullscreenBtn" source="@Embed('../../assets/themes/dark/fullscreen.png')" width="24" height="24" click="Fullscreen();" />
 		<mx:HRule width="24" />
-		<mx:Image id="addImageBtn" source="@Embed('../../assets/themes/dark/image.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addImageBtn" source="@Embed('../../assets/themes/dark/image.png')" width="24" height="24" click="addImageClip();" />
 		<mx:Image id="addLabelBtn" source="@Embed('../../assets/themes/dark/label.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addTextBoxBtn" source="@Embed('../../assets/themes/dark/text-box.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addLineChartBtn" source="@Embed('../../assets/themes/dark/line-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
@@ -603,10 +787,10 @@
 	</mx:VBox>
 	<mx:Canvas id="editCanvas" label="Canvas 1" right="265" left="32" height="100%" color="0x323232" backgroundColor="#ACACAC" backgroundAlpha="1" click="_EditDocumentView.BackgroundClick(event);">
 		<mx:Box top="0" left="0" right="0" bottom="0" paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20"  horizontalAlign="center" verticalAlign="middle" backgroundAlpha="0" backgroundColor="0xffffff">
-			<clg:EditDocumentView id="_EditDocumentView" 
-					width="800" height="600" 
-					dropShadowEnabled="true" 
-					click="_EditDocumentView.BackgroundClick(event);" 
+			<clg:EditDocumentView id="_EditDocumentView"
+					width="800" height="600"
+					dropShadowEnabled="true"
+					click="_EditDocumentView.BackgroundClick(event);"
 					backgroundColor="#FFFFFF" backgroundAlpha="1" borderThickness="0"
 					horizontalScrollPolicy="off"
 					verticalScrollPolicy="off" >
@@ -614,7 +798,7 @@
 				<mx:HBox id="optionsBox" visible="false" paddingBottom="6" paddingTop="6">
 					<!-- <mx:Image id="lockButton" source="@Embed('../../assets/themes/dark/lock.png')" click="_EditDocumentView.lockSelected()" /> -->
 					<mx:Image id="deleteButton" source="@Embed('../../assets/themes/dark/delete.png')" click="_EditDocumentView.deleteSelected()" />
-				</mx:HBox>			
+				</mx:HBox>
 			</clg:EditDocumentView>
 		</mx:Box>
 	</mx:Canvas>

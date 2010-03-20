@@ -1,13 +1,14 @@
 package Collage.Clip
 {
 	import flash.utils.*;
+	import flash.events.*;
 	import Collage.Logger.*;
 	import mx.controls.Alert;
 	import com.roguedevelopment.objecthandles.IMoveable;
 	import com.roguedevelopment.objecthandles.IResizeable;
 	import com.adobe.serialization.json.JSON;
 
-	public class Clip implements IResizeable, IMoveable
+	public class Clip extends EventDispatcher implements IResizeable, IMoveable
 	{
 		private var _UID:String;
 		[Bindable] public var selected:Boolean = false;

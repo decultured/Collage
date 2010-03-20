@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+	title="Save your Dashboard"
+	creationComplete="handleCreationComplete();"
+	close="closeMe();">
+	<mx:Script>
+		<![CDATA[
+			import flash.events.*;
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
+
+			public static const CLOSED:String = "CLOSED";
+			public static const COMPLETE:String = "COMPLETE";
+
+			public function get Title():String { return titleTxt.text; }
+			public function set Title(title:String):void { titleTxt.text = title; }
+
+			private function handleCreationComplete():void {
+				// Center the TitleWindow container
+				// over the control that created it.
+				PopUpManager.centerPopUp(this);
+			}
+
+			private function closeMe():void {
+				dispatchEvent(new Event(CLOSED));
+			}
+
+			public function saveClick():void
+			{
+				if(Title == null || Title.length <= 0) {
+					Alert.show("A valid title is required.");
+					return;
+				}
+
+				dispatchEvent(new Event(COMPLETE));
+				closeMe();
+			}
+
+		]]>
+	</mx:Script>
+	<mx:Form width="100%" defaultButton="{saveBtn}">
+		<mx:FormItem label="Title" width="100%" textAlign="left" required="true">
+			<mx:TextInput id="titleTxt" width="100%" text="" />
+		</mx:FormItem>
+	</mx:Form>
+	<mx:HBox width="100%" textAlign="left" horizontalAlign="right" verticalAlign="middle">
+		<mx:Button id="cancelBtn" click="closeMe();" label="Cancel"  textAlign="center" fontSize="16" color="#333333"/>
+		<mx:Button id="saveBtn" click="saveClick();" label="Save"  textAlign="center" fontSize="16" color="#333333"/>
+	</mx:HBox>
+</mx:TitleWindow>
