@@ -161,14 +161,15 @@
 			if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.BITMAP_FORMAT)) {
 				_EditDocumentView.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData);
 				Logger.Log("Bitmap Pasted", LogEntry.INFO, this);
-			} else if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.HTML_FORMAT)) {
+			} 
+/*			else if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.HTML_FORMAT)) {
 				_EditDocumentView.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.HTML_FORMAT) as String);
 				Logger.Log("HTML Pasted", LogEntry.INFO, this);
 			} else if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT)) {
 				_EditDocumentView.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String);
 				Logger.Log("Text Pasted", LogEntry.INFO, this);
 			}
-		}
+*/		}
 		
 		public function SaveFile():void
 		{
