@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Window xmlns:mx="http://www.adobe.com/2006/mxml" 
-    layout="absolute" 
-    title="Document window" 
+<mx:Window xmlns:mx="http://www.adobe.com/2006/mxml"
+    layout="absolute"
+    title="Document window"
     width="550" height="450"
 	creationComplete="Initialize()"
 	horizontalScrollPolicy="off"
@@ -9,26 +9,26 @@
 	<mx:Script>
 	<![CDATA[
 		import mx.collections.ArrayCollection;
-	
+
 		[Bindable]
 		public var levels:ArrayCollection = new ArrayCollection([
-				{label:"Debug", data:LogEntry.DEBUG}, 
-				{label:"Info", data:LogEntry.INFO}, 
+				{label:"Debug", data:LogEntry.DEBUG},
+				{label:"Info", data:LogEntry.INFO},
 				{label:"Warning", data:LogEntry.WARNING},
-			  	{label:"Error", data:LogEntry.ERROR}, 
+			  	{label:"Error", data:LogEntry.ERROR},
 			  	{label:"Critical", data:LogEntry.CRITICAL}]);
 
 		[Bindable]
 		public var loggerEntries:ArrayCollection = new ArrayCollection();
-		
+
 		public var level:int = 0;
-		
+
 		public function Initialize():void
 		{
 			Logger.events.addEventListener(Logger.NEW_LOG_EVENT, UpdateLog);
 			BuildLog();
 		}
-		
+
 		public function BuildLog():void
 		{
 			loggerEntries = new ArrayCollection();
@@ -36,15 +36,15 @@
 			{
 				if (entry.level >= level)
 					loggerEntries.addItemAt(entry, 0);
-			} 
+			}
 		}
-		
+
 		public function UpdateLog(event:Event):void
 		{
 			if (Logger.LastLog() && Logger.LastLog().level >= level)
 				loggerEntries.addItemAt(Logger.LastLog(), 0);
 		}
-		
+
 		public function LevelChanged():void
 		{
 			if (levelSelector.selectedItem)
@@ -66,21 +66,20 @@
 					return 0xffdbe0;
 				default:
 					return 0xcccccc;
-			}			
+			}
 		}
 	]]>
     </mx:Script>
-    <!-- <mx:DataGrid id="datagrid" dataProvider="{Logger.logEntries}" width="100%" height="100%" /> -->
 	<mx:ApplicationControlBar dock="true" paddingTop="0" paddingBottom="0" width="100%" height="30">
 		<mx:ComboBox id="levelSelector" dataProvider="{levels}" width="150" color="0x000000" change="LevelChanged()" />
 	</mx:ApplicationControlBar>
 	<mx:Canvas top="30" bottom="0" left="0" right="0" horizontalScrollPolicy="off" >
-	<mx:VBox verticalGap="3" 
+	<mx:VBox verticalGap="3"
 		width="100%" height="100%" horizontalScrollPolicy="off"
 		paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5">
 		<mx:Repeater id="rp" dataProvider="{loggerEntries}">
-			<mx:VBox cornerRadius="5" 
-				dropShadowEnabled="true" 
+			<mx:VBox cornerRadius="5"
+				dropShadowEnabled="true"
 				shadowDistance="1"
 				dropShadowColor="0x333333"
 				borderStyle="solid"

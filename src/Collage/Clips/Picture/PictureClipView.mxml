@@ -12,6 +12,11 @@
 		import mx.events.PropertyChangeEvent;
 		
 		public var _BitmapData:BitmapData = null;
+		
+		public function get BitmapImage():BitmapData {
+			return _BitmapData;
+		}
+		
 		public var _Loaded:Boolean = false;
 		
 		public function Initialize():void
@@ -37,6 +42,7 @@
                     bitmap.smoothing = true;
                 }
 				displayImage.source = bitmap;
+				_Model.dispatchEvent(new Event(PictureClip.IMAGE_LOADED));
 				super.onModelChange(null);
 			} 
 		}
@@ -65,6 +71,8 @@
 				if (bitmap.height && bitmap.width) {
 					pictureModel.aspectRatio = bitmap.width / bitmap.height;
 				}
+				_BitmapData = bitmap.bitmapData;
+				_Model.dispatchEvent(new Event(PictureClip.IMAGE_LOADED));
             }
 			super.onModelChange(null);
 		}
