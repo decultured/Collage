@@ -5,18 +5,146 @@
 	creationComplete="Initialize()" >
 	<mx:Script>
 	<![CDATA[
-		private function Initialize():void
-		{
-		}
+	import mx.controls.Alert;
+	import Collage.Logger.*;
+	import Collage.DataEngine.*;
+	import mx.collections.ArrayCollection;
+	
+	[Bindable] public var dataSetSelections:Array = new Array();
+	[Bindable] public var dataSetColumnSelections:Array = new Array();
+
+	private function Initialize():void
+	{
+		DataEngineConnect();
+	}
+	
+	private function DataEngineConnect():void
+	{
+		DataEngine.events.addEventListener(DataEngine.COMPLETE, DatasLoaded);
+		DatasLoaded(null);
+	}
+	
+	private function DatasLoaded(event:Event):void
+	{
+		dataSetSelections = DataEngine.GetDataSetsComboBox(new Array("numeric"), 2, 1);
+	}
+
+	private function ColumnSelectorChanged():void
+	{
+		var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
+
+		if (!dataset || !_Model)
+			return;
 		
-		private function SettingsChanged():void
-		{
-			if (_Model) {
-				var googleMapsModel:GoogleMapsClip = _Model as GoogleMapsClip;
-			}
+		var googleMapsModel:GoogleMapsClip = _Model as GoogleMapsClip;
+
+		var latDataColumn:DataSetColumn = dataset.GetColumnByID(dataSetLatColumnSelector.selectedItem.data);
+		var longDataColumn:DataSetColumn = dataset.GetColumnByID(dataSetLongColumnSelector.selectedItem.data);
+
+		if (longDataColumn)
+			googleMapsModel.longDataColumn = longDataColumn.label;
+		if (latDataColumn)
+			googleMapsModel.latDataColumn = latDataColumn.label;
+		
+		googleMapsModel.RunQuery();
+	}
+	
+	private function SubmitDataRequest():void
+	{
+		var googleMapsModel:GoogleMapsClip = _Model as GoogleMapsClip;
+		googleMapsModel.rowsRequested = parseInt(rowsRequested.text);
+		if (isNaN(googleMapsModel.rowsRequested) || googleMapsModel.rowsRequested < 1) googleMapsModel.rowsRequested = 1;
+		if (googleMapsModel.rowsRequested > 1000) googleMapsModel.rowsRequested = 1000;
+		rowsRequested.text = googleMapsModel.rowsRequested.toString();
+		googleMapsModel.RunQuery();
+	}
+	
+	private function DataSetSelectorChanged():void
+	{
+		if (!_Model)
+			return;
+			
+		var googleMapsModel:GoogleMapsClip = _Model as GoogleMapsClip;
+
+		googleMapsModel.longDataColumn = null;
+		googleMapsModel.latDataColumn = null;
+		googleMapsModel.ResetData();
+
+		var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
+
+		if (dataset) {
+			googleMapsModel.dataSetID = dataset.id;
+			dataSetColumnSelections = dataset.GetColumnsComboBox(new Array("numeric", "datetime"));
+			dataSetLongColumnSelector.enabled = true;
+			dataSetLatColumnSelector.enabled = true;
+		} else {
+			dataSetLongColumnSelector.enabled = false;
+			dataSetLatColumnSelector.enabled = false;
+			googleMapsModel.ResetData();
 		}
+	}
+	
+	private function SettingsChanged():void
+	{
+		if (_Model) {
+			var googleMapsModel:GoogleMapsClip = _Model as GoogleMapsClip;
+
+			googleMapsModel.draggable = draggable.selected;
+			googleMapsModel.zoomable = zoomable.selected;
+
+			googleMapsModel.positionControl = positionControl.selected;
+			googleMapsModel.zoomControl = zoomControl.selected;
+			googleMapsModel.mapTypeControl = mapTypeControl.selected;
+			googleMapsModel.scaleControl = scaleControl.selected;
+			googleMapsModel.overviewMapControl = overviewMapControl.selected;
+
+			googleMapsModel.markerColor = markerColor.selectedColor;
+			googleMapsModel.markerStrokeColor = markerStrokeColor.selectedColor;
+			googleMapsModel.markerShadows = markerShadows.selected;
+			
+			googleMapsModel.markerRadius = markerRadius.value;
+		}
+	}
 	]]>
     </mx:Script>
-	<flexlib:WindowShade label="Settings" styleName="linkButtonWindowShade" width="100%">
+	<flexlib:WindowShade label="Data Connection" styleName="linkButtonWindowShade" width="100%">
+		<mx:Label text="Data Set:" />
+		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="230" change="DataSetSelectorChanged()"/>
+		<mx:Label text="Latitude Value:" />
+		<mx:ComboBox id="dataSetLatColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
+		<mx:Label text="Longitude Value:" />
+		<mx:ComboBox id="dataSetLongColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()"/>
+		<mx:Label text="Rows Requested:" />
+		<mx:TextInput id="rowsRequested" text="{model.rowsRequested}" color="0x323232" width="100%" />
+		<mx:Button id="submitDataButton" color="0x323232" label="Apply" click="SubmitDataRequest()"  />
+	</flexlib:WindowShade>
+	<flexlib:WindowShade label="Basic Map Settings" styleName="linkButtonWindowShade" width="100%">
+		<mx:CheckBox id="draggable" label="Draggable" click="SettingsChanged()" selected="{model.draggable}" />
+		<mx:CheckBox id="zoomable" label="Zoomable" click="SettingsChanged()" selected="{model.zoomable}" />
+	</flexlib:WindowShade>
+	<flexlib:WindowShade label="Map Controls" styleName="linkButtonWindowShade" width="100%">
+		<mx:CheckBox id="positionControl" label="Position" click="SettingsChanged()" selected="{model.positionControl}" enabled="{model.draggable}"/>
+		<mx:CheckBox id="zoomControl" label="Zoom" click="SettingsChanged()" selected="{model.zoomControl}" enabled="{model.zoomable}"/>
+		<mx:CheckBox id="mapTypeControl" label="Map Type" click="SettingsChanged()" selected="{model.mapTypeControl}" />
+		<mx:CheckBox id="scaleControl" label="Scale" click="SettingsChanged()" selected="{model.scaleControl}" />
+		<mx:CheckBox id="overviewMapControl" label="Overview" click="SettingsChanged()" selected="{model.overviewMapControl}" />
+	</flexlib:WindowShade>
+	<flexlib:WindowShade label="Map Controls" styleName="linkButtonWindowShade" width="100%">
+		<mx:HBox width="100%" >
+			<mx:Label text="Marker Color:"/>
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="markerColor" showTextField="true" selectedColor="{model.markerColor}" change="SettingsChanged()"/>
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:HBox width="100%" >
+			<mx:Label text="Marker Border Color:"/>
+			<mx:Spacer width="100%" />
+			<mx:ColorPicker id="markerStrokeColor" showTextField="true" selectedColor="{model.markerStrokeColor}" change="SettingsChanged()"/>
+			<mx:Spacer width="30" />
+		</mx:HBox>
+		<mx:Label text="Marker Radius:" />
+		<mx:HSlider id="markerRadius" minimum="3" maximum="18" snapInterval="1" value="{model.markerRadius}"
+            allowTrackClick="true" liveDragging="false" change="SettingsChanged()" />
+		<mx:CheckBox id="markerShadows" label="Marker Shadows" click="SettingsChanged()" selected="{model.markerShadows}" />
 	</flexlib:WindowShade>
 </clg:ClipEditor>

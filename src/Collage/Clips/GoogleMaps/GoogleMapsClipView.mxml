@@ -15,19 +15,20 @@
 		import mx.events.FlexEvent;
 		import com.google.maps.Map;
 	    import com.google.maps.LatLng;
+	    import com.google.maps.LatLngBounds;
 	    import com.google.maps.MapEvent;
 	    import com.google.maps.MapType;
-	    import com.google.maps.controls.MapTypeControl;
-	    import com.google.maps.controls.ZoomControl;
-	    import com.google.maps.controls.PositionControl;
-
+	    import com.google.maps.MapAction;
+	    import com.google.maps.controls.*;
+		import com.google.maps.overlays.*;
+		import com.google.maps.styles.*;
+		
 		private function onMapReady(event:Event):void {
-
-//http://maps.google.com/maps?q=Kansas+City,+MO&oe=utf-8&client=firefox-a&ie=UTF8&hl=en&f=q&sll=37.0625,-95.677068&sspn=23.875,57.630033&hq=&hnear=Kansas+City,+Jackson,+Missouri&ll=39.099726,-94.578568&spn=0.001961,0.004742&z=18&iwloc=A
-		        map.setCenter(new LatLng(39.099726,-94.578568), 8, MapType.NORMAL_MAP_TYPE);
-		        map.addControl(new ZoomControl());
-		        map.addControl(new PositionControl());
-		        map.addControl(new MapTypeControl());
+	        map.setCenter(new LatLng(39.099726,-94.578568), 8, MapType.NORMAL_MAP_TYPE);
+			map.disableControlByKeyboard();
+			map.disableScrollWheelZoom();
+			SetMarkers();
+			SetControls();
 		}
 		
 		public function Initialize():void
@@ -35,9 +36,81 @@
 			onModelChange(null);
 		}
 
+		private function SetMarkers():void
+		{
+			if (!map.isLoaded())
+				return;
+			
+			map.clearOverlays();
+			var mapBounds:LatLngBounds = new LatLngBounds();
+
+			var googleMapsModel:GoogleMapsClip = _Model as GoogleMapsClip;
+			var mark:Array = googleMapsModel.markers;
+			for (var key:String in googleMapsModel.markers) {
+				var newLatLng:LatLng = new LatLng(mark[key]["latitude"], mark[key]["longitude"]);
+				mapBounds.extend(newLatLng);
+				var markerA:Marker = new Marker(newLatLng,
+					new MarkerOptions({
+						strokeStyle: new StrokeStyle({color: googleMapsModel.markerStrokeColor}),
+						fillStyle: new FillStyle({color: googleMapsModel.markerColor, alpha: 0.8}),
+						radius: googleMapsModel.markerRadius,
+						hasShadow: googleMapsModel.markerShadows
+					})
+				);
+				map.addOverlay(markerA);
+			}
+			map.setCenter(mapBounds.getCenter(), map.getBoundsZoomLevel(mapBounds));
+		}
+
+		private function SetControls():void
+		{
+			if (!map.isLoaded())
+				return;
+
+			map.clearControls();
+			var googleMapsModel:GoogleMapsClip = _Model as GoogleMapsClip;
+			if (googleMapsModel.positionControl && googleMapsModel.draggable)
+				map.addControl(new PositionControl());
+			if (googleMapsModel.zoomControl && googleMapsModel.zoomable)
+				map.addControl(new ZoomControl());
+			if (googleMapsModel.mapTypeControl)
+				map.addControl(new MapTypeControl());
+			if (googleMapsModel.scaleControl)
+				map.addControl(new ScaleControl());
+			if (googleMapsModel.overviewMapControl)
+				map.addControl(new OverviewMapControl());
+		}
+
 		protected override function onModelChange(event:PropertyChangeEvent):void
 		{
+			
+			if (event && (event.property == "x" || event.property == "y" || event.property == "width" || event.property == "height"))
+				return;
+
 			var googleMapsModel:GoogleMapsClip = _Model as GoogleMapsClip;
+			
+			if (event && (event.property == "positionControl" || event.property == "zoomControl" ||
+							event.property == "mapTypeControl" || event.property == "scaleControl" ||
+							event.property == "overviewMapControl" || event.property == "draggable" ||
+							event.property == "zoomable")) {
+
+				if (googleMapsModel.draggable) {
+					map.enableDragging();
+				} else {
+					map.disableDragging();
+				}
+
+				if (googleMapsModel.zoomable) {
+					map.setDoubleClickMode(MapAction.ACTION_PAN_ZOOM_IN);
+				} else {
+					map.setDoubleClickMode(MapAction.ACTION_NOTHING);
+				}
+				SetControls();
+			}
+			
+			if (event && (event.property == "markers" || event.property == "markerShadows" || event.property == "markerColor" || event.property == "markerStrokeColor" || event.property == "markerRadius")) {
+				SetMarkers();
+			}
 			
 			super.onModelChange(event);
 		}
