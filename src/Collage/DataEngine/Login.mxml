@@ -3,7 +3,6 @@
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
 	title="Please login"
 	creationComplete="handleCreationComplete();"
-	close="closeMe();"
 	 horizontalAlign="center" verticalAlign="top" defaultButton="{loginBtn}" paddingLeft="15" paddingRight="15" paddingTop="10" paddingBottom="15">
 	<mx:Script>
 		<![CDATA[
@@ -12,27 +11,13 @@
 			import mx.managers.PopUpManager;
 			
 			private function handleCreationComplete():void {
-				// Center the TitleWindow container 
-				// over the control that created it.
-//				PopUpManager.centerPopUp(this);
-				
 				authMsg.text = "";
 				
 				Session.events.addEventListener(Session.LOGIN_FAILURE, Login_Failure);
-				Session.events.addEventListener(Session.LOGIN_SUCCESS, Login_Success);
-			}
-			
-			private function closeMe():void {
-				Session.events.removeEventListener(Session.LOGIN_FAILURE, Login_Failure);
-				Session.events.removeEventListener(Session.LOGIN_SUCCESS, Login_Success);
 			}
 			
 			private function processLogin():void {
 				Session.Login(email_address.text, password.text);
-			}
-			
-			private function Login_Success(event:Event):void {
-				PopUpManager.removePopUp(this);
 			}
 			
 			private function Login_Failure(event:Event):void {

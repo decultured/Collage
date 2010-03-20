@@ -123,12 +123,10 @@
 
 		public function HandleLoginFailure(event:Event):void {
 			welcomeScreen.visible = true;
-//			PopUpManager.createPopUp(welcomeScreen, Login, false);
 		}
 
 		public function HandleTokenExpired(event:Event):void {
 			welcomeScreen.visible = true;
-//			PopUpManager.createPopUp(welcomeScreen, Login, false);
 		}
 
 		private function StandardOSModifier(item:Object):Array{
@@ -475,6 +473,7 @@
 
 				if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "gif") {
 					var newClip:PictureClip = _EditDocumentView.AddClipByType("image") as PictureClip;
+					newClip.addEventListener(PictureClip.IMAGE_LOADED, PictureClip_ImageLoaded);
 					newClip.url = file.url;
 					Logger.Log("Image Dropped: " + file.url, LogEntry.INFO, this);
 				} else if (ext == "clg") {
