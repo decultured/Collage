@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:WindowedApplication
 	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:Collage="Collage.*"
 	xmlns:clg="Collage.Document.*"
 	xmlns:degrafa="http://www.degrafa.com/2007"
 	layout="absolute"
@@ -116,15 +117,18 @@
 		}
 
 		public function HandleLoginSuccess(event:Event):void {
+			welcomeScreen.visible = false;
 			DataEngine.LoadAllDataSets();
 		}
 
 		public function HandleLoginFailure(event:Event):void {
-			PopUpManager.createPopUp(this, Login, true);
+			welcomeScreen.visible = true;
+//			PopUpManager.createPopUp(welcomeScreen, Login, false);
 		}
 
 		public function HandleTokenExpired(event:Event):void {
-			PopUpManager.createPopUp(this, Login, true);
+			welcomeScreen.visible = true;
+//			PopUpManager.createPopUp(welcomeScreen, Login, false);
 		}
 
 		private function StandardOSModifier(item:Object):Array{
@@ -651,7 +655,7 @@
 		}
 	]]>
 	</mx:Script>
-	<mx:FlexNativeMenu id="nativeMenu" dataProvider="{collageMenuData}"
+	<mx:FlexNativeMenu id="nativeMenu" dataProvider="{collageMenuData}" 
 		labelField="@label"
 		showRoot="false"
 		itemClick="{menuItemClicked(event)}"
@@ -747,6 +751,7 @@
 					backgroundColor="#FFFFFF" backgroundAlpha="1" borderThickness="0"
 					horizontalScrollPolicy="off"
 					verticalScrollPolicy="off" >
+
 				<mx:HBox id="optionsBox" visible="false" paddingBottom="6" paddingTop="6">
 					<!-- <mx:Image id="lockButton" source="@Embed('../../assets/themes/dark/lock.png')" click="_EditDocumentView.lockSelected()" /> -->
 					<mx:Image id="deleteButton" source="@Embed('../../assets/themes/dark/delete.png')" click="_EditDocumentView.deleteSelected()" />
@@ -758,4 +763,6 @@
 		<mx:Box id="inspectorWindow" left="0" right="0" top="0" bottom="0" backgroundColor="#ACACAC" backgroundAlpha="1">
 		</mx:Box>
 	</mx:Canvas>
+	
+	<Collage:WelcomeScreen id="welcomeScreen" height="100%" width="100%" visible="false" />
 </mx:WindowedApplication>

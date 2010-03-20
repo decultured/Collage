@@ -4,10 +4,6 @@ WindowedApplication
 	background-alpha:"1.0";
 }
 
-.appTitle {
-	font-size: 14;
-}
-
 .linkButtonWindowShade {
   	headerClass:ClassReference('mx.controls.LinkButton');
   	header-style-name: linkButtonStyle;
