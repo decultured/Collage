@@ -16,8 +16,8 @@ package Collage.Clips.Label
 		public function LabelClip(dataObject:Object = null)
 		{
 			super(dataObject);
-			verticalSizable = false;
-			horizontalSizable = false;
+			height = 15;
+			width = 40;
 			rotatable = false;
 			type = "label";
 			CreateView(new LabelClipView());
@@ -26,8 +26,10 @@ package Collage.Clips.Label
 
 		public override function Resized():void
 		{
-			width = textWidth;
-			height = textHeight;
+			if (width < textWidth)
+				width = textWidth;
+			if (height < textHeight)
+				height = textHeight;
 		}
 	}
 }

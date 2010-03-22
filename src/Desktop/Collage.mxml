@@ -853,7 +853,7 @@
 		<mx:Image id="fullscreenBtn" source="@Embed('../../assets/themes/dark/fullscreen.png')" width="24" height="24" click="Fullscreen();" />
 		<mx:HRule width="24" />
 		<mx:Image id="addImageBtn" source="@Embed('../../assets/themes/dark/image.png')" width="24" height="24" click="addImageClip();" />
-		<mx:Image id="addLabelBtn" source="@Embed('../../assets/themes/dark/label.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addLabelBtn" source="@Embed('../../assets/themes/dark/label.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 40, 15));" />
 		<mx:Image id="addTextBoxBtn" source="@Embed('../../assets/themes/dark/text-box.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
 		<mx:HRule width="24" />
 		<mx:Image id="addLineChartBtn" source="@Embed('../../assets/themes/dark/line-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
@@ -863,7 +863,7 @@
 		<mx:Image id="addGuageBtn" source="@Embed('../../assets/themes/dark/guage.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('guage', new Rectangle(150, 150, 300, 300));" />
 		<mx:HRule width="24" />
 		<mx:Image id="addTableBtn" source="@Embed('../../assets/themes/dark/datagrid.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('table', new Rectangle(150, 150, 300, 300));" />
-		<mx:Image id="addDataLabelBtn" source="@Embed('../../assets/themes/dark/datalabel.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('datalabel', new Rectangle(150, 150, 300, 300));" />
+		<mx:Image id="addDataLabelBtn" source="@Embed('../../assets/themes/dark/datalabel.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('datalabel', new Rectangle(150, 150, 40, 15));" />
 		<mx:HRule width="24" />
 		<mx:Image id="addMapBtn" source="@Embed('../../assets/themes/dark/map-icon.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('googlemaps', new Rectangle(150, 150, 300, 300));" />
 	</mx:VBox>

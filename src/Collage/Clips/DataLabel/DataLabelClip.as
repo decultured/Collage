@@ -28,18 +28,20 @@ package Collage.Clips.DataLabel
 
 		public function DataLabelClip(dataObject:Object = null)
 		{
-			verticalSizable = false;
-			horizontalSizable = false;
-			rotatable = false;
 			super(dataObject);
+			rotatable = false;
 			CreateView(new DataLabelClipView());
 			CreateEditor(new DataLabelClipEditor());
+			height = 15;
+			width = 40;
 		}
 
 		public override function Resized():void
 		{
-			width = textWidth;
-			height = textHeight;
+			if (width < textWidth)
+				width = textWidth;
+			if (height < textHeight)
+				height = textHeight;
 		}
 		
 		public function RunQuery():void
