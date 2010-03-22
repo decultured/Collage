@@ -97,7 +97,11 @@
 			Logger.events.addEventListener(Logger.NEW_LOG_EVENT, LoggerStatusBarUpdate);
 			Logger.Log("Application Started", LogEntry.DEBUG   , this);
 			//stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown);
-
+			
+			// load the auth token
+			Session.AuthToken = AIRSecureStorage.getItem('apiAuthToken');
+			welcomeScreen.loginForm.email_address.text = AIRSecureStorage.getItem('stored_email');
+			
 			Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
 			Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleTokenExpired);
 			Session.CheckToken();
@@ -116,17 +120,48 @@
 			if (Logger.LastLog() != null && Logger.LastLog().level >= 0)//LogEntry.INFO)
 				status = Logger.LastLog().text;
 		}
+		
+		private function PopUp_Create(parent:DisplayObject, className:Class, modal:Boolean = false):IFlexDisplayObject {
+			popupOverlay.visible = true;
+			
+			var popUp:IFlexDisplayObject = PopUpManager.createPopUp(parent, className, modal);
+			popUp.visible = false;
+			setTimeout(function():void {
+				PopUp_Center(popUp);
+				popUp.visible = true;
+			}, 100);
+			
+			return popUp;
+		}
+		
+		private function PopUp_Center(popUp:IFlexDisplayObject):void {
+			return PopUpManager.centerPopUp(popUp);
+		}
+		
+		private function PopUp_Destroy(popUp:IFlexDisplayObject):void {
+			popupOverlay.visible = false;
+			
+			return PopUpManager.removePopUp(popUp);
+		}
 
 		public function HandleLoginSuccess(event:Event):void {
+			AIRSecureStorage.setItem('apiAuthToken', Session.AuthToken);
+			
 			welcomeScreen.visible = false;
 			DataEngine.LoadAllDataSets();
 		}
 
 		public function HandleLoginFailure(event:Event):void {
+			Session.AuthToken = null;
+			AIRSecureStorage.removeItem('apiAuthToken');
+			
 			welcomeScreen.visible = true;
 		}
 
 		public function HandleTokenExpired(event:Event):void {
+			Session.AuthToken = null;
+			AIRSecureStorage.removeItem('apiAuthToken');
+			
 			welcomeScreen.visible = true;
 		}
 
@@ -207,7 +242,7 @@
 		private var saveDashboardForm:DashboardSaveUI;
 		public function CloudFile_SaveDashboard():void {
 			if(saveDashboardForm == null) {
-				saveDashboardForm = PopUpManager.createPopUp(this, DashboardSaveUI, true) as DashboardSaveUI;
+				saveDashboardForm = PopUp_Create(this, DashboardSaveUI, true) as DashboardSaveUI;
 				saveDashboardForm.addEventListener(DashboardSaveUI.CLOSED, CloudFile_SaveDashboardUI_Closed);
 				saveDashboardForm.addEventListener(DashboardSaveUI.COMPLETE, CloudFile_SaveDashboardUI_Complete);
 				
@@ -227,7 +262,7 @@
 		}
 
 		public function CloudFile_SaveDashboardUI_Closed(e:Event):void {
-			PopUpManager.removePopUp( saveDashboardForm );
+			PopUp_Destroy( saveDashboardForm );
 			saveDashboardForm = null;
 		}
 
@@ -324,7 +359,7 @@
 		private var openDashboardForm:DashboardListUI;
 		public function CloudFile_OpenDashboard():void {
 			if(openDashboardForm == null) {
-				openDashboardForm = PopUpManager.createPopUp(this, DashboardListUI, true) as DashboardListUI;
+				openDashboardForm = PopUp_Create(this, DashboardListUI, true) as DashboardListUI;
 				openDashboardForm.addEventListener(DashboardSaveUI.CLOSED, CloudFile_OpenDashboardUI_Closed);
 				openDashboardForm.addEventListener(DashboardSaveUI.COMPLETE, CloudFile_OpenDashboardUI_Complete);
 			} else {
@@ -333,7 +368,7 @@
 		}
 
 		public function CloudFile_OpenDashboardUI_Closed(e:Event):void {
-			PopUpManager.removePopUp( openDashboardForm );
+			PopUp_Destroy( openDashboardForm );
 			openDashboardForm = null;
 		}
 
@@ -663,7 +698,7 @@
             request.requestHeaders.push(header);
 			
 			var params:URLVariables = new URLVariables();
-			params.auth_token = Session.AuthToken;
+			params.aT = Session.AuthToken;
 			request.data = params;
 
 			file.addEventListener(Event.COMPLETE, FileUploadCompleteHandler);
@@ -777,15 +812,19 @@
 		<mx:Image id="addImageBtn" source="@Embed('../../assets/themes/dark/image.png')" width="24" height="24" click="addImageClip();" />
 		<mx:Image id="addLabelBtn" source="@Embed('../../assets/themes/dark/label.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('label', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addTextBoxBtn" source="@Embed('../../assets/themes/dark/text-box.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('textbox', new Rectangle(150, 150, 300, 300));" />
+		<mx:HRule width="24" />
 		<mx:Image id="addLineChartBtn" source="@Embed('../../assets/themes/dark/line-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('linechart', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addScatterChartBtn" source="@Embed('../../assets/themes/dark/scatter.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('scatterchart', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addBarChartBtn" source="@Embed('../../assets/themes/dark/bar-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('barchart', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addPieChartBtn" source="@Embed('../../assets/themes/dark/pie-chart.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('piechart', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addGuageBtn" source="@Embed('../../assets/themes/dark/guage.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('guage', new Rectangle(150, 150, 300, 300));" />
+		<mx:HRule width="24" />
 		<mx:Image id="addTableBtn" source="@Embed('../../assets/themes/dark/datagrid.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('table', new Rectangle(150, 150, 300, 300));" />
 		<mx:Image id="addDataLabelBtn" source="@Embed('../../assets/themes/dark/datalabel.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('datalabel', new Rectangle(150, 150, 300, 300));" />
+		<mx:HRule width="24" />
+		<mx:Image id="addMapBtn" source="@Embed('../../assets/themes/dark/map-icon.png')" width="24" height="24" click="_EditDocumentView.AddClipByType('googlemaps', new Rectangle(150, 150, 300, 300));" />
 	</mx:VBox>
-	<mx:Canvas id="editCanvas" label="Canvas 1" right="265" left="32" height="100%" color="0x323232" backgroundColor="#ACACAC" backgroundAlpha="1" click="_EditDocumentView.BackgroundClick(event);">
+	<mx:Canvas id="editCanvas" label="Canvas 1" right="255" left="32" height="100%" color="0x323232" backgroundColor="#ACACAC" backgroundAlpha="1" click="_EditDocumentView.BackgroundClick(event);">
 		<mx:Box top="0" left="0" right="0" bottom="0" paddingLeft="20" paddingRight="20" paddingTop="20" paddingBottom="20"  horizontalAlign="center" verticalAlign="middle" backgroundAlpha="0" backgroundColor="0xffffff">
 			<clg:EditDocumentView id="_EditDocumentView"
 					width="800" height="600"
@@ -802,10 +841,11 @@
 			</clg:EditDocumentView>
 		</mx:Box>
 	</mx:Canvas>
-	<mx:Canvas id="inspectorCanvas" right="0" width="255" top="0" bottom="0" backgroundColor="#ACACAC" backgroundAlpha="1" verticalScrollPolicy="on" horizontalScrollPolicy="off">
-		<mx:Box id="inspectorWindow" left="0" right="0" top="0" bottom="0" backgroundColor="#ACACAC" backgroundAlpha="1">
-		</mx:Box>
+	<mx:Canvas id="inspectorCanvas" right="0" width="255" top="0" bottom="0" backgroundColor="#C6CCDA" backgroundAlpha="1" verticalScrollPolicy="on" horizontalScrollPolicy="off">
+		<mx:VBox id="inspectorWindow" left="0" right="0" top="0" bottom="0" backgroundColor="#C6CCDA" backgroundAlpha="1" verticalGap="1">
+		</mx:VBox>
 	</mx:Canvas>
 	
 	<Collage:WelcomeScreen id="welcomeScreen" height="100%" width="100%" visible="false" />
+	<Collage:PopUpOverlay id="popupOverlay" height="100%" width="100%" visible="false" />
 </mx:WindowedApplication>

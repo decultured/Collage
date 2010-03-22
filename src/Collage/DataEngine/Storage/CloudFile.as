@@ -2,7 +2,6 @@ package Collage.DataEngine.Storage
 {
 	import flash.net.*;
 	import flash.events.*;
-	import flash.data.*;
 	import flash.utils.*;
 	import com.dynamicflash.util.Base64;
 	import com.adobe.serialization.json.JSON;
@@ -94,7 +93,7 @@ package Collage.DataEngine.Storage
 			var request:URLRequest = new URLRequest( requestUrl );
 
 			var params:URLVariables = new URLVariables();
-			params.auth_token = Session.AuthToken;
+			params.aT = Session.AuthToken;
 			params.content = this._Content;
 
 			if(this._ByteData != null) {

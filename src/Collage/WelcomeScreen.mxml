@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" backgroundImage="@Embed(source='../../assets/WelcomeScreenBG.swf')" backgroundSize="100%" xmlns:DataEngine="Collage.DataEngine.*">
 	<mx:Canvas backgroundImage="@Embed(source='../../assets/WelcomeScreenText.swf')" backgroundSize="100%" width="673" height="239" horizontalCenter="0" verticalCenter="-179"/>
-<DataEngine:Login  horizontalCenter="0" verticalCenter="0"/>
+<DataEngine:Login id="loginForm"  horizontalCenter="0" verticalCenter="0"/>
 </mx:Canvas>

@@ -2,7 +2,6 @@ package Collage.DataEngine
 {
 	import flash.net.*;
 	import flash.events.*;
-	import flash.data.*;
 	import flash.utils.ByteArray;
 	import mx.controls.Alert;
 	import com.adobe.serialization.json.JSON;
@@ -37,7 +36,7 @@ package Collage.DataEngine
 			var loader:URLLoader = new URLLoader();
 
 			var params:URLVariables = new URLVariables();
-			params.auth_token = Session.AuthToken;
+			params.aT = Session.AuthToken;
 
 			request.data = params;
             request.requestHeaders.push(new URLRequestHeader("X-Requested-With", "XMLHttpRequest"));

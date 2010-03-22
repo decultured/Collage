@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <mx:Application 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:Collage="Collage.*"
 	xmlns:clg="Collage.Document.*"
 	xmlns:degrafa="http://www.degrafa.com/2007"
 	layout="absolute" 
@@ -14,8 +15,8 @@
 	keyDown="HandleKeyDown(event);"
 	horizontalScrollPolicy="off"
 	verticalScrollPolicy="off" >
-	<mx:Style source="../Common/yflexskin.css"/>
-	<mx:Style source="../Common/collageBasic.css"/>
+	<mx:Style source="../Common/yflexskin.css" />
+	<mx:Style source="../Common/collageBasic.css" />
 	<mx:Script>
 	<![CDATA[
 		import mx.containers.dividedBoxClasses.BoxDivider;
@@ -26,87 +27,158 @@
 		import mx.managers.PopUpManager;
 		import mx.core.IFlexDisplayObject;
 		import mx.events.*;
+		import flash.external.*;
 		import flash.events.*;
 		import Collage.DataEngine.*;
+		import Collage.DataEngine.Storage.*;
 		import Collage.Logger.Logger;
 		import Collage.Logger.LogEntry;
 
 		private var _DashboardURL:String = "";
+		private var _DashboardID:String = "";
+		private var _Dashboard:DashboardFile;
+		private var openDashboardForm:DashboardListUI;
+		
+		private var _ExtCallback_DashboardLoad;
+		private var _ExtCallback_DashboardUnLoad;
+		private var _ExtCallback_PopupCreate;
+		private var _ExtCallback_PopupDestroy;
+		
+		private function PopUp_Create(parent:DisplayObject, className:Class, modal:Boolean = false):IFlexDisplayObject {
+			popupOverlay.visible = true;
+			
+			if(_ExtCallback_PopupCreate != null) {
+				ExternalInterface.call(_ExtCallback_PopupCreate);
+			}
+			
+			var popUp:IFlexDisplayObject = PopUpManager.createPopUp(parent, className, modal);
+			popUp.visible = false;
+			setTimeout(function():void {
+				PopUp_Center(popUp);
+				popUp.visible = true;
+			}, 100);
+			
+			return popUp;
+		}
+		
+		private function PopUp_Center(popUp:IFlexDisplayObject):void {
+			return PopUpManager.centerPopUp(popUp);
+		}
+		
+		private function PopUp_Destroy(popUp:IFlexDisplayObject):void {
+			popupOverlay.visible = false;
+			
+			if(_ExtCallback_PopupDestroy != null) {
+				ExternalInterface.call(_ExtCallback_PopupDestroy);
+			}
+			
+			return PopUpManager.removePopUp(popUp);
+		}
 
 		private function Initialize():void
 		{
+			Security.allowDomain('*');
+			
 			Logger.Log("Application Started", LogEntry.DEBUG   , this);
-
-			_DashboardURL = Application.application.parameters.dashboard_url;
-			OpenDashboardFromURL(_DashboardURL);
+			
+			_DashboardID = Application.application.parameters.id;
+			
+			_ExtCallback_PopupCreate = Application.application.parameters.onPopupCreate;
+			_ExtCallback_PopupDestroy = Application.application.parameters.onPopupDestroy;
+			_ExtCallback_DashboardLoad = Application.application.parameters.onDashboardLoad;
+			_ExtCallback_DashboardUnLoad = Application.application.parameters.onDashboardUnLoad;
+			
+			ExternalInterface.addCallback("openDashboardList", CloudFile_OpenDashboard);
 
 			//stage.addEventListener(KeyboardEvent.KEY_DOWN, HandleKeyDown);
-
-			/*Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
-			Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleTokenExpired);
-			Session.CheckToken();*/
+			
+			Session.AuthToken = Application.application.parameters.authToken;
+			
+			Session.events.addEventListener(Session.LOGIN_SUCCESS, HandleLoginSuccess);
+			Session.events.addEventListener(Session.TOKEN_EXPIRED, HandleLoginFailure);
+			Session.CheckToken();
 		}
-/*
+		
 		public function HandleLoginSuccess(event:Event):void {
-			DataEngine.LoadAllDataSets();
+			welcomeScreen.visible = false;
+			
+			if(_ExtCallback_PopupDestroy != null) {
+				ExternalInterface.call(_ExtCallback_PopupDestroy);
+			}
+			
+			/*DataEngine.LoadAllDataSets();*/
+			
+			OpenDashboardByID(_DashboardID);
 		}
 
 		public function HandleLoginFailure(event:Event):void {
-			PopUpManager.createPopUp(this, Login, true);
+			Session.AuthToken = null;
+			
+			if(_ExtCallback_PopupCreate != null) {
+				ExternalInterface.call(_ExtCallback_PopupCreate);
+			}
+			
+			welcomeScreen.visible = true;
 		}
-
-		public function HandleTokenExpired(event:Event):void {
-			PopUpManager.createPopUp(this, Login, true);
-		}
-*/
-		private function Fullscreen():void
-		{
+		
+		private function Fullscreen():void {
 		}
 
 		private function HandleKeyDown(event:KeyboardEvent):void
 		{
 		}
-
-		public function OpenDashboardFromURL(dashURL:String):void
-		{
-			try {
-				var dashLoader:URLLoader = new URLLoader();
-				dashLoader.addEventListener(Event.COMPLETE, CompleteHandler);
-	            dashLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, SecurityErrorHandler);
-	            dashLoader.addEventListener(HTTPStatusEvent.HTTP_STATUS, HttpStatusHandler);
-	            dashLoader.addEventListener(IOErrorEvent.IO_ERROR, IOErrorHandler);
-
-				dashLoader.load(new URLRequest(dashURL));
-			} catch (error:Error) {
-				Alert.show(error.message);
+		
+		public function OpenDashboardByID(dashID:String):void {
+			if(dashID == null || dashID == "") {
+				CloudFile_OpenDashboard();
+				return;
+			}
+			
+			if(_ExtCallback_DashboardUnLoad != null) {
+				ExternalInterface.call(_ExtCallback_DashboardUnLoad);
+			}
+			
+			_Dashboard = new DashboardFile();
+			_Dashboard.addEventListener(CloudFile.OPEN_SUCCESS, OpenDashboardById_Complete);
+			_Dashboard.addEventListener(CloudFile.OPEN_FAILURE, OpenDashboardById_Failure);
+			_Dashboard.Open( dashID );
+		}
+		
+		public function OpenDashboardById_Complete(event:Event):void {
+			var fileData:Object = JSON.decode( _Dashboard.Content );
+		    _DocumentView.model.LoadFromObject(fileData);
+		
+			if(_ExtCallback_DashboardLoad != null) {
+				ExternalInterface.call(_ExtCallback_DashboardLoad, {'height': _DocumentView.model.height, 'width': _DocumentView.model.width});
 			}
 		}
 		
-		private function HttpStatusHandler(event:HTTPStatusEvent):void
-		{
-            event.target.removeEventListener(HTTPStatusEvent.HTTP_STATUS, HttpStatusHandler);
-//			Alert.show("Dashboard HTTP Status: " + event);
-			Logger.Log("Dashboard HTTP Status: " + event, LogEntry.DEBUG);
+		public function OpenDashboardById_Failure(event:Event):void {
+			CloudFile_OpenDashboard();
 		}
 		
-		private function IOErrorHandler(event:IOErrorEvent):void
-		{
-            event.target.removeEventListener(IOErrorEvent.IO_ERROR, IOErrorHandler);
-//			Alert.show("Dashboard IO Error: " + event);
+		public function CloudFile_OpenDashboard():void {
+			if(openDashboardForm == null) {
+				openDashboardForm = PopUp_Create(this, DashboardListUI, true) as DashboardListUI;
+				openDashboardForm.addEventListener(DashboardSaveUI.CLOSED, CloudFile_OpenDashboardUI_Closed);
+				openDashboardForm.addEventListener(DashboardSaveUI.COMPLETE, CloudFile_OpenDashboardUI_Complete);
+			} else {
+				PopUpManager.bringToFront(openDashboardForm);
+			}
 		}
-		
-        private function SecurityErrorHandler(event:SecurityErrorEvent):void
-		{
-            event.target.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, SecurityErrorHandler);
-//			Alert.show("Dashboard Security Error: " + event);
-        }
 
-		private function CompleteHandler(event:Event):void
-		{
-//			Alert.show("Complete");
-			event.target.removeEventListener(Event.COMPLETE, CompleteHandler);
-			var results:Object = JSON.decode(event.target.data);
-		    _DocumentView.model.LoadFromObject(results);
+		public function CloudFile_OpenDashboardUI_Closed(e:Event):void {
+			PopUp_Destroy( openDashboardForm );
+			openDashboardForm = null;
+		}
+
+		public function CloudFile_OpenDashboardUI_Complete(e:Event):void {
+			try {
+				Logger.Log("Opening from cloud.", LogEntry.INFO, this);
+				OpenDashboardByID( openDashboardForm.DashboardID );
+			} catch(e:Error){
+				Logger.Log(e.message, LogEntry.ERROR, this);
+			}
 		}
 	]]>
 	</mx:Script>
@@ -123,4 +195,6 @@
 			</clg:DocumentView>
 		</mx:Box>
 	</mx:Canvas>
+	<Collage:WelcomeScreen id="welcomeScreen" height="100%" width="100%" visible="false" />
+	<Collage:PopUpOverlay id="popupOverlay" height="100%" width="100%" visible="false" />
 </mx:Application>

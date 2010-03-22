@@ -78,7 +78,7 @@ package Collage.DataEngine
 			var header:URLRequestHeader = new URLRequestHeader("X-Requested-With", "XMLHttpRequest");
             request.requestHeaders.push(header);
 			var params:URLVariables = new URLVariables();
-			params.auth_token = Session.AuthToken;
+			params.aT = Session.AuthToken;
 			params['q'] = BuildQueryString();
 			request.data = params;
 			loader.addEventListener(Event.COMPLETE, CompleteHandler);

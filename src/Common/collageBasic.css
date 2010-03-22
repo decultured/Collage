@@ -5,7 +5,6 @@ WindowedApplication
 }
 
 .linkButtonWindowShade {
-  	headerClass:ClassReference('mx.controls.LinkButton');
   	header-style-name: linkButtonStyle;
  	drop-shadow-enabled:false;
   	corner-radius:3;
@@ -20,7 +19,10 @@ WindowedApplication
 
 .linkButtonStyle {
 	corner-radius:3;
+	fillColors: "[0xd6ddda, 0x9ebcac]";
+	fill-colors: "[0xd6ddda, 0x9ebcac]";
 	fill-alphas:1,1;
+	padding: 5;
 	padding-left:10;
 }
 
