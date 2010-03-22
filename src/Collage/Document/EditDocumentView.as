@@ -379,14 +379,19 @@ package Collage.Document
 		
 		public function deleteSelected():void
 		{
-			if (_CurrentlySelected && _CurrentlySelected.view) {
-				if (_Clips && _CurrentlySelected.uid)
-					_Clips[_CurrentlySelected.uid] = null;
-				var view:ClipView = _CurrentlySelected.view;
-				_ObjectHandles.unregisterComponent(view);
-				removeChild(view);
-				Logger.Log("Clip Deleted", LogEntry.DEBUG, this);
-			}
+			deleteClip(_CurrentlySelected);
+		}
+		
+		public function deleteClip(clip:Clip):void
+		{
+			if (!clip || !clip.view)
+				return;
+			if (_Clips && clip.uid)
+				_Clips[clip.uid] = null;
+			var view:ClipView = clip.view;
+			_ObjectHandles.unregisterComponent(view);
+			removeChild(view);
+			Logger.Log("Clip Deleted", LogEntry.DEBUG, this);
 		}
 		
 		public function lockSelected():void

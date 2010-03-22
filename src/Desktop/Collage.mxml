@@ -183,9 +183,11 @@
 		
 		public function HandleCut(event:Event):void
 		{
-			/*Clipboard.generalClipboard.clear();*/
+			if (!_EditDocumentView.IsObjectSelected())
+				return;
+			var selectedClip:Clip = _EditDocumentView.currentlySelected;
 			HandleCopy(null);
-			Alert.show("CUT!!!");
+			_EditDocumentView.deleteClip(selectedClip);
 		}
 		
 		public function HandlePaste(event:Event):void
