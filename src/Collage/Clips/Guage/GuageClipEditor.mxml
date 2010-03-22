@@ -115,7 +115,7 @@
 				guageModel.dataSetID = null;
 				dataSetColumnSelector.enabled = false;
 				modifierSelector.enabled = false;
-				guageModel.ResetData();
+//				guageModel.ResetData();
 			}
 		}
 	]]>

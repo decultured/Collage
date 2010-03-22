@@ -19,6 +19,8 @@
 	dropShadowEnabled="true"
 	applicationComplete="Initialize()"
     paste="HandlePaste(event);"
+    copy="HandleCopy(event);"
+    cut="HandleCut(event);"
 	keyDown="HandleKeyDown(event);"
 	nativeDragEnter="onDragIn(event)"
 	nativeDragDrop="onDrop(event)"
@@ -44,7 +46,10 @@
 	    import flash.desktop.ClipboardFormats;
 	    import flash.desktop.ClipboardTransferMode;
 		import Collage.Document.*;
+		import Collage.Clip.*;
 		import Collage.Clips.Picture.*;
+		import Collage.Clips.Label.*;
+		import Collage.Clips.TextBox.*;
 		import Collage.DataEngine.*;
 		import Collage.DataEngine.Storage.*;
 		import Collage.Logger.*;
@@ -158,10 +163,44 @@
 		{
 
 		}
+
+		public function HandleCopy(event:Event):void
+		{
+			if (!_EditDocumentView.IsObjectSelected())
+				return;
+			var copyObject:Object = _EditDocumentView.currentlySelected.SaveToObject();
+			Clipboard.generalClipboard.clear();
+			Clipboard.generalClipboard.setData("epaths:clipObject", JSON.encode(copyObject));
+			
+			if (_EditDocumentView.currentlySelected is LabelClip)
+				Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, (_EditDocumentView.currentlySelected as LabelClip).text);
+			else if (_EditDocumentView.currentlySelected is TextBoxClip)
+				Clipboard.generalClipboard.setData(ClipboardFormats.HTML_FORMAT, (_EditDocumentView.currentlySelected as TextBoxClip).text);
+			_EditDocumentView.currentlySelected.selected = false;
+			Clipboard.generalClipboard.setData(ClipboardFormats.BITMAP_FORMAT, ImageSnapshot.captureBitmapData(_EditDocumentView.currentlySelected.view));
+			_EditDocumentView.currentlySelected.selected = true;
+		}
+		
+		public function HandleCut(event:Event):void
+		{
+			/*Clipboard.generalClipboard.clear();*/
+			HandleCopy(null);
+			Alert.show("CUT!!!");
+		}
 		
 		public function HandlePaste(event:Event):void
 		{
-			if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.BITMAP_FORMAT)) {
+			if (Clipboard.generalClipboard.hasFormat("epaths:clipObject")) {
+				var clipDataObject:Object = JSON.decode(Clipboard.generalClipboard.getData("epaths:clipObject") as String);
+				if (!clipDataObject || !clipDataObject["type"])
+					return;
+				var newClip:Clip = _EditDocumentView.AddClipByType(clipDataObject["type"]);
+				if (newClip) {
+					newClip.LoadFromObject(clipDataObject);
+					newClip.x = 17;
+					newClip.y = 17;
+				}
+			} else if (Clipboard.generalClipboard.hasFormat(ClipboardFormats.BITMAP_FORMAT)) {
 				/*var clip:PictureClip = _EditDocumentView.AddClipFromData(Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData) as PictureClip;*/
 				var clip:PictureClip = _EditDocumentView.AddClipByType('image', new Rectangle(150, 150, 300, 300)) as PictureClip;
 				clip.addEventListener(PictureClip.IMAGE_LOADED, PictureClip_ImageLoaded);
@@ -524,14 +563,16 @@
 			var command:String = menuEvent.item.@command;
 			switch(command){
 				case "cut":
-					NativeApplication.nativeApplication.cut();
+					HandleCut(null);
+//					NativeApplication.nativeApplication.cut();
 					break;
 				case "copy":
-					NativeApplication.nativeApplication.copy();
+					HandleCopy(null);
+//					NativeApplication.nativeApplication.copy();
 					break;
 				case "paste":
 					HandlePaste(null);
-					NativeApplication.nativeApplication.paste();
+//					NativeApplication.nativeApplication.paste();
 					break;
 				case "delete":
 					_EditDocumentView.deleteSelected();
@@ -735,8 +776,8 @@
                 <menuitem label="Undo" key="z" command="undo" enabled="false"/>
                 <menuitem label="Redo" command="redo" enabled="false"/>
                 <menuitem type="separator"/>
-				<menuitem label="Cut" enabled="false" command="cut" key="x"/>
-				<menuitem label="Copy" enabled="false" command="copy" key="c"/>
+				<menuitem label="Cut" command="cut" key="x"/>
+				<menuitem label="Copy" command="copy" key="c"/>
 				<menuitem label="Paste" command="paste" key="v"/>
 				<menuitem label="Delete" command="delete" />
                 <menuitem type="separator"/>

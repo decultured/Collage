@@ -21,6 +21,7 @@ package Collage.Document
 		protected var _SelectionManager:ObjectHandlesSelectionManager;
 		protected var _ObjectHandles:ObjectHandles;
 		protected var _CurrentlySelected:Clip;
+		public function get currentlySelected():Clip {return _CurrentlySelected;}
 		public function set inspector(inspectorPane:UIComponent):void {_InspectorPane = inspectorPane;}
 		public function get inspector():UIComponent {return _InspectorPane;}
 		public function set optionsBox(optionsBox:UIComponent):void {_OptionsBox = optionsBox;}
@@ -169,6 +170,20 @@ package Collage.Document
 			return newClip;
 		}
 
+		public function CopySelectedClip():Object
+		{
+			if (!IsObjectSelected())
+				return null;
+				
+			return _CurrentlySelected.SaveToObject();
+		}
+		
+		public function PasteClip(copiedClip:Object):void
+		{
+			if (!copiedClip)
+				return;
+		}
+		
 		public function IsObjectSelected():Boolean {
 			if (_CurrentlySelected && _CurrentlySelected.selected)
 				return true;

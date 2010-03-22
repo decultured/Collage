@@ -23,7 +23,6 @@
 			{
 				linechart.invalidateDisplayList();
 				gridLines.invalidateDisplayList();
-//				gridLines.invalidateSeriesStyles();
 			}
 			super.onModelChange(event);
 		}

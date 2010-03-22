@@ -49,6 +49,12 @@
 		{
 			/*DataEngine.events.removeEventListener(DataEngine.COMPLETE, DatasLoaded);*/
 			dataSetSelections = DataEngine.GetDataSetsComboBox(new Array("numeric", "datetime"), 2, 3);
+			var dataLabelModel:DataLabelClip = _Model as DataLabelClip;
+			for (var i:int = 0; i < dataSetSelections.length; i++)
+				if (dataSetSelections[i]["data"] == dataLabelModel.dataSetID)
+					dataSetSelector.selectedIndex = i;
+			if (dataSetSelector.selectedItem)
+				DataSetSelectorChanged(false);
 		}
 
 		private function ColumnSelectorChanged():void
@@ -84,28 +90,38 @@
 			dataLabelModel.RunQuery();
 		}
 		
-		private function DataSetSelectorChanged():void
+		private function DataSetSelectorChanged(clearSelections:Boolean = true):void
 		{
 			if (!_Model)
 				return;
 				
 			var dataLabelModel:DataLabelClip = _Model as DataLabelClip;
 
-			dataLabelModel.dataSetColumn = null;
-			dataLabelModel.ResetData();
+			if (clearSelections) {
+				dataLabelModel.dataSetColumn = null;
+				dataLabelModel.ResetData();
+			}
 
 			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
 
 			if (dataset) {
 				dataLabelModel.dataSetID = dataSetSelector.selectedItem.data;
 				dataSetColumnSelections = dataset.GetColumnsComboBox();
+				for (var i:int = 0; i < dataSetColumnSelections.length; i++) {
+					if (dataSetColumnSelections[i]["label"] == dataLabelModel.dataSetColumn)
+						dataSetColumnSelector.selectedIndex = i;
+				}
+				for (i = 0; i < modifierSelections.length; i++) {
+					if (modifierSelections[i]["data"] == dataLabelModel.dataSetColumnModifier)
+						modifierSelector.selectedIndex = i;
+				}
 				dataSetColumnSelector.enabled = true;
 				modifierSelector.enabled = true;
 			} else {
 				dataLabelModel.dataSetID = null;
 				dataSetColumnSelector.enabled = false;
 				modifierSelector.enabled = false;
-				dataLabelModel.ResetData();
+//				dataLabelModel.ResetData();
 			}
 		}
 
@@ -114,7 +130,7 @@
 	<flexlib:WindowShade label="Data Connection" styleName="linkButtonWindowShade" width="100%">
 		<mx:Label text="Data Set:" color="#000000" fontWeight="bold" />
 		<mx:ComboBox id="dataSetSelector" dataProvider="{dataSetSelections}" width="230" change="DataSetSelectorChanged()" prompt="Please select a dataset..."/>
-		<mx:Label text="Y Axis Value:" color="#000000" fontWeight="bold" />
+		<mx:Label text="Data Column:" color="#000000" fontWeight="bold" />
 		<mx:ComboBox id="dataSetColumnSelector" dataProvider="{dataSetColumnSelections}" enabled="false" width="230" change="ColumnSelectorChanged()" prompt="Please select a column..."/>
 		<mx:Label text="Modifier:" color="#000000" fontWeight="bold" />
 		<mx:ComboBox id="modifierSelector" dataProvider="{modifierSelections}" enabled="false" width="230" change="ModifierSelectorChanged()" prompt="Please select a modifier..."/>

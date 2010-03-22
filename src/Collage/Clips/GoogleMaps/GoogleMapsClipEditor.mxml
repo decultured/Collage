@@ -27,6 +27,12 @@
 	private function DatasLoaded(event:Event):void
 	{
 		dataSetSelections = DataEngine.GetDataSetsComboBox(new Array("numeric"), 2, 1);
+		var googleMapsModel:GoogleMapsClip = _Model as GoogleMapsClip;
+		for (var i:int = 0; i < dataSetSelections.length; i++)
+			if (dataSetSelections[i]["data"] == googleMapsModel.dataSetID)
+				dataSetSelector.selectedIndex = i;
+		if (dataSetSelector.selectedItem)
+			DataSetSelectorChanged(false);
 	}
 
 	private function ColumnSelectorChanged():void
@@ -59,28 +65,36 @@
 		googleMapsModel.RunQuery();
 	}
 	
-	private function DataSetSelectorChanged():void
+	private function DataSetSelectorChanged(clearSelections:Boolean = true):void
 	{
 		if (!_Model)
 			return;
 			
 		var googleMapsModel:GoogleMapsClip = _Model as GoogleMapsClip;
 
-		googleMapsModel.longDataColumn = null;
-		googleMapsModel.latDataColumn = null;
-		googleMapsModel.ResetData();
+		if (clearSelections) {
+			googleMapsModel.longDataColumn = null;
+			googleMapsModel.latDataColumn = null;
+			googleMapsModel.ResetData();
+		}
 
 		var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
 
 		if (dataset) {
 			googleMapsModel.dataSetID = dataset.id;
 			dataSetColumnSelections = dataset.GetColumnsComboBox(new Array("numeric", "datetime"));
+			for (var i:int = 0; i < dataSetColumnSelections.length; i++) {
+				if (dataSetColumnSelections[i]["label"] == googleMapsModel.longDataColumn)
+					dataSetLongColumnSelector.selectedIndex = i;
+				if (dataSetColumnSelections[i]["label"] == googleMapsModel.latDataColumn)
+					dataSetLatColumnSelector.selectedIndex = i;
+			}			
 			dataSetLongColumnSelector.enabled = true;
 			dataSetLatColumnSelector.enabled = true;
 		} else {
 			dataSetLongColumnSelector.enabled = false;
 			dataSetLatColumnSelector.enabled = false;
-			googleMapsModel.ResetData();
+//			googleMapsModel.ResetData();
 		}
 	}
 	

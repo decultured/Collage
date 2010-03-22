@@ -86,8 +86,8 @@ package Collage.Clips.LineChart
 				_DataQuery.AddField(xAxisDataColumn, "desc");
 				_DataQuery.AddField(yAxisDataColumn);
 				_DataQuery.limit = rowsRequested;
-				_DataQuery.LoadQueryResults();
 				_DataQuery.addEventListener(DataQuery.COMPLETE, QueryFinished);
+				_DataQuery.LoadQueryResults();
 			}
 		}
 		

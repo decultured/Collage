@@ -39,7 +39,13 @@
 		private function DatasLoaded(event:Event):void
 		{
 			/*DataEngine.events.removeEventListener(DataEngine.COMPLETE, DatasLoaded);*/
+			var scatterChartModel:ScatterChartClip = _Model as ScatterChartClip;
 			dataSetSelections = DataEngine.GetDataSetsComboBox(new Array("numeric", "datetime"), 2, 3);
+			for (var i:int = 0; i < dataSetSelections.length; i++)
+				if (dataSetSelections[i]["data"] == scatterChartModel.dataSetID)
+					dataSetSelector.selectedIndex = i;
+			if (dataSetSelector.selectedItem)
+				DataSetSelectorChanged(false);
 		}
 
 		private function ColumnSelectorChanged():void
@@ -75,28 +81,36 @@
 			scatterChartModel.RunQuery();
 		}
 		
-		private function DataSetSelectorChanged():void
+		private function DataSetSelectorChanged(clearSelections:Boolean = true):void
 		{
 			if (!_Model)
 				return;
 				
 			var scatterChartModel:ScatterChartClip = _Model as ScatterChartClip;
 
-			scatterChartModel.yAxisDataColumn = null;
-			scatterChartModel.xAxisDataColumn = null;
-			scatterChartModel.ResetData();
+			if (clearSelections) {
+				scatterChartModel.yAxisDataColumn = null;
+				scatterChartModel.xAxisDataColumn = null;
+				scatterChartModel.ResetData();
+			}
 
 			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
 
 			if (dataset) {
 				scatterChartModel.dataSetID = dataset.id;
 				dataSetColumnSelections = dataset.GetColumnsComboBox(new Array("numeric", "datetime"));
+				for (var i:int = 0; i < dataSetColumnSelections.length; i++) {
+					if (dataSetColumnSelections[i]["label"] == scatterChartModel.yAxisDataColumn)
+						dataSetYColumnSelector.selectedIndex = i;
+					if (dataSetColumnSelections[i]["label"] == scatterChartModel.xAxisDataColumn)
+						dataSetXColumnSelector.selectedIndex = i;
+				}			
 				dataSetYColumnSelector.enabled = true;
 				dataSetXColumnSelector.enabled = true;
 			} else {
 				dataSetYColumnSelector.enabled = false;
 				dataSetXColumnSelector.enabled = false;
-				scatterChartModel.ResetData();
+//				scatterChartModel.ResetData();
 			}
 		}
 

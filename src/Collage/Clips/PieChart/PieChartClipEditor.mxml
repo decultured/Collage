@@ -51,6 +51,12 @@
 		{
 			/*DataEngine.events.removeEventListener(DataEngine.COMPLETE, DatasLoaded);*/
 			dataSetSelections = DataEngine.GetDataSetsComboBox(new Array("numeric", "datetime"), 1, 3);
+			var pieChartModel:PieChartClip = _Model as PieChartClip;
+			for (var i:int = 0; i < dataSetSelections.length; i++)
+				if (dataSetSelections[i]["data"] == pieChartModel.dataSetID)
+					dataSetSelector.selectedIndex = i;
+			if (dataSetSelector.selectedItem)
+				DataSetSelectorChanged(false);
 		}
 
 		private function ColumnSelectorChanged():void
@@ -83,17 +89,19 @@
 			pieChartModel.RunQuery();
 		}
 		
-		private function DataSetSelectorChanged():void
+		private function DataSetSelectorChanged(clearSelections:Boolean = true):void
 		{
 			if (!_Model)
 				return;
 				
 			var pieChartModel:PieChartClip = _Model as PieChartClip;
 
-			pieChartModel.dataColumn = null;
-			pieChartModel.labelColumn = null;
-			pieChartModel.dataModifier = null;
-			pieChartModel.ResetData();
+			if (clearSelections) {
+				pieChartModel.dataColumn = null;
+				pieChartModel.labelColumn = null;
+				pieChartModel.dataModifier = null;
+				pieChartModel.ResetData();
+			}
 
 			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
 
@@ -101,6 +109,18 @@
 				pieChartModel.dataSetID = dataset.id;
 				dataColumnSelections = dataset.GetColumnsComboBox(new Array("numeric", "datetime"));
 				labelColumnSelections = dataset.GetColumnsComboBox();
+				for (var i:int = 0; i < dataColumnSelections.length; i++) {
+					if (dataColumnSelections[i]["label"] == pieChartModel.dataColumn)
+						dataColumnSelector.selectedIndex = i;
+				}
+				for (i = 0; i < labelColumnSelections.length; i++) {
+					if (labelColumnSelections[i]["label"] == pieChartModel.labelColumn)
+						labelColumnSelector.selectedIndex = i;
+				}
+				for (i = 0; i < modifierSelections.length; i++) {
+					if (modifierSelections[i]["data"] == pieChartModel.dataModifier)
+						modifierSelector.selectedIndex = i;
+				}
 				dataColumnSelector.enabled = true;
 				labelColumnSelector.enabled = true;
 				modifierSelector.enabled = true;
@@ -111,7 +131,7 @@
 				dataColumnSelector.selectedIndex = -1;
 				labelColumnSelector.selectedIndex = -1;
 				modifierSelector.selectedIndex = -1;
-				pieChartModel.ResetData();
+//				pieChartModel.ResetData();
 			}
 		}	
 

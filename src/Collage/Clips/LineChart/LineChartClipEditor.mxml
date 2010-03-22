@@ -40,7 +40,13 @@
 		private function DatasLoaded(event:Event):void
 		{
 			/*DataEngine.events.removeEventListener(DataEngine.COMPLETE, DatasLoaded);*/
+			var lineChartModel:LineChartClip = _Model as LineChartClip;
 			dataSetSelections = DataEngine.GetDataSetsComboBox(new Array("numeric", "datetime"), 2, 3);
+			for (var i:int = 0; i < dataSetSelections.length; i++)
+				if (dataSetSelections[i]["data"] == lineChartModel.dataSetID)
+					dataSetSelector.selectedIndex = i;
+			if (dataSetSelector.selectedItem)
+				DataSetSelectorChanged(false);
 		}
 
 		private function ColumnSelectorChanged():void
@@ -73,28 +79,36 @@
 			lineChartModel.RunQuery();
 		}
 		
-		private function DataSetSelectorChanged():void
+		private function DataSetSelectorChanged(clearSelections:Boolean = true):void
 		{
 			if (!_Model)
 				return;
 				
 			var lineChartModel:LineChartClip = _Model as LineChartClip;
 
-			lineChartModel.yAxisDataColumn = null;
-			lineChartModel.xAxisDataColumn = null;
-			lineChartModel.ResetData();
+			if (clearSelections) {
+				lineChartModel.yAxisDataColumn = null;
+				lineChartModel.xAxisDataColumn = null;
+				lineChartModel.ResetData();
+			}
 
 			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
 
 			if (dataset) {
 				lineChartModel.dataSetID = dataset.id;
 				dataSetColumnSelections = dataset.GetColumnsComboBox(new Array("numeric", "datetime"));
+				for (var i:int = 0; i < dataSetColumnSelections.length; i++) {
+					if (dataSetColumnSelections[i]["label"] == lineChartModel.yAxisDataColumn)
+						dataSetYColumnSelector.selectedIndex = i;
+					if (dataSetColumnSelections[i]["label"] == lineChartModel.xAxisDataColumn)
+						dataSetXColumnSelector.selectedIndex = i;
+				}			
 				dataSetYColumnSelector.enabled = true;
 				dataSetXColumnSelector.enabled = true;
 			} else {
 				dataSetYColumnSelector.enabled = false;
 				dataSetXColumnSelector.enabled = false;
-				lineChartModel.ResetData();
+//				lineChartModel.ResetData();
 			}
 		}
 		

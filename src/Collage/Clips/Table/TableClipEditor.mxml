@@ -57,6 +57,10 @@
 		{
 			/*DataEngine.events.removeEventListener(DataEngine.COMPLETE, DatasLoaded);*/
 			dataSetSelections = DataEngine.GetDataSetsComboBox();
+			var tableModel:TableClip = _Model as TableClip;
+			for (var i:int = 0; i < dataSetSelections.length; i++)
+				if (dataSetSelections[i]["data"] == tableModel.dataSetID)
+					dataSetSelector.selectedIndex = i;
 		}
 
 		private function SubmitDataRequest():void

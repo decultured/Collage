@@ -42,6 +42,12 @@
 		{
 			/*DataEngine.events.removeEventListener(DataEngine.COMPLETE, DatasLoaded);*/
 			dataSetSelections = DataEngine.GetDataSetsComboBox(new Array("numeric", "datetime"), 1, 3);
+			var barChartModel:BarChartClip = _Model as BarChartClip;
+			for (var i:int = 0; i < dataSetSelections.length; i++)
+				if (dataSetSelections[i]["data"] == barChartModel.dataSetID)
+					dataSetSelector.selectedIndex = i;
+			if (dataSetSelector.selectedItem)
+				DataSetSelectorChanged(false);
 		}
 
 		private function ColumnSelectorChanged():void
@@ -80,17 +86,19 @@
 			barChartModel.RunQuery();
 		}
 
-		private function DataSetSelectorChanged():void
+		private function DataSetSelectorChanged(clearSelections:Boolean = true):void
 		{
 			if (!_Model)
 				return;
 
 			var barChartModel:BarChartClip = _Model as BarChartClip;
 
-			barChartModel.dataColumn = null;
-			barChartModel.labelColumn = null;
-			barChartModel.dataModifier = null;
-			barChartModel.ResetData();
+			if (clearSelections) {
+				barChartModel.dataColumn = null;
+				barChartModel.labelColumn = null;
+				barChartModel.dataModifier = null;
+				barChartModel.ResetData();
+			}
 
 			var dataset:DataSet = DataEngine.GetDataSetByID(dataSetSelector.selectedItem.data);
 
@@ -98,6 +106,18 @@
 				barChartModel.dataSetID = dataset.id;
 				dataColumnSelections = dataset.GetColumnsComboBox(new Array("numeric", "datetime"));
 				labelColumnSelections = dataset.GetColumnsComboBox(new Array("numeric", "datetime"));
+				for (var i:int = 0; i < dataColumnSelections.length; i++) {
+					if (dataColumnSelections[i]["label"] == barChartModel.dataColumn)
+						dataColumnSelector.selectedIndex = i;
+				}
+				for (i = 0; i < labelColumnSelections.length; i++) {
+					if (labelColumnSelections[i]["label"] == barChartModel.labelColumn)
+						labelColumnSelector.selectedIndex = i;
+				}
+				for (i = 0; i < modifierSelections.length; i++) {
+					if (modifierSelections[i]["data"] == barChartModel.dataModifier)
+						modifierSelector.selectedIndex = i;
+				}
 				dataColumnSelector.enabled = true;
 				labelColumnSelector.enabled = true;
 				modifierSelector.enabled = true;
@@ -108,7 +128,7 @@
 				dataColumnSelector.selectedIndex = -1;
 				labelColumnSelector.selectedIndex = -1;
 				modifierSelector.selectedIndex = -1;
-				barChartModel.ResetData();
+//				barChartModel.ResetData();
 			}
 
 //			UpdateInspector();

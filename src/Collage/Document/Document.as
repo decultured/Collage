@@ -98,40 +98,17 @@ package Collage.Document
 			for (var key:String in dataObject)
 			{
 				if (key == "document") {
-					url = dataObject["document"]["url"];
-					backgroundColor = dataObject["document"]["backgroundColor"];
-					gridSize = dataObject["document"]["gridSize"];
-					gridColor = dataObject["document"]["gridColor"];
 					super.LoadFromObject(dataObject[key]);
 				} else if (key == "clips") {
 					if (!dataObject[key] is Array)
 						continue;
-					
 					var clipArray:Array = dataObject[key] as Array;
 					for (var i:uint = 0; i < clipArray.length; i++) {
 						var clipDataObject:Object = clipArray[i] as Object;
-
-						if (!clipDataObject["type"]) {
-							Alert.show("Clip Broke");
+						if (!clipDataObject["type"])
 							continue;
-						}
-
-						try {
-							var newClip:Clip = docView.AddClipByType(clipDataObject["type"]);
-							
-							if (clipDataObject["type"] != "table") {
-								for(var obj_k:String in clipDataObject) {
-									try {
-										if(newClip.hasOwnProperty(obj_k))
-											newClip[obj_k] = clipDataObject[obj_k];
-									} catch(e:Error) {}
-								}
-							} else {
-								newClip.LoadFromObject(clipDataObject);
-							}
-						} catch(e:Error) {
-							Alert.show(e.message);
-						}
+						var newClip:Clip = docView.AddClipByType(clipDataObject["type"]);
+						newClip.LoadFromObject(clipDataObject);
 					}
 				}
 			}
