@@ -795,7 +795,7 @@
             <menuitem label="File">
                 <menuitem label="New" command="new" key="n"/>
                 <menuitem label="Open..." command="open" key="o" />
-				<menuitem label="Open from Cloud..." command="cloudstorage_opendashboard" />
+				<menuitem label="Open from Cloud..." modifier="" command="cloudstorage_opendashboard" />
                 <menuitem type="separator"/>
                 <menuitem label="Save..." command="save" key="s" />
 				<menuitem label="Save to Cloud..." command="cloudstorage_savedashboard" />

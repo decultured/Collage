@@ -8,6 +8,7 @@
 		<![CDATA[
 			import flash.net.*;
 			import flash.events.*;
+			import mx.core.IFlexDisplayObject;
 			import com.adobe.serialization.json.JSON;
 			import mx.controls.Alert;
 			import mx.managers.PopUpManager;
@@ -22,11 +23,13 @@
 			public var dashboardList:ArrayCollection;
 
 			public var selectedBox:Object;
+			[Bindable]
 			public var selectedItem:Object;
 
 			public function get DashboardID():String { if(selectedItem != null) { return selectedItem["id"]; } else { return null; } }
 
 			private function handleCreationComplete():void {
+				dashboardList = null;
 				dashboardList = new ArrayCollection();
 				
 				GetList();
@@ -72,15 +75,22 @@
 				Logger.Log("DashboardListUI::GetList_Error: " + event, LogEntry.DEBUG);
 			}
 
-			private function selectItem(index:uint, event:Event):void {
+			private function selectItem(event:Event):void {
 				try {
 					if(selectedBox != null) {
 						selectedBox.styleName = "";
 					}
-					Alert.show("index = "+ index);
-					return;
-					selectedItem = dashboardList.getItemAt( index );
-					Alert.show("item = "+ selectedItem);
+					
+					selectedItem = event.currentTarget.getRepeaterItem();
+					
+					var index:int = 0;
+					for each(var item:Object in dashboardList) {
+						if(item.id == selectedItem.id) {
+							break;
+						}
+						index++;
+					}
+					
 					selectedBox = dashboardItemBox[index];
 					selectedBox.styleName = "selected";
 				} catch(error:Error) {
@@ -106,26 +116,19 @@
 		}
 	</mx:Style>
 		<mx:Canvas height="300" width="100%" horizontalScrollPolicy="off">
-			<!-- <flexlib:FlowBox
-				horizontalGap="3" verticalGap="3"
-				width="100%"
-				height="100%"
-				horizontalScrollPolicy="off"
-				paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5"> -->
 			<mx:Tile direction="horizontal" horizontalGap="10" verticalGap="15" 
 				color="0x323232" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
 				<mx:Repeater id="dashListRep" startingIndex="0">
-					<mx:VBox id="dashboardItemBox" click="{selectItem(dashListRep.currentIndex, event)}" horizontalScrollPolicy="off" verticalScrollPolicy="off" paddingLeft="3" paddingRight="3" paddingBottom="3" paddingTop="3">
-						<mx:Image click="{selectItem(dashListRep.currentIndex, event)}" width="200" height="150" source="{DataEngine.getUrl('api/v1/storage/dashboard/'+ String(dashListRep.currentItem.id) +'/snapshot.png?aT='+ Session.AuthToken)}"/>
-						<mx:Label click="{selectItem(dashListRep.currentIndex, event)}" text="{String(dashListRep.currentItem.title).substr(0, 15)}" width="100%" fontSize="12" textAlign="center" />
+					<mx:VBox id="dashboardItemBox" click="{selectItem(event)}" horizontalScrollPolicy="off" verticalScrollPolicy="off" paddingLeft="3" paddingRight="3" paddingBottom="3" paddingTop="3">
+						<mx:Image click="{selectItem(event)}" width="200" height="150" source="{DataEngine.getUrl('api/v1/storage/dashboard/'+ String(dashListRep.currentItem.id) +'/snapshot.png?aT='+ Session.AuthToken)}"/>
+						<mx:Label click="{selectItem(event)}" text="{String(dashListRep.currentItem.title).substr(0, 15)}" width="100%" fontSize="12" textAlign="center" />
 					</mx:VBox>
 				</mx:Repeater>
-			<!-- </flexlib:FlowBox> -->
 			</mx:Tile>
 		</mx:Canvas>
 		<mx:Spacer height="10" width="100%" />
 		<mx:HBox horizontalAlign="right" width="100%">
 			<mx:Button id="cancelBtn" click="{closeMe();}" label="Cancel" fontSize="16" />
-			<mx:Button id="openDashboardBtn" click="{openDashboard(event);}" label="Open" fontSize="16" />
+			<mx:Button id="openDashboardBtn" click="{openDashboard(event);}" label="Open" fontSize="16" enabled="{selectedItem != null}" />
 		</mx:HBox>
 </mx:TitleWindow>
