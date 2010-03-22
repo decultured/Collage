@@ -117,8 +117,8 @@
 	]]>
     </mx:Script>
 	<maps:Map id="map" 
-	    key="ABQIAAAAPRXqhGNlOd_sHtLdsKF4ExREepsFs8h9qLshUwr98X_ZtMTNKxTNWvF41U7M8n1RRDdhiOCQeAmoHg" 
-		url="http://www.decultured.com/"
+	    key="ABQIAAAAPRXqhGNlOd_sHtLdsKF4ExQ1NLv7FTRfL_h8MNLwNYgg3JeGxxQ6W1x9FNgbBrMz5W64gCQiHO5Z3Q" 
+		url="http://dataengine.endlesspaths.com/"
 	    mapevent_mapready="onMapReady(event)"
 	    width="100%" height="100%"/>
 </clg:ClipView>
