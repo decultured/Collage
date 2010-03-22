@@ -8,7 +8,6 @@
 		<![CDATA[
 			import flash.net.*;
 			import flash.events.*;
-			import flash.data.*;
 			import com.adobe.serialization.json.JSON;
 			import mx.controls.Alert;
 			import mx.managers.PopUpManager;
@@ -28,10 +27,8 @@
 			public function get DashboardID():String { if(selectedItem != null) { return selectedItem["id"]; } else { return null; } }
 
 			private function handleCreationComplete():void {
-				// Center the TitleWindow container
-				// over the control that created it.
-				PopUpManager.centerPopUp(this);
-
+				dashboardList = new ArrayCollection();
+				
 				GetList();
 			}
 
@@ -44,7 +41,7 @@
 				var request:URLRequest = new URLRequest( DataEngine.getUrl("/api/v1/storage/dashboard/list") );
 
 				var params:URLVariables = new URLVariables();
-				params.auth_token = Session.AuthToken;
+				params.aT = Session.AuthToken;
 
 				request.data = params;
 	            request.requestHeaders.push(new URLRequestHeader("X-Requested-With", "XMLHttpRequest"));
@@ -63,29 +60,32 @@
 				Logger.Log("DashboardListUI::GetList_Complete: " + event, LogEntry.DEBUG);
 
 				var results:Array = JSON.decode(event.target.data);
-				dashboardList = null;
-				dashboardList = new ArrayCollection();
 
 				for each(var dash:Object in results) {
 					dashboardList.addItemAt( dash, 0 );
 				}
-
-				PopUpManager.centerPopUp(this);
+				
+				dashListRep.dataProvider = dashboardList;
 			}
 
 			private function GetList_Error(event:Event):void {
 				Logger.Log("DashboardListUI::GetList_Error: " + event, LogEntry.DEBUG);
 			}
 
-			private function selectItem(e:Event):void {
-				if(selectedBox != null) {
-					selectedBox.styleName = "";
+			private function selectItem(index:uint, event:Event):void {
+				try {
+					if(selectedBox != null) {
+						selectedBox.styleName = "";
+					}
+					Alert.show("index = "+ index);
+					return;
+					selectedItem = dashboardList.getItemAt( index );
+					Alert.show("item = "+ selectedItem);
+					selectedBox = dashboardItemBox[index];
+					selectedBox.styleName = "selected";
+				} catch(error:Error) {
+					Alert.show("error = "+ error);
 				}
-
-				selectedItem = e.target.getRepeaterItem();
-
-				selectedBox = e.target;
-				selectedBox.styleName = "selected";
 			}
 
 			private function openDashboard(e:Event):void {
@@ -106,19 +106,22 @@
 		}
 	</mx:Style>
 		<mx:Canvas height="300" width="100%" horizontalScrollPolicy="off">
-			<flexlib:FlowBox
+			<!-- <flexlib:FlowBox
 				horizontalGap="3" verticalGap="3"
 				width="100%"
 				height="100%"
 				horizontalScrollPolicy="off"
-				paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5">
-				<mx:Repeater id="dashListRep" dataProvider="{dashboardList}">
-					<mx:VBox click="{selectItem(event)}" doubleClick="{selectItem(event); openDashboard(event);}" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-						<mx:Image  width="200" height="150" source="{DataEngine.getUrl('api/v1/storage/dashboard/'+ String(dashListRep.currentItem.id) +'/snapshot?auth_token='+ Session.AuthToken)}"/>
-						<mx:Label text="{String(dashListRep.currentItem.title).substr(0, 15)}" width="100%" fontSize="12" textAlign="center" />
+				paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5"> -->
+			<mx:Tile direction="horizontal" horizontalGap="10" verticalGap="15" 
+				color="0x323232" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
+				<mx:Repeater id="dashListRep" startingIndex="0">
+					<mx:VBox id="dashboardItemBox" click="{selectItem(dashListRep.currentIndex, event)}" horizontalScrollPolicy="off" verticalScrollPolicy="off" paddingLeft="3" paddingRight="3" paddingBottom="3" paddingTop="3">
+						<mx:Image click="{selectItem(dashListRep.currentIndex, event)}" width="200" height="150" source="{DataEngine.getUrl('api/v1/storage/dashboard/'+ String(dashListRep.currentItem.id) +'/snapshot.png?aT='+ Session.AuthToken)}"/>
+						<mx:Label click="{selectItem(dashListRep.currentIndex, event)}" text="{String(dashListRep.currentItem.title).substr(0, 15)}" width="100%" fontSize="12" textAlign="center" />
 					</mx:VBox>
 				</mx:Repeater>
-			</flexlib:FlowBox>
+			<!-- </flexlib:FlowBox> -->
+			</mx:Tile>
 		</mx:Canvas>
 		<mx:Spacer height="10" width="100%" />
 		<mx:HBox horizontalAlign="right" width="100%">

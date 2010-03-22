@@ -27,7 +27,7 @@
 	</mx:Script>
 	<mx:Form width="100%" defaultButton="{loginBtn}">
 		<mx:FormItem label="E-Mail Address" width="100%" textAlign="left" required="true">
-			<mx:TextInput id="email_address" width="100%" text="{Session.getItem('stored_email')}"/>
+			<mx:TextInput id="email_address" width="100%" text=""/>
 		</mx:FormItem>
 		<mx:FormItem label="Password" width="100%" required="true">
 			<mx:TextInput id="password" displayAsPassword="true" width="100%"/>
